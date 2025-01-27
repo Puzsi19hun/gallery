@@ -1,1 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/minecraft-4');
+
 /* You can add global styles to this file, and also import other style files */
+body
+{
+    overflow: hidden;
+    background-color: #161725;
+    font-family: 'Minecraft', serif;
+}

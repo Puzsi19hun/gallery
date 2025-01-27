@@ -1,0 +1,36 @@
+.navbar
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+}
+
+.navbar div a{
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: #A3C4BC;;
+    cursor: pointer;
+}
+
+.logo
+{
+    height: 4rem;
+    width: 6rem;
+    
+}
+
+.right
+{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 1rem;
+}
+
+.left
+{
+    display: flex;
+    height: 0;
+    align-items: flex-start;
+}

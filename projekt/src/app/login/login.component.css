@@ -1,0 +1,73 @@
+
+
+
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    
+}
+
+.loginContainer
+{
+    display: flex;
+    background-color: #A3C4BC;
+    justify-content: center;
+    padding: 2rem;
+    height: 20rem;
+    width: 30rem;
+    border-radius: 2rem;
+}
+
+.form
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.5rem;
+    justify-content: center;
+    color: #2D3A3A;
+}
+
+.form div{
+    display: flex;
+    flex-direction: column;
+}
+
+form > div > label
+{
+    margin-left: 0.1rem;
+    margin-bottom: 0.5rem;
+}
+
+input
+{
+    text-align: justify;
+    height: 1.5rem;
+    border: none;
+    border-radius: 0.3rem;
+    height: 2.5rem;
+    font-size: 1.25rem;
+    padding: 0 0.5rem 0 0.5rem;
+    box-shadow: 1px 1px rgba(0, 0, 0, 0.25);
+    font-family: 'Pixelify Sans', serif;
+}
+
+button
+{
+    border: none;
+    border-radius: 0.75rem;
+    background-color: #468C98;
+    color: #A2FAA3;
+    height: 2.5rem;
+    width: 12rem;
+    margin-top: 1rem;
+    font-family: 'Pixelify Sans', serif;
+    font-size: 1.25rem;
+    box-shadow: 1px 1px rgba(0, 0, 0, 0.25);
+
+}
