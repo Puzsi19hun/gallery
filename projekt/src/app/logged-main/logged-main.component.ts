@@ -18,7 +18,7 @@ export class LoggedMainComponent implements OnInit {
     let headers = new HttpHeaders()
     headers.set('X-Requested-With', 'XMLHttpRequest')
 
-    this.http.get(url, { headers: headers, observe: "response" }).subscribe(
+    this.http.get(url, { headers: headers, observe: "response", withCredentials: true }).subscribe(
       (data: any) => {
         console.log(data)
         this.nev = data.body!.name
@@ -29,9 +29,10 @@ export class LoggedMainComponent implements OnInit {
 
   onLogout(): void {
     let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/logout"
-    this.http.post(url, { observe: "response" }).subscribe(
+    let headers = new HttpHeaders()
+    headers.set('X-Requested-With', 'XMLHttpRequest')
+    this.http.post(url, { headers: headers, observe: "response" }, { withCredentials: true }).subscribe(
       data => {
-        console.log(data)
         this.dataservice.move_to("/")
       }
     )

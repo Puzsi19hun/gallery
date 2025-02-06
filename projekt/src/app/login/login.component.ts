@@ -15,7 +15,6 @@ export class LoginComponent {
   onSubmit(email: string, pass: string) {
     let headers = new HttpHeaders();
     headers.set('X-Requested-With', 'XMLHttpRequest')
-    headers.set('Content-Type', 'application/json')
     let formData: FormData = new FormData();
     formData.append('email', email);
     formData.append('password', pass);
