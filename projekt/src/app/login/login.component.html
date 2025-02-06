@@ -1,17 +1,18 @@
 <div class="container">
     <div class="loginContainer">
-        <form class="form">
+        <form #form class="form" ngNativeValidate (ngSubmit)="onSubmit(email.value,pass.value)">
             <div>
                 <label for="">E-mail: </label>
-                <input required type="email">
+                <input #email required type="text">
             </div>
             <div>
                 <label for="">Password: </label>
-                <input required type="password">
+                <input #pass required type="password">
             </div>
             <div>
                 <button>Login</button>
             </div>
+            <div id="hiba"></div>
         </form>
     </div>
 </div>
