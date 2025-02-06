@@ -1,8 +1,16 @@
-.main
-{
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 1rem;
+.main {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 1rem;
+}
+
+.main > p {
+  color: red;
+  font-size: 2rem;
+}
+
+.main > p > b {
+  color: rgb(81, 255, 0);
 }

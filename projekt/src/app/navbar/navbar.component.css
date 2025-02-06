@@ -29,3 +29,10 @@
   height: 0;
   align-items: flex-start;
 }
+.navbar > div > a {
+  transition: 0.15s all ease-out;
+}
+.navbar > div > a:hover {
+  transition: 0.15s all ease-out;
+  color: rgb(81, 255, 0);
+}
