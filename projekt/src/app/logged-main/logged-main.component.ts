@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { DataserviceService } from '../dataservice.service';
 
 @Component({
   selector: 'app-logged-main',
@@ -8,28 +9,30 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './logged-main.component.css'
 })
 export class LoggedMainComponent implements OnInit {
-  constructor(private http: HttpClient)
-  {}
+  constructor(private http: HttpClient, private dataservice: DataserviceService) { }
   nev = ""
   email = ""
 
   ngOnInit(): void {
     let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/user"
-    let headers = new HttpHeaders();
+    let headers = new HttpHeaders()
     headers.set('X-Requested-With', 'XMLHttpRequest')
 
-    this.http.get(url, {headers: headers, observe: "response"}).subscribe(
-      data => {
+    this.http.get(url, { headers: headers, observe: "response" }).subscribe(
+      (data: any) => {
         console.log(data)
+        this.nev = data.body!.name
+        this.email = data.body!.email
       }
     )
   }
 
-  onLogout(): void{
+  onLogout(): void {
     let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/logout"
-    this.http.post(url, {observe: "response"}).subscribe(
+    this.http.post(url, { observe: "response" }).subscribe(
       data => {
         console.log(data)
+        this.dataservice.move_to("/")
       }
     )
   }
