@@ -1,7 +1,2 @@
-@if (logged_in) {
-<app-navbar-logged></app-navbar-logged>
-}
-@else{
-<app-navbar-guest></app-navbar-guest>
-}
+<app-navbar [logged_in]="logged_in"></app-navbar>
 <router-outlet></router-outlet>

@@ -13,15 +13,17 @@ export class LoginComponent {
   constructor(private http: HttpClient, private dataservice: DataserviceService) { }
   url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/login"
   onSubmit(email: string, pass: string) {
-    let headers = new HttpHeaders();
-    headers.set('X-Requested-With', 'XMLHttpRequest')
+    let headerss = new HttpHeaders();
+    headerss.set('X-Requested-With', 'XMLHttpRequest')
+    headerss.set('Content-Type', 'application/json')
     let formData: FormData = new FormData();
     formData.append('email', email);
     formData.append('password', pass);
-    this.http.post(this.url, formData, { headers: headers, observe: 'response', withCredentials: true }).subscribe(
+
+    this.http.post(this.url, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
       data => {
         console.log(data)
-        this.dataservice.set_login(true)
+        this.dataservice.login();
         this.dataservice.move_to('/logged-main')
       },
       error => document.getElementById("hiba")!.innerText = error.error.status

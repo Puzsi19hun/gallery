@@ -14,27 +14,27 @@ export class LoggedMainComponent implements OnInit {
   email = ""
 
   ngOnInit(): void {
-    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/user"
-    let headers = new HttpHeaders()
-    headers.set('X-Requested-With', 'XMLHttpRequest')
+    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/user";
+    let headers = new HttpHeaders();
+    headers.set('X-Requested-With', 'XMLHttpRequest');
+    headers.set('Content-Type', 'application/json');
+    if (localStorage.getItem('logged') == null) {
+      this.dataservice.move_to("/")
+    }
+    else {
+      this.http.get(url, { withCredentials: true }).subscribe(
+        (data: any) => {
+          console.log(data);
+          this.nev = data.name;
+          this.email = data.email;
+        },
+        error => {
+          this.dataservice.logout()
+        }
 
-    this.http.get(url, { headers: headers, observe: "response", withCredentials: true }).subscribe(
-      (data: any) => {
-        console.log(data)
-        this.nev = data.body!.name
-        this.email = data.body!.email
-      }
-    )
+      )
+    }
   }
 
-  onLogout(): void {
-    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/logout"
-    let headers = new HttpHeaders()
-    headers.set('X-Requested-With', 'XMLHttpRequest')
-    this.http.post(url, { headers: headers, observe: "response" }, { withCredentials: true }).subscribe(
-      data => {
-        this.dataservice.move_to("/")
-      }
-    )
-  }
+
 }
