@@ -1,14 +1,15 @@
 @if(logged_in)
 {
 <nav class="navbar">
-    <div class="left">
-        <a style="cursor: pointer;" routerLink="/"><img src="assets/1024x.png" class="logo" alt=""></a>
-    </div>
+    <a class="left" routerLink="/">
+        <a style="cursor: pointer;" ><img src="assets/1024x.png" class="logo" alt=""></a>
+        <h1 class="asd" style="color: rgb(81, 255, 0);">PixelArtSpotlight</h1>
+    </a>
     <div class="right">
-        <a routerLink="">New Drawing</a>
-        <a routerLink="">Gallery</a>
-        <a routerLink="">Profil</a>
-        <a routerLink="">Settings</a>
+        <a (click)="addActive(newdrawing)" #newdrawing routerLink="/new-drawing">New Drawing</a>
+        <a (click)="addActive(gallery)" #gallery routerLink="">Gallery</a>
+        <a (click)="addActive(profil)" #profil routerLink="/profil">Profil</a>
+        <a (click)="addActive(settings)" #settings routerLink="">Settings</a>
         <a (click)="onLogout()">Logout</a>
     </div>
 </nav>

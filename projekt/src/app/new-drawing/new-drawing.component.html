@@ -1,0 +1,25 @@
+@if(showDialog)
+{
+<div class="dialogContainer">
+    <div class="dialog">
+        <div class="selectSize">
+            <div>
+                <input type="text" placeholder="Height: ">
+            </div>
+            <div>
+                <input type="text" name="" placeholder="Width:" id="">
+            </div>
+        </div>
+        <div class="dialogButtons">
+            <button (click)="showDialog = false">Back</button>
+            <button>OK</button>
+        </div>
+    </div>
+</div>
+}
+<div class="container">
+    <div class="buttons">
+        <button (click)="openDialog()">New</button>
+        <button>Edit</button>
+    </div>
+</div>

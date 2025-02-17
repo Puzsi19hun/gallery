@@ -15,6 +15,12 @@ export class NavbarComponent {
   @Input({ required: true }) logged_in: boolean = false
 
 
+  addActive(e: any)
+  {
+    document.querySelector(".active")?.classList.remove('active')
+    e.classList.add('active')
+  }
+
   onLogout() {
     let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/logout"
     this.http.post(url, { observe: "response" }, { withCredentials: true }).subscribe(
