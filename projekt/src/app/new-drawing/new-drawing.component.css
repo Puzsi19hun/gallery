@@ -1,6 +1,8 @@
 .container {
   margin-top: 2rem;
   margin-left: 2rem;
+  margin-right: 2rem;
+
   color: red;
 }
 
@@ -82,6 +84,15 @@ input {
     flex-direction: column;
     border-radius: 1rem;
     padding: 2rem 0;
+}
+
+canvas {
+  border: 2px solid salmon;
+  box-shadow: 0 0 50px 15px #333;
+  background-color: white;
+  display: flex;
+  margin: 0 auto;
+  margin-top: 2rem;
 }
 
 
