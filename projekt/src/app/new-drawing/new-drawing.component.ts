@@ -1,42 +1,91 @@
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Component, ElementRef, HostListener, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-new-drawing',
-  imports: [],
   templateUrl: './new-drawing.component.html',
-  styleUrl: './new-drawing.component.css'
+  styleUrls: ['./new-drawing.component.css']
 })
 export class NewDrawingComponent {
-  showDialog = false
-  mode = "draw"
-  selectedColor = "black"
+  showDialog = false;
+  mode = "draw";
+  selectedColor = "black";
   private ctx!: CanvasRenderingContext2D | null;
-  private canvasSize = 600;
   private pixelGrid: string[][] = [];
   private drawing = false;
   private erasing = false;
 
-  gridWidth: number = 50;
-  gridHeight: number = 50;
+  gridWidth: number = 16;
+  gridHeight: number = 16;
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+  private canvasSize: number = 700;
   private hoverX: number | null = null;
   private hoverY: number | null = null;
+  private dirtyGrid: boolean[][] = [];
 
   ngAfterViewInit() {
     this.initializeCanvas();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['gridWidth'] || changes['gridHeight']) {
-      this.initializeCanvas();
-    }
+    this.resizeCanvas();
   }
 
   initializeCanvas() {
     this.setCanvasSize();
     this.setupCanvas();
+    this.initGrid();  // Ensure grid is initialized
+    this.initDirtyGrid(); // Ensure dirty grid is initialized
+  }
+
+  // Initialize the pixel grid with the current size
+  initGrid() {
+    this.pixelGrid = Array.from({ length: this.gridHeight }, () =>
+      Array(this.gridWidth).fill('white')
+    );
+  }
+
+  // Initialize the dirty grid
+  initDirtyGrid() {
+    this.dirtyGrid = Array.from({ length: this.gridHeight }, () =>
+      Array(this.gridWidth).fill(true)
+    );
+  }
+
+  // Draw grid method
+  drawGrid() {
+    if (!this.ctx) return;
+
+    const ctx = this.ctx;
+
+    const cellWidth = this.canvas.nativeElement.width / this.gridWidth;
+    const cellHeight = this.canvas.nativeElement.height / this.gridHeight;
+
+    for (let y = 0; y < this.gridHeight; y++) {
+      for (let x = 0; x < this.gridWidth; x++) {
+        if (this.dirtyGrid[y][x]) {
+          ctx.fillStyle = this.pixelGrid[y][x];
+          ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+        }
+      }
+    }
+
+    // Draw hover effect if any
+    if (this.hoverX !== null && this.hoverY !== null) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+      ctx.fillRect(this.hoverX * cellWidth, this.hoverY * cellHeight, cellWidth, cellHeight);
+    }
+  }
+
+  // The method to change size of the grid
+  changeSize(newHeight: any, newWidth: any) {
+    this.gridWidth = parseInt(newWidth);
+    this.gridHeight = parseInt(newHeight);
+
+    // Re-initialize the grid arrays to match the new size
     this.initGrid();
+    this.initDirtyGrid();
+
+    // Resize canvas accordingly
+    this.resizeCanvas();
+
+    // Redraw the grid after resizing
     this.drawGrid();
   }
 
@@ -48,64 +97,49 @@ export class NewDrawingComponent {
   resizeCanvas() {
     if (!this.canvas) return;
 
-    const canvasElement = this.canvas.nativeElement as HTMLCanvasElement;
+    const screenWidth = window.innerWidth;
 
-    // Limitáljuk a méretet, hogy ne legyen túl nagy
-    const maxCanvasSize = 600;
-    const newSize = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8, maxCanvasSize);
+    let newCanvasSize = 700;
 
-    // Ha a méret nem változik, nem kell újrarajzolni
-    if (this.canvasSize === newSize) return;
+    if (screenWidth < 768) {
+      newCanvasSize = 300;
+    } else if (screenWidth < 1024) {
+      newCanvasSize = 500;
+    }
 
-    this.canvasSize = newSize;
-    canvasElement.width = this.canvasSize;
-    canvasElement.height = this.canvasSize;
+    this.canvasSize = newCanvasSize;
 
-    // Újrarajzolás az elmentett pixelGrid alapján
+    const cellWidth = this.canvasSize / this.gridWidth;
+    const cellHeight = this.canvasSize / this.gridHeight;
+
+    const newWidth = this.gridWidth * Math.min(cellWidth, cellHeight);
+    const newHeight = this.gridHeight * Math.min(cellWidth, cellHeight);
+
+    this.canvas.nativeElement.width = newWidth;
+    this.canvas.nativeElement.height = newHeight;
+
     this.drawGrid();
   }
 
-
-
   setCanvasSize() {
-    const screenWidth = window.innerWidth;
-    this.canvasSize = screenWidth < 600 ? 250 : screenWidth < 1024 ? 400 : 600;
+    const cellWidth = this.canvasSize / this.gridWidth;
+    const cellHeight = this.canvasSize / this.gridHeight;
+
+    const newWidth = this.gridWidth * Math.min(cellWidth, cellHeight);
+    const newHeight = this.gridHeight * Math.min(cellWidth, cellHeight);
+
+    this.canvas.nativeElement.width = newWidth;
+    this.canvas.nativeElement.height = newHeight;
+
+    this.drawGrid();
   }
 
   setupCanvas() {
     const canvasEl = this.canvas.nativeElement;
     this.ctx = canvasEl.getContext('2d');
-
     if (this.ctx) {
-      canvasEl.width = this.canvasSize;
-      canvasEl.height = this.canvasSize;
-    }
-  }
-
-  initGrid() {
-    this.pixelGrid = Array.from({ length: this.gridHeight }, () =>
-      Array(this.gridWidth).fill('white')
-    );
-  }
-
-  drawGrid() {
-    if (!this.ctx) return;
-    const ctx = this.ctx;
-
-    const cellWidth = this.canvasSize / this.gridWidth;
-    const cellHeight = this.canvasSize / this.gridHeight;
-
-    for (let y = 0; y < this.gridHeight; y++) {
-      for (let x = 0; x < this.gridWidth; x++) {
-        if (this.hoverX === x && this.hoverY === y) {
-          ctx.fillStyle = 'rgba(0, 0, 0, 1)'; // Szürke átlátszó hover szín
-        } else {
-          ctx.fillStyle = this.pixelGrid[y][x];
-        }
-        ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
-        ctx.strokeStyle = '#ccc';
-        ctx.strokeRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
-      }
+      canvasEl.width = this.canvas.nativeElement.width;
+      canvasEl.height = this.canvas.nativeElement.height;
     }
   }
 
@@ -149,13 +183,18 @@ export class NewDrawingComponent {
     const gridY = Math.floor(y / cellHeight);
 
     if (gridX >= 0 && gridX < this.gridWidth && gridY >= 0 && gridY < this.gridHeight) {
-      this.hoverX = gridX;
-      this.hoverY = gridY;
+      if (this.hoverX !== gridX || this.hoverY !== gridY) {
+        this.hoverX = gridX;
+        this.hoverY = gridY;
+        this.drawGrid();
+      }
     } else {
-      this.hoverX = null;
-      this.hoverY = null;
+      if (this.hoverX !== null && this.hoverY !== null) {
+        this.hoverX = null;
+        this.hoverY = null;
+        this.drawGrid();
+      }
     }
-    this.drawGrid();
   }
 
   drawPixel(event: MouseEvent) {
@@ -164,8 +203,10 @@ export class NewDrawingComponent {
     if (this.hoverX !== null && this.hoverY !== null) {
       if (this.drawing) {
         this.pixelGrid[this.hoverY][this.hoverX] = 'black';
+        this.dirtyGrid[this.hoverY][this.hoverX] = true;
       } else if (this.erasing) {
         this.pixelGrid[this.hoverY][this.hoverX] = 'white';
+        this.dirtyGrid[this.hoverY][this.hoverX] = true;
       }
       this.drawGrid();
     }
@@ -183,9 +224,7 @@ export class NewDrawingComponent {
     event.preventDefault();
   }
 
-
   openDialog() {
-    this.showDialog = true
+    this.showDialog = true;
   }
-
 }

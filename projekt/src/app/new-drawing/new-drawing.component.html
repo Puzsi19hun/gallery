@@ -4,15 +4,15 @@
     <div class="dialog">
         <div class="selectSize">
             <div>
-                <input type="text" placeholder="Height: ">
+                <input #height required type="text" placeholder="Height: ">
             </div>
             <div>
-                <input type="text" name="" placeholder="Width:" id="">
+                <input #width required type="text" name="" placeholder="Width:" id="">
             </div>
         </div>
         <div class="dialogButtons">
             <button (click)="showDialog = false">Back</button>
-            <button>OK</button>
+            <button (click)="changeSize(height.value, width.value)">OK</button>
         </div>
     </div>
 </div>
@@ -22,7 +22,9 @@
         <button (click)="openDialog()">New</button>
         <button>Edit</button>
     </div>
-    <canvas #canvas>
+    <div class="canvasContainer">
+        <canvas #canvas>
 
-    </canvas>
+        </canvas>
+    </div>
 </div>
