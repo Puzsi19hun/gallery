@@ -26,7 +26,7 @@ export class LoginComponent {
         this.dataservice.login();
         this.dataservice.move_to('/logged-main')
       },
-      error => document.getElementById("hiba")!.innerText = error.error.status
+      error => document.getElementById("hiba")!.innerText = "Invalid credentials!"
     )
 
   }
