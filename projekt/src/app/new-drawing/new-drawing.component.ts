@@ -17,8 +17,8 @@ export class NewDrawingComponent {
   private drawing = false;
   private erasing = false;
 
-  gridWidth: number = 16;
-  gridHeight: number = 16;
+  gridWidth: number = 50;
+  gridHeight: number = 50;
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
   private hoverX: number | null = null;
   private hoverY: number | null = null;
