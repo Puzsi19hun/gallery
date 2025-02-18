@@ -51,27 +51,28 @@ export class NewDrawingComponent {
   // Draw grid method
   drawGrid() {
     if (!this.ctx) return;
-
     const ctx = this.ctx;
-
     const cellWidth = this.canvas.nativeElement.width / this.gridWidth;
     const cellHeight = this.canvas.nativeElement.height / this.gridHeight;
 
+    // Rajzoljuk ki a kitöltött cellákat, de szegélyek nélkül
     for (let y = 0; y < this.gridHeight; y++) {
       for (let x = 0; x < this.gridWidth; x++) {
         if (this.dirtyGrid[y][x]) {
-          ctx.fillStyle = this.pixelGrid[y][x];
-          ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+          ctx.fillStyle = this.pixelGrid[y][x]; // A cella színe
+          ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight); // Csak kitöltjük a cellát
         }
       }
     }
 
-    // Draw hover effect if any
-    if (this.hoverX !== null && this.hoverY !== null) {
+    // Hover effektus, ha van hoverelt cella
+    if (this.hoverX !== null && this.hoverY !== null && !this.showDialog) {
       ctx.fillStyle = 'rgba(0, 0, 0, 1)';
       ctx.fillRect(this.hoverX * cellWidth, this.hoverY * cellHeight, cellWidth, cellHeight);
     }
   }
+
+
 
   // The method to change size of the grid
   changeSize(newHeight: any, newWidth: any) {
@@ -87,6 +88,7 @@ export class NewDrawingComponent {
 
     // Redraw the grid after resizing
     this.drawGrid();
+    this.showDialog = false
   }
 
   @HostListener('window:resize', ['$event'])
@@ -167,6 +169,7 @@ export class NewDrawingComponent {
     }
   }
 
+  // Update hoverCell logic
   updateHoverCell(event: MouseEvent) {
     if (!this.ctx) return;
 
@@ -197,10 +200,11 @@ export class NewDrawingComponent {
     }
   }
 
+
   drawPixel(event: MouseEvent) {
     if (!this.ctx) return;
 
-    if (this.hoverX !== null && this.hoverY !== null) {
+    if (this.hoverX !== null && this.hoverY !== null && !this.showDialog) {
       if (this.drawing) {
         this.pixelGrid[this.hoverY][this.hoverX] = 'black';
         this.dirtyGrid[this.hoverY][this.hoverX] = true;
