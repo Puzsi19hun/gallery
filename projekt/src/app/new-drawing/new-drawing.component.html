@@ -17,14 +17,28 @@
     </div>
 </div>
 }
+<div class="buttons">
+    <button (click)="openDialog()">New</button>
+    <button (click)="clear()">Clear</button>
+</div>
 <div class="container">
-    <div class="buttons">
-        <button (click)="openDialog()">New</button>
-        <button>Edit</button>
-    </div>
-    <div class="canvasContainer">
-        <canvas #canvas>
+    <div class="drawArea">
+        <div class="tools">
+            <div>
+                <button class="color">Color: <p-colorPicker class="colorPicker" [inline]="false"
+                        [(ngModel)]="color"></p-colorPicker></button>
 
-        </canvas>
+            </div>
+            <div class="flood">
+                <button>
+                    <i class="fa-solid fa-bucket"></i>
+                </button>
+            </div>
+        </div>
+        <div class="canvasContainer">
+            <canvas #canvas>
+
+            </canvas>
+        </div>
     </div>
 </div>

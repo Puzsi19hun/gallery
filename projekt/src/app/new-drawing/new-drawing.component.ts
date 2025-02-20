@@ -1,14 +1,17 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ColorPickerModule } from 'primeng/colorpicker';
 
 @Component({
   selector: 'app-new-drawing',
+  imports: [ColorPickerModule, FormsModule],
   templateUrl: './new-drawing.component.html',
   styleUrls: ['./new-drawing.component.css']
 })
 export class NewDrawingComponent {
   showDialog = false;
   mode = "draw";
-  selectedColor = "black";
+  color: string = "black";
   private ctx!: CanvasRenderingContext2D | null;
   private pixelGrid: string[][] = [];
   private drawing = false;
@@ -17,7 +20,7 @@ export class NewDrawingComponent {
   gridWidth: number = 16;
   gridHeight: number = 16;
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
-  private canvasSize: number = 700;
+  private canvasSize: number = 600;
   private hoverX: number | null = null;
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
@@ -60,16 +63,36 @@ export class NewDrawingComponent {
       for (let x = 0; x < this.gridWidth; x++) {
         if (this.dirtyGrid[y][x]) {
           ctx.fillStyle = this.pixelGrid[y][x]; // A cella színe
-          ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight); // Csak kitöltjük a cellát
+          ctx.fillRect(
+            Math.floor(x * cellWidth),  // Bal felső sarok pontos helye
+            Math.floor(y * cellHeight),
+            Math.ceil(cellWidth),  // Biztosítsd, hogy a teljes terület ki legyen töltve
+            Math.ceil(cellHeight)
+          );
+
         }
       }
     }
 
     // Hover effektus, ha van hoverelt cella
     if (this.hoverX !== null && this.hoverY !== null && !this.showDialog) {
-      ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+      ctx.fillStyle = this.color;
       ctx.fillRect(this.hoverX * cellWidth, this.hoverY * cellHeight, cellWidth, cellHeight);
     }
+  }
+
+
+  clear() {
+    if (!this.ctx) return;
+
+    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+    // Tisztítsd meg a pixelGrid és a dirtyGrid tömböket is
+    this.initGrid();
+    this.initDirtyGrid();
+
+    // Frissítsd a rajzot
+    this.drawGrid();
   }
 
 
@@ -101,10 +124,14 @@ export class NewDrawingComponent {
 
     const screenWidth = window.innerWidth;
 
-    let newCanvasSize = 700;
+    let newCanvasSize = 600;
 
-    if (screenWidth < 768) {
-      newCanvasSize = 300;
+
+    if (screenWidth < 500) {
+      newCanvasSize = 300
+    }
+    else if (screenWidth < 768) {
+      newCanvasSize = 400;
     } else if (screenWidth < 1024) {
       newCanvasSize = 500;
     }
@@ -142,6 +169,7 @@ export class NewDrawingComponent {
     if (this.ctx) {
       canvasEl.width = this.canvas.nativeElement.width;
       canvasEl.height = this.canvas.nativeElement.height;
+
     }
   }
 
@@ -206,7 +234,7 @@ export class NewDrawingComponent {
 
     if (this.hoverX !== null && this.hoverY !== null && !this.showDialog) {
       if (this.drawing) {
-        this.pixelGrid[this.hoverY][this.hoverX] = 'black';
+        this.pixelGrid[this.hoverY][this.hoverX] = this.color;
         this.dirtyGrid[this.hoverY][this.hoverX] = true;
       } else if (this.erasing) {
         this.pixelGrid[this.hoverY][this.hoverX] = 'white';

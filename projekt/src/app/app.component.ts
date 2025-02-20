@@ -23,8 +23,13 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.login_subscription = this.dataservice.isAuthenticated$.subscribe(
       (logged: boolean) => {
+        if (logged == true) {
+          this.dataservice.navbar = "logged"
+        }
         this.logged_in = logged
       })
+
+
 
     // if (localStorage.getItem('logged') == "true") {
     //   this.logged_in = true
