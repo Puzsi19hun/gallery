@@ -9,8 +9,13 @@ import { Route } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   constructor(private http: HttpClient, private dataservice: DataserviceService) { }
+  ngOnInit(): void {
+    if (localStorage.getItem('logged') == "true") {
+      this.dataservice.move_to("/logged-main")
+    }
+  }
   url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/login"
   onSubmit(email: string, pass: string) {
     let headerss = new HttpHeaders();
