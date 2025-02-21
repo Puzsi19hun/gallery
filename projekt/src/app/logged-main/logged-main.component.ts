@@ -19,6 +19,7 @@ export class LoggedMainComponent implements OnInit {
     headers.set('X-Requested-With', 'XMLHttpRequest');
     headers.set('Content-Type', 'application/json');
     if (localStorage.getItem('logged') == null) {
+      this.dataservice.logout()
       this.dataservice.move_to("/")
     }
     else {
