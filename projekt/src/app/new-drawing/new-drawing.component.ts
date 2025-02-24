@@ -1,6 +1,8 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'primeng/colorpicker';
+import { DataserviceService } from '../dataservice.service';
 
 @Component({
   selector: 'app-new-drawing',
@@ -16,6 +18,7 @@ export class NewDrawingComponent {
   private pixelGrid: string[][] = [];
   private drawing = false;
   private erasing = false;
+  bucketMode: boolean = false;
 
   gridWidth: number = 16;
   gridHeight: number = 16;
@@ -24,6 +27,8 @@ export class NewDrawingComponent {
   private hoverX: number | null = null;
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
+
+  constructor(private http: HttpClient, private dataservice: DataserviceService) { }
 
   ngAfterViewInit() {
     this.initializeCanvas();
@@ -81,6 +86,7 @@ export class NewDrawingComponent {
     }
   }
 
+  // tools
 
   clear() {
     if (!this.ctx) return;
@@ -93,6 +99,110 @@ export class NewDrawingComponent {
 
     // Frissítsd a rajzot
     this.drawGrid();
+  }
+
+  toggleBucketMode() {
+    this.bucketMode = !this.bucketMode;
+
+    if (this.bucketMode) {
+      document.querySelector("#bucket")?.classList.add('bucketActive')
+    }
+    else {
+      document.querySelector('#bucket')?.classList.remove('bucketActive')
+    }
+  }
+
+  fillAreaRecursive(x: number, y: number, targetColor: string) {
+    if (x < 0 || x >= this.gridWidth || y < 0 || y >= this.gridHeight) return;
+    if (this.pixelGrid[y][x] !== targetColor) return;
+    if (this.pixelGrid[y][x] === this.color) return;
+
+    this.pixelGrid[y][x] = this.color;
+    this.dirtyGrid[y][x] = true;
+
+    this.fillAreaRecursive(x - 1, y, targetColor);
+    this.fillAreaRecursive(x + 1, y, targetColor);
+    this.fillAreaRecursive(x, y - 1, targetColor);
+    this.fillAreaRecursive(x, y + 1, targetColor);
+  }
+
+  fillArea(event: MouseEvent) {
+    if (!this.ctx) return;
+
+    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    const scaleX = this.canvas.nativeElement.width / rect.width;
+    const scaleY = this.canvas.nativeElement.height / rect.height;
+
+    const x = Math.floor((event.clientX - rect.left) * scaleX / (this.canvas.nativeElement.width / this.gridWidth));
+    const y = Math.floor((event.clientY - rect.top) * scaleY / (this.canvas.nativeElement.height / this.gridHeight));
+
+    if (x < 0 || x >= this.gridWidth || y < 0 || y >= this.gridHeight) return;
+
+    const targetColor = this.pixelGrid[y][x];
+    if (targetColor === this.color) return;
+
+    this.fillAreaRecursive(x, y, targetColor);
+    this.drawGrid();
+  }
+
+  savePixelArt() {
+    if (!this.ctx) return;
+
+    const canvasEl = this.canvas.nativeElement;
+    const cellSizeX = canvasEl.width / this.gridWidth; // 600 / 16 = 37.5
+    const cellSizeY = canvasEl.height / this.gridHeight; // 600 / 16 = 37.5
+
+    let pixelList: string[] = [];
+
+    for (let row = 0; row < this.gridHeight; row++) {
+      for (let col = 0; col < this.gridWidth; col++) {
+        const sampleX = Math.floor((col + 0.5) * cellSizeX); // cella közepe X
+        const sampleY = Math.floor((row + 0.5) * cellSizeY); // cella közepe Y
+
+        const imageData = this.ctx.getImageData(sampleX, sampleY, 1, 1);
+        const pixels = imageData.data;
+
+        const r = pixels[0];
+        const g = pixels[1];
+        const b = pixels[2];
+        const a = pixels[3];
+
+        if (a === 0) {
+          pixelList.push("transparent");
+        } else {
+          pixelList.push(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
+        }
+      }
+    }
+
+    console.log("Pixel list:", pixelList);
+    this.sendToApi(pixelList)
+  }
+
+
+
+  sendToApi(pixelList: string[]) {
+    const apiUrl = 'https://nagypeti.moriczcloud.hu/PixelArtSpotlight/save'; // API URL
+
+    let headerss = new HttpHeaders();
+    headerss.set('X-Requested-With', 'XMLHttpRequest')
+    headerss.set('Content-Type', 'application/json')
+    let formData: FormData = new FormData();
+    formData.append('hex_codes', JSON.stringify(pixelList));
+    formData.append('width', String(this.gridWidth));
+
+    if (confirm("Are you sure you want to save your drawing?")) {
+      this.http.post(apiUrl, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
+        data => {
+          console.log(data)
+
+        },
+        error => console.log(error)
+
+      )
+    }
+
+
   }
 
 
@@ -175,13 +285,18 @@ export class NewDrawingComponent {
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
-    if (event.button === 0) {
-      this.drawing = true;
-    } else if (event.button === 2) {
-      this.erasing = true;
+    if (this.bucketMode) {
+      this.fillArea(event);
+    } else {
+      if (event.button === 0) {
+        this.drawing = true;
+      } else if (event.button === 2) {
+        this.erasing = true;
+      }
+      this.drawPixel(event);
     }
-    this.drawPixel(event);
   }
+
 
   @HostListener('mouseup')
   onMouseUp() {

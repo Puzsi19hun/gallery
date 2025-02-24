@@ -96,8 +96,12 @@ canvas {
   border: 2px solid salmon;
   box-shadow: 0 0 50px 15px #333;
   background-color: white;
-  display: flex;
   margin-top: 1rem;
+}
+
+.bucketActive {
+  color: rgb(81, 255, 0);
+  border: 2px solid red;
 }
 
 .drawArea {
@@ -108,6 +112,7 @@ canvas {
   gap: 1rem;
   flex-direction: column;
   align-items: center;
+  margin-left: -2rem;
 }
 
 /*Tools*/
@@ -132,15 +137,35 @@ canvas {
 
 @media only screen and (max-width: 1200px) {
   .dialog {
-    width: 55%;
+    width: 50%;
     height: 30%;
   }
 }
 
 @media only screen and (max-width: 600px) {
   .container {
-    margin-left: 0rem;
-    margin-top: 1rem;
+    margin: 0;
+    margin-left: -0.5rem;
+  }
+
+  .dialogButton {
+    width: 4rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+
+  .buttons {
+    height: 88vh;
+    padding: 0.1rem 0.5rem;
+  }
+
+  input {
+    height: 2rem;
+    font-size: 0.65rem;
+  }
+
+  .drawArea {
+    margin: 0 auto;
   }
 
   .dialog {

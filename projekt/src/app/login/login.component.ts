@@ -1,5 +1,5 @@
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DataserviceService } from '../dataservice.service';
 import { Route } from '@angular/router';
@@ -9,9 +9,18 @@ import { Route } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit {
   constructor(private http: HttpClient, private dataservice: DataserviceService) { }
+
+
+
   url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/login"
+
+  ngAfterViewInit(): void {
+    if (localStorage.getItem('logged') && this.dataservice.navbar == "logged") {
+      this.dataservice.move_to("/logged-main")
+    }
+  }
   onSubmit(email: string, pass: string) {
     let headerss = new HttpHeaders();
     headerss.set('X-Requested-With', 'XMLHttpRequest')

@@ -10,7 +10,7 @@
   cursor: pointer;
 }
 
-a{
+a {
   color: #a3c4bc;
 }
 
@@ -27,18 +27,17 @@ a{
   margin-top: 1.25rem;
 }
 
-.active{
+.active {
   color: rgb(81, 255, 0);
 }
 
 .left {
+  position: absolute;
   display: flex;
-  height: 0;
   align-items: flex-start;
   text-decoration: none;
+  cursor: pointer;
 }
-
-
 
 .navbar > div > a {
   transition: 0.15s all ease-out;

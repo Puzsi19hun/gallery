@@ -11,8 +11,8 @@
             </div>
         </div>
         <div class="dialogButtons">
-            <button (click)="showDialog = false">Back</button>
-            <button (click)="changeSize(height.value,width.value)">OK</button>
+            <button class="dialogButton" (click)="showDialog = false">Back</button>
+            <button class="dialogButton" (click)="changeSize(height.value,width.value)">OK</button>
         </div>
     </div>
 </div>
@@ -20,17 +20,18 @@
 <div class="buttons">
     <button (click)="openDialog()">New</button>
     <button (click)="clear()">Clear</button>
+    <button (click)="savePixelArt()">Save</button>
 </div>
 <div class="container">
     <div class="drawArea">
         <div class="tools">
             <div>
-                <button class="color">Color: <p-colorPicker class="colorPicker" [inline]="false"
+                <button class="color">Color: <p-colorPicker appendTo="body" class="colorPicker" [inline]="false"
                         [(ngModel)]="color"></p-colorPicker></button>
 
             </div>
             <div class="flood">
-                <button>
+                <button id="bucket" (click)="toggleBucketMode()">
                     <i class="fa-solid fa-bucket"></i>
                 </button>
             </div>
