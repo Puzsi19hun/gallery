@@ -16,5 +16,9 @@ export class MainComponent implements OnInit {
     if (localStorage.getItem('logged') && this.dataservice.navbar == "logged") {
       this._router.navigateByUrl('/logged-main')
     }
+    else
+    {
+      this.dataservice.logout()
+    }
   }
 }

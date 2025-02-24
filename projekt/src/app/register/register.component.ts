@@ -11,7 +11,11 @@ import { FormsModule } from '@angular/forms';
 })
 export class RegisterComponent {
   constructor(private dataservice: DataserviceService, private http: HttpClient) { }
-
+  ngOnInit(): void {
+    if (localStorage.getItem('logged') == "true") {
+      this.dataservice.move_to("/logged-main")
+    }
+  }
   onSubmit(name: string, email: string, pass1: string, pass2: string) {
     if (pass1 == pass2) {
       let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/register"
