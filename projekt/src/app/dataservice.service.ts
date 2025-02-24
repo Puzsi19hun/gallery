@@ -12,6 +12,7 @@ export class DataserviceService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.get_logged_in_state());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   public navbar = "guest";
+  public token = "";
 
   private get_logged_in_state(): boolean {
     return !!localStorage.getItem('logged');  // Or check cookies if you're storing it there
@@ -27,11 +28,18 @@ export class DataserviceService {
     localStorage.removeItem('logged');
     this.isAuthenticatedSubject.next(false);
     this.navbar = "guest"
+    this.token = ""
   }
 
   get_navbar() {
     return this.navbar;
   }
+
+  set_token(token: any) {
+    localStorage.setItem('token', token)
+  }
+
+
 
 
 

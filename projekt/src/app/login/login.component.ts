@@ -1,8 +1,9 @@
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DataserviceService } from '../dataservice.service';
 import { Route } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   imports: [FormsModule],
@@ -10,7 +11,7 @@ import { Route } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements AfterViewInit {
-  constructor(private http: HttpClient, private dataservice: DataserviceService) { }
+  constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
 
 
@@ -30,10 +31,12 @@ export class LoginComponent implements AfterViewInit {
     formData.append('password', pass);
 
     this.http.post(this.url, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
-      data => {
+      (data: any) => {
         console.log(data)
         this.dataservice.login();
+        this.dataservice.set_token(data.message)
         this.dataservice.move_to('/logged-main')
+        this.cdr.detectChanges()
       },
       error => document.getElementById("hiba")!.innerText = "Invalid credentials!"
     )

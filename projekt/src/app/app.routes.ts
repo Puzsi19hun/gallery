@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoggedMainComponent } from './logged-main/logged-main.component';
 import { NewDrawingComponent } from './new-drawing/new-drawing.component';
 import { ProfilComponent } from './profil/profil.component';
+import { GalleryComponent } from './gallery/gallery.component';
 
 export const routes: Routes = [
     { path: '', component: LoginComponent },
@@ -13,6 +14,6 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: "logged-main", component: LoggedMainComponent },
     { path: 'new-drawing', component: NewDrawingComponent },
-    { path: 'profil', component: ProfilComponent }
-
+    { path: 'profil', component: ProfilComponent },
+    { path: 'gallery', component: GalleryComponent }
 ];

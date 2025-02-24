@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
 
 @Component({
@@ -8,17 +8,24 @@ import { DataserviceService } from '../dataservice.service';
   templateUrl: './logged-main.component.html',
   styleUrl: './logged-main.component.css'
 })
-export class LoggedMainComponent implements OnInit {
+export class LoggedMainComponent implements OnInit, AfterViewInit {
   constructor(private http: HttpClient, private dataservice: DataserviceService) { }
   nev = ""
   email = ""
 
+
+  ngAfterViewInit(): void {
+    if (localStorage.getItem('logged') == null || this.dataservice.get_navbar() == "guest" || localStorage.getItem('token') == null) {
+      this.dataservice.logout()
+      this.dataservice.move_to("/")
+    }
+  }
   ngOnInit(): void {
     let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/user";
     let headers = new HttpHeaders();
     headers.set('X-Requested-With', 'XMLHttpRequest');
     headers.set('Content-Type', 'application/json');
-    if (localStorage.getItem('logged') == null) {
+    if (localStorage.getItem('logged') == null || this.dataservice.get_navbar() == "guest") {
       this.dataservice.logout()
       this.dataservice.move_to("/")
     }

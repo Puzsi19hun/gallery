@@ -1,0 +1,83 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { DataserviceService } from '../dataservice.service';
+
+@Component({
+  selector: 'app-drawing-card',
+  templateUrl: './drawing-card.component.html',
+  styleUrl: './drawing-card.component.css'
+})
+export class DrawingCardComponent implements AfterViewInit {
+  data: any[] = [];
+  @ViewChild('canvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
+
+  @Input({ required: true }) user_id = "";
+  @Input({ required: true }) image_id = "";
+  @Input({ required: true }) width = "";
+  @Input({ required: true }) hexCodes: string[] = [];
+
+  private readonly CANVAS_SIZE = 200; // Fix méretű előnézet (200x200 px)
+
+  constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
+
+  ngAfterViewInit(): void {
+    if (!this.isUserLoggedIn()) {
+      this.dataservice.logout();
+      this.dataservice.move_to("/");
+      return;
+    }
+    this.drawCanvas();
+  }
+
+  private isUserLoggedIn(): boolean {
+    return localStorage.getItem('logged') !== null &&
+      this.dataservice.get_navbar() !== "guest" &&
+      localStorage.getItem('token') !== null;
+  }
+
+  private drawCanvas() {
+    if (!this.canvasRef) return;
+
+    const canvas = this.canvasRef.nativeElement;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.imageSmoothingEnabled = false; // Kikapcsolt antialiasing
+
+    const gridWidth = parseInt(this.width);
+    const gridHeight = Math.ceil(this.hexCodes.length / gridWidth);
+
+    // Canvas beállítása
+    canvas.width = this.CANVAS_SIZE;
+    canvas.height = this.CANVAS_SIZE;
+
+    // Skálázás kiszámítása
+    const pixelSize = Math.floor(Math.min(this.CANVAS_SIZE / gridWidth, this.CANVAS_SIZE / gridHeight));
+
+    // Kép középre igazítása
+    const offsetX = Math.floor((this.CANVAS_SIZE - gridWidth * pixelSize) / 2);
+    const offsetY = Math.floor((this.CANVAS_SIZE - gridHeight * pixelSize) / 2);
+
+    for (let i = 0; i < this.hexCodes.length; i++) {
+      const x = (i % gridWidth) * pixelSize + offsetX;
+      const y = Math.floor(i / gridWidth) * pixelSize + offsetY;
+
+      ctx.fillStyle = this.hexCodes[i];
+      ctx.fillRect(x, y, pixelSize, pixelSize);
+    }
+  }
+
+  ngOnInit(): void {
+    const url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getHexCodes";
+    const headers = new HttpHeaders({
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'application/json'
+    });
+
+    this.http.get(url, { headers, withCredentials: true }).subscribe(
+      (data: any) => {
+        this.data = data[0];
+      }
+    );
+  }
+}

@@ -30,7 +30,13 @@ export class NewDrawingComponent {
 
   constructor(private http: HttpClient, private dataservice: DataserviceService) { }
 
+
+
   ngAfterViewInit() {
+    if (localStorage.getItem('logged') == null || this.dataservice.get_navbar() == "guest" || localStorage.getItem('token') == null) {
+      this.dataservice.logout()
+      this.dataservice.move_to("/")
+    }
     this.initializeCanvas();
     this.resizeCanvas();
   }
