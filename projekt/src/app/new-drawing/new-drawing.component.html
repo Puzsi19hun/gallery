@@ -53,19 +53,21 @@
     <div class="drawArea">
         <div class="tools">
             <div>
-                <button class="color">Color: <p-colorPicker id="picker" appendTo="body" class="colorPicker"
-                        [inline]="false" [(ngModel)]="color"></p-colorPicker></button>
+                <button class="color toolButton"><span class="colorLabel">Color: </span><p-colorPicker id="picker"
+                        appendTo="body" class="colorPicker" [inline]="false"
+                        [(ngModel)]="color"></p-colorPicker></button>
 
             </div>
             <div class="flood">
-                <button id="bucket" (click)="toggleBucketMode()">
+                <button id="bucket" class="toolButton" (click)="toggleBucketMode()">
                     <span class="material-icons bucket">
                         format_color_fill
                     </span>
                 </button>
             </div>
             <div class="pipetta">
-                <button #pipette id="pipette" [ngClass]="{ 'active': pipette }" (click)="togglePipetteMode()">
+                <button #pipette id="pipette" class="toolButton" [ngClass]="{ 'active': pipette }"
+                    (click)="togglePipetteMode()">
                     <span class="material-icons bucket">
                         colorize
                     </span>

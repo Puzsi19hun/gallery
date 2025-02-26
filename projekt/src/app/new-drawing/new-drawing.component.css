@@ -172,8 +172,8 @@ input {
 
 .dialog {
   position: absolute;
-  background-color: rgb(44, 43, 43);
-  width: 50%;
+  background-color: rgba(44, 43, 43, 0.7);
+  width: 30%;
   height: 30%;
   display: flex;
   flex-direction: column;
@@ -262,6 +262,10 @@ canvas {
     margin-left: -0.5rem;
   }
 
+  .colorLabel {
+    display: none;
+  }
+
   .dialogButton {
     width: 6rem;
     height: 2rem;
@@ -269,7 +273,7 @@ canvas {
   }
 
   .buttons {
-    height: 88vh;
+    height: 83vh;
     padding: 0.1rem 0.5rem;
   }
 
@@ -278,8 +282,16 @@ canvas {
     font-size: 0.65rem;
   }
 
+  .colorPicker {
+    margin: 0 auto;
+  }
+
   .drawArea {
     margin: 0 auto;
+  }
+
+  .toolButton {
+    width: 3rem;
   }
 
   .dialog {
