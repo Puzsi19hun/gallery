@@ -5,7 +5,7 @@
 .drawingsContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
   height: 83vh;
   width: 100%;
   justify-content: center;
@@ -17,14 +17,23 @@
 .center {
   display: flex;
   justify-content: center;
-  margin-bottom: 0rem;
   color: rgba(81, 255, 0, 1);
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 @media only screen and (max-width: 1200px) {
   .container {
     margin-left: 0rem;
     margin: 0 auto;
+  }
+}
+
+@media only screen and (max-width: 780px) {
+  .drawingsContainer {
+    height: 72vh;
+  }
+
+  .center {
+    margin-bottom: 2rem;
   }
 }

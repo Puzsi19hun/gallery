@@ -12,6 +12,7 @@ import { DrawingCardComponent } from '../drawing-card/drawing-card.component';
 })
 export class GalleryComponent implements OnInit {
   data: any[] = []
+  user: any[] = []
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
 
@@ -29,7 +30,6 @@ export class GalleryComponent implements OnInit {
     headers.set('Content-Type', 'application/json');
     this.http.get(url, { headers: headers, withCredentials: true }).subscribe(
       (data: any) => {
-        console.log(data)
         this.data = data[0]
       }
     )

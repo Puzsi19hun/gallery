@@ -365,7 +365,7 @@ export class NewDrawingComponent {
 
   sendToApi(pixelList: string[], name: any, canBeEdited: any) {
     const apiUrl = 'https://nagypeti.moriczcloud.hu/PixelArtSpotlight/save'; // API URL
-
+    console.log(name, canBeEdited)
     let canEdit = 0
 
     if (canBeEdited == true) {
@@ -396,7 +396,7 @@ export class NewDrawingComponent {
       )
     }
 
-
+    this.savingDialog = false
   }
 
   openSaveDialog() {
