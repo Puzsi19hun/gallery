@@ -3,10 +3,11 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { DataserviceService } from '../dataservice.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-new-drawing',
-  imports: [ColorPickerModule, FormsModule],
+  imports: [ColorPickerModule, FormsModule, NgClass],
   templateUrl: './new-drawing.component.html',
   styleUrls: ['./new-drawing.component.css']
 })
@@ -19,6 +20,8 @@ export class NewDrawingComponent {
   private pixelGrid: string[][] = [];
   private drawing = false;
   private erasing = false;
+  private pipette = false;
+
   bucketMode: boolean = false;
 
   gridWidth: number = 16;
@@ -94,6 +97,68 @@ export class NewDrawingComponent {
   }
 
   // tools
+
+  handlePipetteClick(event: MouseEvent) {
+    if (!this.ctx || !this.pipette) return;
+
+    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    const scaleX = this.canvas.nativeElement.width / rect.width;
+    const scaleY = this.canvas.nativeElement.height / rect.height;
+
+    const clickX = Math.floor((event.clientX - rect.left) * scaleX / (this.canvas.nativeElement.width / this.gridWidth));
+    const clickY = Math.floor((event.clientY - rect.top) * scaleY / (this.canvas.nativeElement.height / this.gridHeight));
+
+    if (clickX >= 0 && clickX < this.gridWidth && clickY >= 0 && clickY < this.gridHeight) {
+      // Get the color from pixelGrid
+      let pickedColor = this.pixelGrid[clickY][clickX];
+
+      // Ensure the color is in proper hex format if needed
+      if (pickedColor === 'white') {
+        pickedColor = '#ffffff';
+      }
+
+      // Update the color
+      this.color = pickedColor;
+      console.log('Picked color:', pickedColor);
+
+      // Force redraw of the canvas to update the hover color
+      // Temporarily reset hover position
+      const tempHoverX = this.hoverX;
+      const tempHoverY = this.hoverY;
+
+      // Clear hover state
+      this.hoverX = null;
+      this.hoverY = null;
+
+      // Redraw grid to clear previous hover
+      this.drawGrid();
+
+      // Restore hover position
+      this.hoverX = tempHoverX;
+      this.hoverY = tempHoverY;
+
+      // Redraw grid with updated hover color
+      this.drawGrid();
+
+      // Turn off pipette mode
+      this.pipette = false;
+      document.querySelector('#pipette')?.classList.remove('pipetteActive');
+    }
+  }
+
+
+  togglePipetteMode() {
+    this.pipette = !this.pipette;
+    if (this.pipette) {
+      document.querySelector("#pipette")?.classList.add('pipetteActive')
+    }
+    else {
+      document.querySelector('#pipette')?.classList.remove('pipetteActive')
+      this.drawing = false; // Rajzolás letiltása pipetta mód kikapcsolásakor
+      this.erasing = false; // Törlés letiltása pipetta mód kikapcsolásakor
+    }
+  }
+
 
   clear() {
     if (!this.ctx) return;
@@ -234,9 +299,15 @@ export class NewDrawingComponent {
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
+    if (this.pipette) {
+      this.handlePipetteClick(event);
+      return;
+    }
+
     if (this.bucketMode) {
       this.fillArea(event);
     } else {
+      // Drawing or erasing (left or right button)
       if (event.button === 0) {
         this.drawing = true;
       } else if (event.button === 2) {
@@ -245,6 +316,7 @@ export class NewDrawingComponent {
       this.drawPixel(event);
     }
   }
+
 
 
   @HostListener('mouseup')
@@ -294,7 +366,7 @@ export class NewDrawingComponent {
 
 
   drawPixel(event: MouseEvent) {
-    if (!this.ctx) return;
+    if (!this.ctx || this.pipette) return; // Ne rajzoljunk pipetta módban
 
     if (this.hoverX !== null && this.hoverY !== null && !this.showDialog) {
       if (this.drawing) {

@@ -193,6 +193,11 @@ canvas {
   border: 2px solid red;
 }
 
+.pipetteActive {
+  color: rgb(81, 255, 0);
+  border: 2px solid red;
+}
+
 .drawArea {
   top: 5rem;
   position: absolute;
@@ -225,7 +230,7 @@ canvas {
 }
 
 .bucket {
-  font-size: 2.2rem;
+  font-size: 2rem;
 }
 
 @media only screen and (max-width: 1450px) {
