@@ -12,6 +12,7 @@ import { DataserviceService } from '../dataservice.service';
 })
 export class NewDrawingComponent {
   showDialog = false;
+  savingDialog = false;
   mode = "draw";
   color: string = "black";
   private ctx!: CanvasRenderingContext2D | null;
@@ -151,65 +152,7 @@ export class NewDrawingComponent {
     this.drawGrid();
   }
 
-  savePixelArt() {
-    if (!this.ctx) return;
 
-    const canvasEl = this.canvas.nativeElement;
-    const cellSizeX = canvasEl.width / this.gridWidth; // 600 / 16 = 37.5
-    const cellSizeY = canvasEl.height / this.gridHeight; // 600 / 16 = 37.5
-
-    let pixelList: string[] = [];
-
-    for (let row = 0; row < this.gridHeight; row++) {
-      for (let col = 0; col < this.gridWidth; col++) {
-        const sampleX = Math.floor((col + 0.5) * cellSizeX); // cella közepe X
-        const sampleY = Math.floor((row + 0.5) * cellSizeY); // cella közepe Y
-
-        const imageData = this.ctx.getImageData(sampleX, sampleY, 1, 1);
-        const pixels = imageData.data;
-
-        const r = pixels[0];
-        const g = pixels[1];
-        const b = pixels[2];
-        const a = pixels[3];
-
-        if (a === 0) {
-          pixelList.push("transparent");
-        } else {
-          pixelList.push(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
-        }
-      }
-    }
-
-    console.log("Pixel list:", pixelList);
-    this.sendToApi(pixelList)
-  }
-
-
-
-  sendToApi(pixelList: string[]) {
-    const apiUrl = 'https://nagypeti.moriczcloud.hu/PixelArtSpotlight/save'; // API URL
-
-    let headerss = new HttpHeaders();
-    headerss.set('X-Requested-With', 'XMLHttpRequest')
-    headerss.set('Content-Type', 'application/json')
-    let formData: FormData = new FormData();
-    formData.append('hex_codes', JSON.stringify(pixelList));
-    formData.append('width', String(this.gridWidth));
-
-    if (confirm("Are you sure you want to save your drawing?")) {
-      this.http.post(apiUrl, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
-        data => {
-          console.log(data)
-
-        },
-        error => console.log(error)
-
-      )
-    }
-
-
-  }
 
 
 
@@ -380,4 +323,88 @@ export class NewDrawingComponent {
   openDialog() {
     this.showDialog = true;
   }
+
+
+  // Saving
+
+  savePixelArt(name: any, canBeEdited: any) {
+    if (!this.ctx) return;
+
+    const canvasEl = this.canvas.nativeElement;
+    const cellSizeX = canvasEl.width / this.gridWidth; // 600 / 16 = 37.5
+    const cellSizeY = canvasEl.height / this.gridHeight; // 600 / 16 = 37.5
+
+    let pixelList: string[] = [];
+
+    for (let row = 0; row < this.gridHeight; row++) {
+      for (let col = 0; col < this.gridWidth; col++) {
+        const sampleX = Math.floor((col + 0.5) * cellSizeX); // cella közepe X
+        const sampleY = Math.floor((row + 0.5) * cellSizeY); // cella közepe Y
+
+        const imageData = this.ctx.getImageData(sampleX, sampleY, 1, 1);
+        const pixels = imageData.data;
+
+        const r = pixels[0];
+        const g = pixels[1];
+        const b = pixels[2];
+        const a = pixels[3];
+
+        if (a === 0) {
+          pixelList.push("transparent");
+        } else {
+          pixelList.push(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
+        }
+      }
+    }
+
+    console.log("Pixel list:", pixelList);
+    this.sendToApi(pixelList, name, canBeEdited)
+  }
+
+
+
+  sendToApi(pixelList: string[], name: any, canBeEdited: any) {
+    const apiUrl = 'https://nagypeti.moriczcloud.hu/PixelArtSpotlight/save'; // API URL
+
+    let canEdit = 0
+
+    if (canBeEdited == true) {
+      canEdit = 1
+    }
+    else {
+      canEdit = 0
+    }
+
+    let headerss = new HttpHeaders();
+    headerss.set('X-Requested-With', 'XMLHttpRequest')
+    headerss.set('Content-Type', 'application/json')
+    let formData: FormData = new FormData();
+    formData.append('hex_codes', JSON.stringify(pixelList));
+    formData.append('width', String(this.gridWidth));
+    formData.append('name', name);
+    formData.append('canBeEdited', String(canEdit))
+
+
+    if (confirm("Are you sure you want to save your drawing?")) {
+      this.http.post(apiUrl, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
+        data => {
+          console.log(data)
+
+        },
+        error => console.log(error)
+
+      )
+    }
+
+
+  }
+
+  openSaveDialog() {
+    this.savingDialog = true
+  }
+
+  onSave(name: any, canBeEdited: any) {
+    this.savePixelArt(name, canBeEdited)
+  }
+
 }

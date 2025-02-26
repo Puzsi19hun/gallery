@@ -29,6 +29,7 @@ export class DataserviceService {
     this.isAuthenticatedSubject.next(false);
     this.navbar = "guest"
     this.token = ""
+    this.move_to('/login')
   }
 
   get_navbar() {

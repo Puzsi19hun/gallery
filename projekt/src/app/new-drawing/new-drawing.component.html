@@ -17,10 +17,37 @@
     </div>
 </div>
 }
+
+@if(savingDialog)
+{
+<div class="savingContainer">
+    <div class="savingDialog">
+        <div class="inputs">
+            <div>
+                <input #name required type="text" placeholder="Name: ">
+                <div style="display: flex; margin: 1rem 0rem;">
+                    <label for="">Can be edited</label>
+                    <div style="margin-left: 0.725rem;" class="checkbox-wrapper-22">
+                        <label class="switch" for="checkbox">
+                            <input #canBeEdited type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dialogButtons">
+            <button class="dialogButton" (click)="onSave(name.value, canBeEdited.checked)">Save</button>
+            <button class="dialogButton" (click)="savingDialog = false">Cancel</button>
+        </div>
+    </div>
+</div>
+}
+
 <div class="buttons">
     <button (click)="openDialog()">New</button>
     <button (click)="clear()">Clear</button>
-    <button (click)="savePixelArt()">Save</button>
+    <button (click)="openSaveDialog()">Save</button>
 </div>
 <div class="container">
     <div class="drawArea">

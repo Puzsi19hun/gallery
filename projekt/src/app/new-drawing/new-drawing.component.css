@@ -63,6 +63,88 @@ input {
   align-items: center;
 }
 
+.savingContainer {
+  z-index: 1;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  height: 80vh;
+  width: 100vw;
+  align-items: center;
+}
+
+.savingDialog {
+  position: absolute;
+  background-color: rgb(44, 43, 43);
+  width: 30%;
+  font-size: 2rem;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 1rem;
+  padding: 2rem 0;
+  border: 1px solid rgba(81, 255, 0.5);
+  animation: flickerAnimation 2s infinite;
+}
+
+.inputs {
+  display: flex;
+  width: 100%;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.checkbox-wrapper-22 .switch {
+  margin-top: 0.2rem;
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.checkbox-wrapper-22 .switch input {
+  display: none;
+}
+
+.checkbox-wrapper-22 .slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 0.4s;
+}
+
+.checkbox-wrapper-22 .slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: 0.4s;
+  width: 26px;
+}
+
+.checkbox-wrapper-22 input:checked + .slider {
+  background-color: rgb(81, 255, 0);
+}
+
+.checkbox-wrapper-22 input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.checkbox-wrapper-22 .slider.round {
+  border-radius: 34px;
+}
+
+.checkbox-wrapper-22 .slider.round:before {
+  border-radius: 50%;
+}
+
 .dialogButtons {
   position: relative;
   display: flex;
@@ -83,8 +165,8 @@ input {
 
 .dialog {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
-  width: 30%;
+  background-color: rgb(44, 43, 43);
+  width: 50%;
   height: 30%;
   display: flex;
   flex-direction: column;
@@ -141,8 +223,13 @@ canvas {
 
 @media only screen and (max-width: 1200px) {
   .dialog {
-    width: 50%;
-    height: 30%;
+    width: 70%;
+    height: 70%;
+  }
+
+  .savingDialog {
+    width: 60%;
+    height: 60%;
   }
 }
 
@@ -175,5 +262,25 @@ canvas {
   .dialog {
     width: 80%;
     height: 30%;
+  }
+
+  .savingDialog {
+    width: 80%;
+    height: 30%;
+  }
+}
+
+@keyframes flickerAnimation {
+  0% {
+    box-shadow: rgba(155, 220, 188, 0.05) 0px 30px 60px -12px,
+      rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
+  }
+  50% {
+    box-shadow: rgba(155, 220, 188, 0.5) 0px 30px 60px -12px,
+      rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
+  }
+  100% {
+    box-shadow: rgba(155, 220, 188, 0.05) 0px 30px 60px -12px,
+      rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
   }
 }

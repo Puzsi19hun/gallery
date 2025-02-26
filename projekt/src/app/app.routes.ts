@@ -15,5 +15,5 @@ export const routes: Routes = [
     { path: "logged-main", component: LoggedMainComponent },
     { path: 'new-drawing', component: NewDrawingComponent },
     { path: 'profil', component: ProfilComponent },
-    { path: 'gallery', component: GalleryComponent }
+    { path: 'gallery', component: GalleryComponent },
 ];
