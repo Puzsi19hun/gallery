@@ -6,31 +6,39 @@
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   height: 100%;
   border: 1px solid rgba(81, 255, 0, 0.75);
-  padding: 2rem 5rem;
+  padding: 0rem 5rem;
   border-radius: 1rem;
   text-align: center;
   color: #6dffff;
+  max-width: 20rem;
   max-height: 25rem;
   min-height: 25rem;
+  position: relative;
+}
+
+.card > *:not(.bottom) {
+  flex-grow: 0; /* Ne osztódjon el a tér, minden maradjon fent */
 }
 
 .name {
-  display: flex;
-  margin: 0 auto;
-  justify-content: flex-start;
-  margin-top: -1rem;
+  text-align: center;
+  overflow-wrap: break-word;
+  margin-bottom: 1rem; /* Kis távolság a név alatt */
+  white-space: normal; /* Mindkettő természetesen törik */
 }
 
 .bottom {
-  display: flex;
+  position: absolute;
+  bottom: 0.1rem; /* Most 0.1rem a margó */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  word-break: break-word;
+  overflow-wrap: break-word;
   width: 100%;
-  height: 100%;
-  margin-bottom: -1rem;
-  justify-content: center;
-  align-items: flex-end;
 }
 
 @media only screen and (max-width: 780px) {
