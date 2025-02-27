@@ -16,12 +16,6 @@ export class GalleryComponent implements OnInit {
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
 
-  ngAfterViewInit(): void {
-    if (localStorage.getItem('logged') == null || this.dataservice.get_navbar() == "guest" || localStorage.getItem('token') == null) {
-      this.dataservice.logout()
-      this.dataservice.move_to("/")
-    }
-  }
 
   ngOnInit(): void {
     let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getHexCodes";

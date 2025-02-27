@@ -49,19 +49,9 @@ export class DrawingCardComponent implements AfterViewInit {
 
 
     ngAfterViewInit(): void {
-        if (!this.isUserLoggedIn()) {
-            this.dataservice.logout();
-            this.dataservice.move_to("/");
-            return;
-        }
         this.drawCanvas();
     }
 
-    private isUserLoggedIn(): boolean {
-        return localStorage.getItem('logged') !== null &&
-            this.dataservice.get_navbar() !== "guest" &&
-            localStorage.getItem('token') !== null;
-    }
 
     private drawCanvas() {
         if (!this.canvasRef) return;
