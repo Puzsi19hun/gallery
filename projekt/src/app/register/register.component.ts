@@ -1,16 +1,22 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { PasswordModule } from 'primeng/password';
+import { DividerModule } from 'primeng/divider';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule],
+  imports: [FormsModule, ToastModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  constructor(private dataservice: DataserviceService, private http: HttpClient) { }
+  constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef, private messageService: MessageService) { }
+
+
   ngOnInit(): void {
     if (localStorage.getItem('logged') == "true") {
       this.dataservice.move_to("/logged-main")
@@ -31,17 +37,16 @@ export class RegisterComponent {
       this.http.post(url, formData, { headers: headerss, observe: "response" }).subscribe(
         data => {
           console.log(data)
-          document.getElementById('hiba')!.innerHTML = "Registration successful!"
-          document.getElementById('hiba')!.style.color = "green"
+          this.dataservice.registerPopup()
         },
         error => {
-          document.getElementById('hiba')!.innerHTML = error
+          this.dataservice.errorPopup(error)
         }
       )
 
     }
     else {
-      document.getElementById('hiba')!.innerHTML = "The passwords do not match!"
+      this.dataservice.errorPopup("The passwords do not match!")
     }
   }
 }

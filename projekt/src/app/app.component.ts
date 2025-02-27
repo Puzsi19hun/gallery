@@ -4,11 +4,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { DataserviceService } from './dataservice.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { Subscription } from 'rxjs';
+import { MessageService } from "primeng/api";
+import { ToastModule } from 'primeng/toast';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HttpClientModule, NavbarComponent],
+  imports: [RouterOutlet, HttpClientModule, NavbarComponent, ToastModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -1,22 +1,24 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DataserviceService } from '../dataservice.service';
 import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink],
+  imports: [RouterLink, ToastModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  constructor(private dataservice: DataserviceService, private http: HttpClient) { }
+  constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef, private messageService: MessageService) { }
+
 
   @Input({ required: true }) logged_in: boolean = false
 
 
-  addActive(e: any)
-  {
+  addActive(e: any) {
     document.querySelector(".active")?.classList.remove('active')
     e.classList.add('active')
   }
@@ -35,6 +37,8 @@ export class NavbarComponent {
         }
       }
     )
+
+    this.dataservice.logoutPopup()
   }
 }
 

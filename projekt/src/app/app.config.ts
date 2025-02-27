@@ -7,6 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideClientHydration } from '@angular/platform-browser';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { MessageService } from 'primeng/api';
 
 
 //This (provideHttpClient) will help us to resolve the issue 
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
 		provideClientHydration(),
 		provideAnimationsAsync(),
 		provideHttpClient(),
+		MessageService,
 		providePrimeNG({
 			theme: {
 				preset: Aura
