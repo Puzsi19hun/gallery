@@ -22,7 +22,8 @@ export class NewDrawingComponent {
   private erasing = false;
   private pipette = false;
   bucketMode: boolean = false;
-
+  private history: string[][][] = [];
+private redoStack: string[][][] = [];
   gridWidth: number = 16;
   gridHeight: number = 16;
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
@@ -89,7 +90,7 @@ export class NewDrawingComponent {
     }
 
     // Hover effektus, ha van hoverelt cella
-    if (this.hoverX !== null && this.hoverY !== null && !this.showDialog &&!this.savingDialog) {
+    if (this.hoverX !== null && this.hoverY !== null && !this.showDialog && !this.savingDialog) {
       ctx.fillStyle = this.color;
       ctx.fillRect(this.hoverX * cellWidth, this.hoverY * cellHeight, cellWidth, cellHeight);
     }
@@ -161,18 +162,22 @@ export class NewDrawingComponent {
   }
 
 
-  clear() {
-    if (!this.ctx) return;
+  // Modify the clear method to capture state before clearing
+clear() {
+  if (!this.ctx) return;
 
-    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  // Capture state before clearing
+  this.captureState();
 
-    // Tisztítsd meg a pixelGrid és a dirtyGrid tömböket is
-    this.initGrid();
-    this.initDirtyGrid();
+  this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
-    // Frissítsd a rajzot
-    this.drawGrid();
-  }
+  // Clean up pixelGrid and dirtyGrid arrays
+  this.initGrid();
+  this.initDirtyGrid();
+
+  // Update the drawing
+  this.drawGrid();
+}
 
   toggleBucketMode() {
     this.bucketMode = !this.bucketMode;
@@ -203,23 +208,25 @@ export class NewDrawingComponent {
 
   fillArea(event: MouseEvent) {
     if (!this.ctx) return;
-
+  
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const scaleX = this.canvas.nativeElement.width / rect.width;
     const scaleY = this.canvas.nativeElement.height / rect.height;
-
+  
     const x = Math.floor((event.clientX - rect.left) * scaleX / (this.canvas.nativeElement.width / this.gridWidth));
     const y = Math.floor((event.clientY - rect.top) * scaleY / (this.canvas.nativeElement.height / this.gridHeight));
-
+  
     if (x < 0 || x >= this.gridWidth || y < 0 || y >= this.gridHeight) return;
-
+  
     const targetColor = this.pixelGrid[y][x];
     if (targetColor === this.color) return;
-
+  
+    // Capture state before making changes
+    this.captureState();
+  
     this.fillAreaRecursive(x, y, targetColor);
     this.drawGrid();
   }
-
 
 
 
@@ -245,6 +252,8 @@ export class NewDrawingComponent {
   onResize(event: any) {
     this.resizeCanvas();
   }
+
+
 
   resizeCanvas() {
     if (!this.canvas) return;
@@ -302,13 +311,12 @@ export class NewDrawingComponent {
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
-    if(!this.savingDialog)
-    {
+    if (!this.savingDialog) {
       if (this.pipette) {
         this.handlePipetteClick(event);
         return;
       }
-  
+
       if (this.bucketMode) {
         this.fillArea(event);
       } else {
@@ -321,7 +329,7 @@ export class NewDrawingComponent {
         this.drawPixel(event);
       }
     }
-    
+
   }
 
 
@@ -373,19 +381,26 @@ export class NewDrawingComponent {
 
 
   drawPixel(event: MouseEvent) {
-    if (!this.ctx || this.pipette) return; // Ne rajzoljunk pipetta módban
-
+    if (!this.ctx || this.pipette) return;
+  
     if (this.hoverX !== null && this.hoverY !== null && !this.showDialog && !this.savingDialog) {
+      // Capture state before making changes
+      this.captureState();
+  
       if (this.drawing) {
         this.pixelGrid[this.hoverY][this.hoverX] = this.color;
-        this.dirtyGrid[this.hoverY][this.hoverX] = true;
       } else if (this.erasing) {
         this.pixelGrid[this.hoverY][this.hoverX] = 'white';
-        this.dirtyGrid[this.hoverY][this.hoverX] = true;
       }
+  
+      this.dirtyGrid[this.hoverY][this.hoverX] = true;
       this.drawGrid();
     }
   }
+  
+
+
+
 
   @HostListener('mouseleave')
   onMouseLeave() {
@@ -485,5 +500,87 @@ export class NewDrawingComponent {
   onSave(name: any, canBeEdited: any) {
     this.savePixelArt(name, canBeEdited)
   }
+
+  // Add these methods to your NewDrawingComponent class
+
+// Capture the current state before making changes
+captureState() {
+  // Make a deep copy of the current pixel grid state
+  const stateCopy = this.pixelGrid.map(row => [...row]);
+  
+  // Push to history, limiting history size to prevent memory issues
+  this.history.push(stateCopy);
+  
+  // Clear redo stack when a new action is performed
+  this.redoStack = [];
+  
+  // Limit history size to prevent memory issues (optional)
+  if (this.history.length > 20) {
+    this.history.shift(); // Remove oldest state
+  }
+}
+
+// Undo the last action
+undo() {
+  if (this.history.length === 0) return;
+  
+  // Save current state to redo stack before undoing
+  const currentState = this.pixelGrid.map(row => [...row]);
+  this.redoStack.push(currentState);
+  
+  // Restore previous state
+  const previousState = this.history.pop();
+  if (previousState) {
+    this.pixelGrid = previousState;
+    
+    // Mark all cells as dirty to ensure complete redraw
+    this.dirtyGrid = Array.from({ length: this.gridHeight }, () =>
+      Array(this.gridWidth).fill(true)
+    );
+    
+    // Redraw the canvas
+    this.drawGrid();
+  }
+}
+
+// Redo the last undone action
+redo() {
+  if (this.redoStack.length === 0) return;
+  
+  // Save current state to history before redoing
+  const currentState = this.pixelGrid.map(row => [...row]);
+  this.history.push(currentState);
+  
+  // Restore the next state
+  const nextState = this.redoStack.pop();
+  if (nextState) {
+    this.pixelGrid = nextState;
+    
+    // Mark all cells as dirty to ensure complete redraw
+    this.dirtyGrid = Array.from({ length: this.gridHeight }, () =>
+      Array(this.gridWidth).fill(true)
+    );
+    
+    // Redraw the canvas
+    this.drawGrid();
+  }
+}
+
+// Keyboard event listener for Ctrl+Z (undo) and Ctrl+Y (redo)
+@HostListener('window:keydown', ['$event'])
+handleKeyboardEvent(event: KeyboardEvent) {
+  // Undo with Ctrl+Z
+  if (event.ctrlKey && event.key === 'z') {
+    event.preventDefault();
+    this.undo();
+  }
+  
+  // Redo with Ctrl+Y or Ctrl+Shift+Z
+  if ((event.ctrlKey && event.key === 'y') || 
+      (event.ctrlKey && event.shiftKey && event.key === 'z')) {
+    event.preventDefault();
+    this.redo();
+  }
+}
 
 }

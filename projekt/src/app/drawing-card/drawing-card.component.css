@@ -9,11 +9,11 @@
   align-items: center;
   height: 100%;
   border: 1px solid rgba(81, 255, 0, 0.75);
-  padding: 0rem 5rem;
   border-radius: 1rem;
   text-align: center;
   color: #6dffff;
   max-width: 20rem;
+  min-width: 20rem;
   max-height: 25rem;
   min-height: 25rem;
   position: relative;
@@ -23,12 +23,21 @@
   flex-grow: 0; /* Ne osztódjon el a tér, minden maradjon fent */
 }
 
+
+
 .name {
   text-align: center;
-  overflow-wrap: break-word;
-  margin-bottom: 1rem; /* Kis távolság a név alatt */
-  white-space: normal; /* Mindkettő természetesen törik */
+  margin-bottom: 1rem;
+  white-space: normal; /* Engedi a törést */
+  word-break: break-word; /* Ha szükséges, törjön */
+  overflow-wrap: break-word; /* Ha egy szó túl hosszú, akkor törjön */
+  width: 100%; /* Teljes szélességet kihasználja */
+  max-width: 100%; /* Nem lehet nagyobb a szülőjénél */
+ 
 }
+
+
+
 
 .bottom {
   position: absolute;
