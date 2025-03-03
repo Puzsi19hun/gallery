@@ -21,7 +21,6 @@ export class NewDrawingComponent {
   private drawing = false;
   private erasing = false;
   private pipette = false;
-
   bucketMode: boolean = false;
 
   gridWidth: number = 16;
@@ -90,7 +89,7 @@ export class NewDrawingComponent {
     }
 
     // Hover effektus, ha van hoverelt cella
-    if (this.hoverX !== null && this.hoverY !== null && !this.showDialog) {
+    if (this.hoverX !== null && this.hoverY !== null && !this.showDialog &&!this.savingDialog) {
       ctx.fillStyle = this.color;
       ctx.fillRect(this.hoverX * cellWidth, this.hoverY * cellHeight, cellWidth, cellHeight);
     }
@@ -151,6 +150,8 @@ export class NewDrawingComponent {
     this.pipette = !this.pipette;
     if (this.pipette) {
       document.querySelector("#pipette")?.classList.add('pipetteActive')
+      document.querySelector("#bucket")?.classList.remove('bucketActive')
+      this.bucketMode = false
     }
     else {
       document.querySelector('#pipette')?.classList.remove('pipetteActive')
@@ -178,6 +179,8 @@ export class NewDrawingComponent {
 
     if (this.bucketMode) {
       document.querySelector("#bucket")?.classList.add('bucketActive')
+      document.querySelector("#pipette")?.classList.remove('pipetteActive')
+      this.pipette = false
     }
     else {
       document.querySelector('#bucket')?.classList.remove('bucketActive')
@@ -299,22 +302,26 @@ export class NewDrawingComponent {
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
-    if (this.pipette) {
-      this.handlePipetteClick(event);
-      return;
-    }
-
-    if (this.bucketMode) {
-      this.fillArea(event);
-    } else {
-      // Drawing or erasing (left or right button)
-      if (event.button === 0) {
-        this.drawing = true;
-      } else if (event.button === 2) {
-        this.erasing = true;
+    if(!this.savingDialog)
+    {
+      if (this.pipette) {
+        this.handlePipetteClick(event);
+        return;
       }
-      this.drawPixel(event);
+  
+      if (this.bucketMode) {
+        this.fillArea(event);
+      } else {
+        // Drawing or erasing (left or right button)
+        if (event.button === 0) {
+          this.drawing = true;
+        } else if (event.button === 2) {
+          this.erasing = true;
+        }
+        this.drawPixel(event);
+      }
     }
+    
   }
 
 
@@ -368,7 +375,7 @@ export class NewDrawingComponent {
   drawPixel(event: MouseEvent) {
     if (!this.ctx || this.pipette) return; // Ne rajzoljunk pipetta módban
 
-    if (this.hoverX !== null && this.hoverY !== null && !this.showDialog) {
+    if (this.hoverX !== null && this.hoverY !== null && !this.showDialog && !this.savingDialog) {
       if (this.drawing) {
         this.pixelGrid[this.hoverY][this.hoverX] = this.color;
         this.dirtyGrid[this.hoverY][this.hoverX] = true;

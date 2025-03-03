@@ -1,8 +1,29 @@
+/* Alapértelmezett navigáció (asztali nézet) */
 .navbar {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  z-index: 1000;
 }
+
+
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: white;
+  position: absolute;
+  right: 1rem;
+  top: 0.3rem;
+  z-index: 10000;
+}
+
+.asd
+  {
+    margin-left: -0.725rem;
+    margin-top: 1rem;
+  }
+
 
 .navbar div a {
   text-decoration: none;
@@ -24,7 +45,9 @@ a {
   justify-content: flex-end;
   width: 100%;
   gap: 1rem;
-  margin-top: 1.25rem;
+  margin-top: 0.25rem;
+  z-index: 1000;
+  
 }
 
 .active {
@@ -35,6 +58,7 @@ a {
   position: absolute;
   display: flex;
   align-items: flex-start;
+  margin-left: -0.725rem;
   text-decoration: none;
   cursor: pointer;
 }
@@ -45,4 +69,35 @@ a {
 .navbar > div > a:hover {
   transition: 0.15s all ease-out;
   color: rgb(81, 255, 0);
+}
+
+/* Mobil nézet */
+@media (max-width: 768px) {
+  .right {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 200px;
+    padding: 1rem;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.9); /* Világos háttér */
+
+  }
+
+  .asd
+  {
+    font-size: 1rem;
+    margin-left: -0.725rem;
+    margin-top: 1rem;
+  }
+
+  .right.active {
+    display: flex;
+  }
+
+  .hamburger {
+    display: block;
+  }
 }

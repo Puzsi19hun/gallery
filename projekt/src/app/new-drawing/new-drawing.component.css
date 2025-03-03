@@ -172,7 +172,7 @@ input {
 
 .dialog {
   position: absolute;
-  background-color: rgba(44, 43, 43, 0.7);
+  background-color: rgba(44, 43, 43, 1);
   width: 30%;
   height: 30%;
   display: flex;
@@ -235,8 +235,8 @@ canvas {
 
 @media only screen and (max-width: 1450px) {
   .dialog {
-    width: 70%;
-    height: 70%;
+    width: 40%;
+    height: 40%;
   }
 
   .savingDialog {
@@ -256,7 +256,7 @@ canvas {
   }
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 768px) {
   .container {
     margin: 0;
     margin-left: -0.5rem;
@@ -297,6 +297,14 @@ canvas {
   .dialog {
     width: 80%;
     height: 30%;
+  }
+
+  .dialog input {
+    font-size: 0.8rem;
+  }
+
+  .dialog button{
+    font-size: 1.25rem;
   }
 
   .savingDialog {

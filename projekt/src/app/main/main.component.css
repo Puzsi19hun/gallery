@@ -3,7 +3,8 @@
   height: 100vh;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 1rem;
+  margin-top: 4rem;
+  margin-left: 1rem;
 }
 
 .main > p {

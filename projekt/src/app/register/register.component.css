@@ -77,8 +77,22 @@ button:hover {
 
 @media only screen and (max-width: 700px) {
   .loginContainer {
-    width: 70%;
-    height: 50%;
+    width: 90%;
+    height: 60%;
+  }
+
+  input {
+    height: 2rem;
+    font-size: 0.8rem;
+  }
+  
+  button {
+    height: 3rem;
+    width: 10rem;
+    margin-top: 1rem;
+    margin: 0.225rem auto;
+    font-family: "HISKYFLIPPERHIBOLD", serif;
+    font-size: 1.4rem;
   }
 }
 
