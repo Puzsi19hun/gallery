@@ -6,6 +6,8 @@ import { LoggedMainComponent } from './logged-main/logged-main.component';
 import { NewDrawingComponent } from './new-drawing/new-drawing.component';
 import { ProfilComponent } from './profil/profil.component';
 import { GalleryComponent } from './gallery/gallery.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { NewPassComponent } from './new-pass/new-pass.component';
 
 export const routes: Routes = [
     { path: '', component: LoginComponent },
@@ -16,4 +18,6 @@ export const routes: Routes = [
     { path: 'new-drawing', component: NewDrawingComponent },
     { path: 'profil', component: ProfilComponent },
     { path: 'gallery', component: GalleryComponent },
+    { path: 'forgot-password', component: ForgotPasswordComponent},
+    { path: 'new-pass', component: NewPassComponent }
 ];

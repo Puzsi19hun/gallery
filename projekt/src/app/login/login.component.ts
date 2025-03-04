@@ -61,4 +61,9 @@ export class LoginComponent implements AfterViewInit {
 
     )
   }
+
+  onForgotPass()
+  {
+    this.dataservice.move_to('/forgot-password');
+  }
 }
