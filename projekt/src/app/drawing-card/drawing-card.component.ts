@@ -70,18 +70,22 @@ export class DrawingCardComponent implements AfterViewInit {
         canvas.height = this.CANVAS_SIZE;
 
         // Skálázás kiszámítása
-        const pixelSize = Math.floor(Math.min(this.CANVAS_SIZE / gridWidth, this.CANVAS_SIZE / gridHeight));
+        const pixelSizeX = this.CANVAS_SIZE / gridWidth;
+        const pixelSizeY = this.CANVAS_SIZE / gridHeight;
+        const pixelSize = Math.min(pixelSizeX, pixelSizeY);
+
 
         // Kép középre igazítása
-        const offsetX = Math.floor((this.CANVAS_SIZE - gridWidth * pixelSize) / 2);
-        const offsetY = Math.floor((this.CANVAS_SIZE - gridHeight * pixelSize) / 2);
+        const offsetX = (this.CANVAS_SIZE - gridWidth * pixelSize) / 2;
+        const offsetY = (this.CANVAS_SIZE - gridHeight * pixelSize) / 2;
 
         for (let i = 0; i < this.hexCodes.length; i++) {
-            const x = (i % gridWidth) * pixelSize + offsetX;
-            const y = Math.floor(i / gridWidth) * pixelSize + offsetY;
+            const x = Math.round((i % gridWidth) * pixelSize + offsetX);
+            const y = Math.round(Math.floor(i / gridWidth) * pixelSize + offsetY);
 
             ctx.fillStyle = this.hexCodes[i];
-            ctx.fillRect(x, y, pixelSize, pixelSize);
+            ctx.strokeStyle = 'transparent'; // Kikapcsolja a rácsvonalakat
+            ctx.fillRect(x, y, Math.ceil(pixelSize), Math.ceil(pixelSize));
         }
     }
 
