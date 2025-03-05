@@ -1,9 +1,28 @@
 <div class="container">
+    @if(ExpandCard)
+    {
+    <div class="dialogContainer">
+        <div class="dialog">
+            <div class="mainContainer">
+                <div>
+                    <h1>{{cardName}}</h1>
+                </div>
+                <div>
+                    <input #width required type="text" name="" placeholder="Width:" id="">
+                </div>
+            </div>
+            <div class="dialogButtons">
+                <button class="dialogButton" (click)="ExpandCard = false">Cancel</button>
+            </div>
+        </div>
+    </div>
+    }
+
     <h1 class="center show">The Gallery</h1>
     <div class="drawingsContainer">
         <div *ngFor="let item of data" class="drawings">
-            <app-drawing-card [name]="item.name" [user_id]="item.user_id" [image_id]="item.image_id"
-                [width]="item.width" [hexCodes]="item.hex_codes"></app-drawing-card>
+            <app-drawing-card (expandCard)="onExpand($event)" [name]="item.name" [user_id]="item.user_id"
+                [image_id]="item.image_id" [width]="item.width" [hexCodes]="item.hex_codes"></app-drawing-card>
         </div>
     </div>
 </div>

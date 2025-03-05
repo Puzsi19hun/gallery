@@ -23,14 +23,11 @@ export class ForgotPasswordComponent {
 
     this.http.post(url, formData, { headers: headerss, withCredentials: true }).subscribe(
       (data: any) => {
-        console.log(data)
-        document.getElementById('text')!.innerHTML = "Email has been sent!"
-        document.getElementById('text')!.style.color = "rgb(81, 255, 0)"
+        this.dataservice.SuccessPopup('Email has been sent!')
         this.cdr.detectChanges()
       },
       error => {
-        document.getElementById('text')!.innerHTML = "No user found!"
-        document.getElementById('text')!.style.color = "rgb(255, 0, 0)"
+        this.dataservice.errorPopup('No user found!')
         this.cdr.detectChanges()
       }
     )

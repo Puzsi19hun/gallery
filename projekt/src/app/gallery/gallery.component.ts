@@ -13,6 +13,10 @@ import { DrawingCardComponent } from '../drawing-card/drawing-card.component';
 export class GalleryComponent implements OnInit {
   data: any[] = []
   user: any[] = []
+
+  cardName = "";
+  cardHex: any[] = [];
+  ExpandCard = false;
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
 
@@ -27,5 +31,11 @@ export class GalleryComponent implements OnInit {
         this.data = data[0]
       }
     )
+  }
+
+  onExpand(value: any) {
+    this.ExpandCard = true
+    this.cardName = value.name
+    this.cardHex = value.hexCodes
   }
 }

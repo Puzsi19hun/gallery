@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class DrawingCardComponent implements AfterViewInit {
     @Input({ required: true }) width = "";
     @Input({ required: true }) name = "";
     @Input({ required: true }) hexCodes: string[] = [];
+    @Output() expandCard = new EventEmitter<any>()
     userName = "";
     private readonly CANVAS_SIZE = 200; // Fix méretű előnézet (200x200 px)
 
@@ -42,9 +43,6 @@ export class DrawingCardComponent implements AfterViewInit {
                 this.data = data[0];
             }
         );
-
-
-
     }
 
 
@@ -52,6 +50,9 @@ export class DrawingCardComponent implements AfterViewInit {
         this.drawCanvas();
     }
 
+    onClick() {
+        this.expandCard.emit({ name: this.name, hex_codes: this.hexCodes })
+    }
 
     private drawCanvas() {
         if (!this.canvasRef) return;

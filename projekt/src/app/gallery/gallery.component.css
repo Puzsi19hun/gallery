@@ -15,6 +15,47 @@
   border-radius: 1rem;
 }
 
+.dialogButtons {
+  position: relative;
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.dialogContainer {
+  z-index: 1;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  height: 80vh;
+  width: 100vw;
+  align-items: center;
+}
+
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  position: absolute;
+  background-color: rgba(44, 43, 43, 1);
+  width: 30%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  padding: 2rem 0;
+}
+
+
 .center {
   display: flex;
   justify-content: center;
@@ -31,18 +72,19 @@
 }
 
 @media only screen and (max-width: 780px) {
-  .container
-  {
+  .container {
     margin-top: 5rem;
   }
+
   .drawingsContainer {
-    height: 78vh;}
+    height: 78vh;
+  }
 
   .center {
     margin-bottom: 2rem;
   }
-  .show 
-  {
+
+  .show {
     display: none;
   }
 }

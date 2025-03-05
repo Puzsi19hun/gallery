@@ -65,6 +65,15 @@ export class DataserviceService {
     });
   }
 
+  SuccessPopup(text: string)
+  {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: text,
+    });
+  }
+
   registerPopup() {
     this.messageService.add({
       severity: "success",

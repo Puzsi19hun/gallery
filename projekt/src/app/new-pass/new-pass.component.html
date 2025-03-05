@@ -1,14 +1,14 @@
 <div class="container">
     <div class="formContainer">
-        <form #form class="form" ngNativeValidate>
+        <form #form class="form" ngNativeValidate (ngSubmit)="onSubmit(pass1.value, pass2.value)">
             <div>
                 <div>
                     <label for="">New Password</label>
-                    <input #pass1 required type=" text">
+                    <input #pass1 required type="password">
                 </div>
                 <div>
                     <label for="">New Password again</label>
-                    <input #pass12 required type=" text">
+                    <input #pass2 required type="password">
                 </div>
             </div>
             <div>

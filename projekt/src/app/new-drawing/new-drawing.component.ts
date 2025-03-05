@@ -22,8 +22,6 @@ export class NewDrawingComponent {
   private erasing = false;
   private pipette = false;
   bucketMode: boolean = false;
-  private history: string[][][] = [];
-private redoStack: string[][][] = [];
   gridWidth: number = 16;
   gridHeight: number = 16;
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
@@ -167,7 +165,6 @@ clear() {
   if (!this.ctx) return;
 
   // Capture state before clearing
-  this.captureState();
 
   this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
@@ -221,8 +218,6 @@ clear() {
     const targetColor = this.pixelGrid[y][x];
     if (targetColor === this.color) return;
   
-    // Capture state before making changes
-    this.captureState();
   
     this.fillAreaRecursive(x, y, targetColor);
     this.drawGrid();
@@ -384,9 +379,7 @@ clear() {
     if (!this.ctx || this.pipette) return;
   
     if (this.hoverX !== null && this.hoverY !== null && !this.showDialog && !this.savingDialog) {
-      // Capture state before making changes
-      this.captureState();
-  
+      // Capture state before making changes  
       if (this.drawing) {
         this.pixelGrid[this.hoverY][this.hoverX] = this.color;
       } else if (this.erasing) {
@@ -503,84 +496,7 @@ clear() {
 
   // Add these methods to your NewDrawingComponent class
 
-// Capture the current state before making changes
-captureState() {
-  // Make a deep copy of the current pixel grid state
-  const stateCopy = this.pixelGrid.map(row => [...row]);
-  
-  // Push to history, limiting history size to prevent memory issues
-  this.history.push(stateCopy);
-  
-  // Clear redo stack when a new action is performed
-  this.redoStack = [];
-  
-  // Limit history size to prevent memory issues (optional)
-  if (this.history.length > 20) {
-    this.history.shift(); // Remove oldest state
-  }
-}
-
-// Undo the last action
-undo() {
-  if (this.history.length === 0) return;
-  
-  // Save current state to redo stack before undoing
-  const currentState = this.pixelGrid.map(row => [...row]);
-  this.redoStack.push(currentState);
-  
-  // Restore previous state
-  const previousState = this.history.pop();
-  if (previousState) {
-    this.pixelGrid = previousState;
-    
-    // Mark all cells as dirty to ensure complete redraw
-    this.dirtyGrid = Array.from({ length: this.gridHeight }, () =>
-      Array(this.gridWidth).fill(true)
-    );
-    
-    // Redraw the canvas
-    this.drawGrid();
-  }
-}
-
-// Redo the last undone action
-redo() {
-  if (this.redoStack.length === 0) return;
-  
-  // Save current state to history before redoing
-  const currentState = this.pixelGrid.map(row => [...row]);
-  this.history.push(currentState);
-  
-  // Restore the next state
-  const nextState = this.redoStack.pop();
-  if (nextState) {
-    this.pixelGrid = nextState;
-    
-    // Mark all cells as dirty to ensure complete redraw
-    this.dirtyGrid = Array.from({ length: this.gridHeight }, () =>
-      Array(this.gridWidth).fill(true)
-    );
-    
-    // Redraw the canvas
-    this.drawGrid();
-  }
-}
-
 // Keyboard event listener for Ctrl+Z (undo) and Ctrl+Y (redo)
-@HostListener('window:keydown', ['$event'])
-handleKeyboardEvent(event: KeyboardEvent) {
-  // Undo with Ctrl+Z
-  if (event.ctrlKey && event.key === 'z') {
-    event.preventDefault();
-    this.undo();
-  }
-  
-  // Redo with Ctrl+Y or Ctrl+Shift+Z
-  if ((event.ctrlKey && event.key === 'y') || 
-      (event.ctrlKey && event.shiftKey && event.key === 'z')) {
-    event.preventDefault();
-    this.redo();
-  }
-}
+
 
 }
