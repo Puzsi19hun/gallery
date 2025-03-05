@@ -32,7 +32,6 @@ export class LoggedMainComponent implements OnInit, AfterViewInit {
     else {
       this.http.get(url, { withCredentials: true }).subscribe(
         (data: any) => {
-          console.log(data);
           this.nev = data.name;
           this.email = data.email;
         },

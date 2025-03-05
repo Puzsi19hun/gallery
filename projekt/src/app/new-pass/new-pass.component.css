@@ -39,7 +39,7 @@
   flex-direction: column;
 }
 
-form > div > label {
+form > div > div > label {
   margin-left: 0.1rem;
   margin-bottom: 0.5rem;
 }

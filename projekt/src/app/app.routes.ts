@@ -19,5 +19,5 @@ export const routes: Routes = [
     { path: 'profil', component: ProfilComponent },
     { path: 'gallery', component: GalleryComponent },
     { path: 'forgot-password', component: ForgotPasswordComponent },
-    { path: 'new-pass/:token', component: NewPassComponent }
+    { path: 'new-pass', component: NewPassComponent }
 ];
