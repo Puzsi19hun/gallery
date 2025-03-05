@@ -18,6 +18,6 @@ export const routes: Routes = [
     { path: 'new-drawing', component: NewDrawingComponent },
     { path: 'profil', component: ProfilComponent },
     { path: 'gallery', component: GalleryComponent },
-    { path: 'forgot-password', component: ForgotPasswordComponent},
-    { path: 'new-pass', component: NewPassComponent }
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'new-pass/:token', component: NewPassComponent }
 ];

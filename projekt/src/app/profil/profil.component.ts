@@ -18,6 +18,11 @@ export class ProfilComponent {
       this.dataservice.move_to("/")
     }
   }
+
+  onForgotPass() {
+    this.dataservice.move_to('/forgot-password');
+  }
+
   ngOnInit(): void {
     let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/user";
     let headers = new HttpHeaders();

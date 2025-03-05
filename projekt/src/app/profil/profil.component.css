@@ -1,6 +1,27 @@
 .container {
-    margin-top: 4rem;
-    margin-left: 2rem;
-    color: red;
-  }
-  
+  margin-top: 4rem;
+  margin-left: 2rem;
+  color: red;
+}
+
+button {
+  border: none;
+  border-radius: 0.75rem;
+  background-color: #006391;
+  color: white;
+  height: 3rem;
+  width: 10rem;
+  margin-top: 1rem;
+  font-family: "HISKYFLIPPERHIBOLD", serif;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: 0.2s ease-out;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), 0 15px 40px rgba(0, 0, 0, 0.05);
+}
+
+.link {
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1.5rem;
+  color: sandybrown;
+}
