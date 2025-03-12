@@ -28,7 +28,8 @@ export class GalleryComponent implements OnInit {
     headers.set('Content-Type', 'application/json');
     this.http.get(url, { headers: headers, withCredentials: true }).subscribe(
       (data: any) => {
-        this.data = data[0]
+        console.log(data)
+        this.data = data
       }
     )
   }

@@ -40,7 +40,7 @@ export class DrawingCardComponent implements AfterViewInit {
 
         this.http.get(url, { headers, withCredentials: true }).subscribe(
             (data: any) => {
-                this.data = data[0];
+                this.data = data;
             }
         );
     }
