@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, AfterViewInit, Output, EventEmitter, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
 
 @Component({
@@ -74,8 +74,6 @@ export class DrawingCardComponent implements AfterViewInit {
             );
         }
     }
-
-
 
     private drawCanvas() {
         if (!this.canvasRef) return;
