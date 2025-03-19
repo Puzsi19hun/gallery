@@ -4,12 +4,8 @@
     <div class="dialogContainer">
         <div class="dialog">
             <div class="mainContainer">
-                <div>
-                    <h1>{{cardName}}</h1>
-                </div>
-                <div>
-                    <input #width required type="text" name="" placeholder="Width:" id="">
-                </div>
+                <h1 class="name">{{cardName}}</h1>
+                <canvas #canvass></canvas>
             </div>
             <div class="dialogButtons">
                 <button class="dialogButton" (click)="ExpandCard = false">Cancel</button>

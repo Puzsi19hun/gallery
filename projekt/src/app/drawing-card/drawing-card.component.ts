@@ -44,7 +44,7 @@ export class DrawingCardComponent implements AfterViewInit {
     }
 
     onClick() {
-        this.expandCard.emit({ name: this.name, hex_codes: this.hexCodes })
+        this.expandCard.emit({ name: this.name, hex_codes: this.hexCodes, width: this.width })
     }
 
     private drawCanvas() {
