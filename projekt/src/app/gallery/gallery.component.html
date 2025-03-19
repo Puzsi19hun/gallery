@@ -22,7 +22,8 @@
     <div class="drawingsContainer">
         <div *ngFor="let item of data" class="drawings">
             <app-drawing-card (expandCard)="onExpand($event)" [name]="item.name" [user_id]="item.user_id"
-                [image_id]="item.image_id" [width]="item.width" [hexCodes]="item.hex_codes"></app-drawing-card>
+                [image_id]="item.image_id" [width]="item.width" [user_name]="item.user_name"
+                [hexCodes]="item.hex_codes"></app-drawing-card>
         </div>
     </div>
 </div>

@@ -15,6 +15,7 @@ export class GalleryComponent implements OnInit {
   user: any[] = []
 
   cardName = "";
+  userName = "";
   cardHex: any[] = [];
   ExpandCard = false;
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
