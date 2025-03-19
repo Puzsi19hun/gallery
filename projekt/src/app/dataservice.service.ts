@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -15,6 +15,7 @@ export class DataserviceService {
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   public navbar = "guest";
   public token = "";
+  public id = 0;
 
   private get_logged_in_state(): boolean {
     return !!localStorage.getItem('logged');  // Or check cookies if you're storing it there
@@ -24,10 +25,22 @@ export class DataserviceService {
     localStorage.setItem('logged', "true")
     this.isAuthenticatedSubject.next(true);
     this.navbar = "logged"
+
+    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/user";
+    let headers = new HttpHeaders();
+    headers.set('X-Requested-With', 'XMLHttpRequest');
+    headers.set('Content-Type', 'application/json');
+
+    this.http.get(url, { withCredentials: true }).subscribe(
+      (data: any) => {
+        localStorage.setItem('id', data.id)
+      }
+    )
   }
 
   logout() {
     localStorage.removeItem('logged');
+    localStorage.removeItem('id');
     this.isAuthenticatedSubject.next(false);
     this.navbar = "guest"
     this.token = ""
@@ -65,8 +78,7 @@ export class DataserviceService {
     });
   }
 
-  SuccessPopup(text: string)
-  {
+  SuccessPopup(text: string) {
     this.messageService.add({
       severity: "success",
       summary: "Success",

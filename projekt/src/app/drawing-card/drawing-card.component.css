@@ -3,6 +3,20 @@
   justify-content: center;
 }
 
+.delete {
+  position: absolute;
+  font-size: 2rem;
+  color: red;
+  top: 0.6rem;
+  right: 0.33rem;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.delete:hover {
+  color: rgb(81, 255, 0);
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -23,8 +37,6 @@
   flex-grow: 0; /* Ne osztódjon el a tér, minden maradjon fent */
 }
 
-
-
 .name {
   text-align: center;
   padding: 0 0.5rem;
@@ -32,13 +44,9 @@
   white-space: nowrap; /* Megakadályozza a sortörést */
   overflow: hidden; /* Elrejti a kilógó részt */
   text-overflow: ellipsis; /* Három ponttal jelzi a levágást */
-  width: 100%; /* Biztosítja, hogy kitöltse a szülőt */
-  max-width: 100%;
+  width: 90%; /* Biztosítja, hogy kitöltse a szülőt */
+  max-width: 90%;
 }
-
-
-
-
 
 .bottom {
   position: absolute;
@@ -55,5 +63,8 @@
   .card {
     padding: 2rem 2rem;
     font-size: 0.8rem;
+
+    max-width: 16rem;
+    min-width: 16rem;
   }
 }

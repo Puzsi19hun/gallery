@@ -1,0 +1,15 @@
+.drawingsContainer {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+  border-radius: 1rem;
+}
+
+@media only screen and (max-width: 780px) {
+  .drawingsContainer {
+    height: 75vh;
+  }
+}

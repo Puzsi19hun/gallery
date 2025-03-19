@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { DataserviceService } from '../dataservice.service';
   styleUrl: './logged-main.component.css'
 })
 export class LoggedMainComponent implements OnInit, AfterViewInit {
-  constructor(private http: HttpClient, private dataservice: DataserviceService) { }
+  constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
   nev = ""
   email = ""
 

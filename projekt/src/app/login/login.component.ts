@@ -52,6 +52,7 @@ export class LoginComponent implements AfterViewInit {
         this.dataservice.loginPopup()
         this.dataservice.login();
         this.dataservice.set_token(data.message)
+
         this.cdr.detectChanges()
         this.dataservice.move_to('/logged-main')
       },
@@ -62,8 +63,7 @@ export class LoginComponent implements AfterViewInit {
     )
   }
 
-  onForgotPass()
-  {
+  onForgotPass() {
     this.dataservice.move_to('/forgot-password');
   }
 }

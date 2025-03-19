@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, AfterViewInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
 
 @Component({
@@ -17,6 +17,7 @@ export class DrawingCardComponent implements AfterViewInit {
     @Input({ required: true }) name = "";
     @Input({ required: true }) user_name = "";
     @Input({ required: true }) hexCodes: string[] = [];
+    @Input({ required: true }) profil = false;
     @Output() expandCard = new EventEmitter<any>()
     private readonly CANVAS_SIZE = 200; // Fix méretű előnézet (200x200 px)
 
@@ -39,6 +40,10 @@ export class DrawingCardComponent implements AfterViewInit {
     }
 
 
+    readLocalStorageValue(key: any) {
+        return localStorage.getItem(key);
+    }
+
     ngAfterViewInit(): void {
         this.drawCanvas();
     }
@@ -46,6 +51,31 @@ export class DrawingCardComponent implements AfterViewInit {
     onClick() {
         this.expandCard.emit({ name: this.name, hex_codes: this.hexCodes, width: this.width })
     }
+
+    onDelete() {
+        let conf = confirm('Are you sure you want to delete this drawing?')
+        if (conf) {
+            const headers = new HttpHeaders({
+                'X-Requested-With': 'XMLHttpRequest',
+            });
+
+            const url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/delete";
+            let formData: FormData = new FormData();
+            formData.append('kepid', this.image_id);
+            console.log(formData.get('kepid'))
+            this.http.post(url, formData, { headers: headers, withCredentials: true }).subscribe(
+                (data: any) => {
+                    window.location.reload()
+                    this.dataservice.SuccessPopup('Sikeres törlés!')
+                },
+                (error: any) => {
+                    this.dataservice.errorPopup("Sikertelen törlés, hiba: " + error)
+                }
+            );
+        }
+    }
+
+
 
     private drawCanvas() {
         if (!this.canvasRef) return;

@@ -51,8 +51,7 @@ export class GalleryComponent implements OnInit {
 
   private updateCanvasSize() {
     const screenWidth = window.innerWidth;
-    // A vászon mérete az ablak szélességének 50%-a legyen, de legalább 200px, maximum 500px
-    this.canvasSize = Math.max(this.MIN_CANVAS_SIZE, Math.min(this.MAX_CANVAS_SIZE, screenWidth * 0.5));
+    this.canvasSize = Math.max(this.MIN_CANVAS_SIZE, Math.min(this.MAX_CANVAS_SIZE, screenWidth - 50));
   }
 
   private drawCanvas() {

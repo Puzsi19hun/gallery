@@ -100,7 +100,7 @@ a:hover {
 
   .drawingsRight {
     margin-top: 0.5rem;
-    height: 80vh;
+    height: 82vh;
     width: 80%;
   }
 
@@ -133,6 +133,7 @@ a:hover {
     right: 3.5rem;
     width: 7rem;
     height: 25%;
+    z-index: 10;
     padding: 1rem;
     border-radius: 1rem;
     background: #070d13; /* Világos háttér */
@@ -160,6 +161,6 @@ a:hover {
     width: 95%;
   }
   .drawingsRight {
-    width: 95%;
+    width: 100%;
   }
 }

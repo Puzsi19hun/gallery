@@ -1,3 +1,5 @@
+@if(user_id != readLocalStorageValue("id"))
+{
 <div class="drawingsContainer">
     <div class="card">
         <h1 class="name">{{name}}</h1>
@@ -6,3 +8,19 @@
             {{user_name}}</h3>
     </div>
 </div>
+}
+@else
+{
+<div class="drawingsContainer">
+    <div class="card">
+        @if(profil)
+        {
+        <i (click)="onDelete()" class="far fa-times-circle delete"></i>
+        }
+        <h1 class="name">{{name}}</h1>
+        <canvas #canvas></canvas>
+        <h3 style="color: #33a100; font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Your drawing
+        </h3>
+    </div>
+</div>
+}
