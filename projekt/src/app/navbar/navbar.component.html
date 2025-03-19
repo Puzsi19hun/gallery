@@ -6,7 +6,12 @@
         <h1 (click)="navigateMain()" class="asd" style="color: rgb(81, 255, 0);">PixelArtSpotlight</h1>
     </div>
     <div class="hamburger" (click)="toggleMenu()">
+        @if (menuOpen) {
+        ✕
+        }
+        @else {
         ☰
+        }
     </div>
     <div class="right" [class.active]="menuOpen">
         <a #newdrawing routerLink="/new-drawing">New Drawing</a>
@@ -27,7 +32,12 @@
     </div>
     <!-- Hamburger Menü (Mobilra) -->
     <div class="hamburger" (click)="toggleMenu()">
+        @if (menuOpen) {
+        ✕
+        }
+        @else {
         ☰
+        }
     </div>
     <div class="right" [class.active]="menuOpen">
         <a routerLink="/gallery">Gallery</a>

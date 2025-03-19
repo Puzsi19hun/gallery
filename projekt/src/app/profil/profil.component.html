@@ -1,11 +1,28 @@
-<div class="container">
-    <p >Your name: {{nev}}</p>
-    <p>E-mail address: {{email}}</p>
-    <a class="link" (click)="onForgotPass()">Forgot password</a>
-    <div class="drawingsContainer">
-        <h1 class="drawingLabel">Your drawings: </h1>
-        <div class="drawings">
-
-        </div>
+<nav class="navbar">
+    <div class="left" [class.active]="menuOpen">
+        <a (click)="onProfil()" [class.active]="profilOpen" #profile>Profile</a>
+        <a #gallery (click)="onDrawings()" [class.active]="drawingsOpen">Drawings</a>
     </div>
-</div>
+    <div class="hamburger" (click)="toggleMenu()">
+        @if(menuOpen)
+        {
+        ✕
+        }
+        @else {
+        ☰
+        }
+    </div>
+
+    @if(profilOpen){
+    <div class="right">
+        <app-basic></app-basic>
+    </div>
+    }
+
+    @if(drawingsOpen)
+    {
+    <div class="drawingsRight">
+        <app-user-drawings></app-user-drawings>
+    </div>
+    }
+</nav>

@@ -6,7 +6,6 @@
   z-index: 1000;
 }
 
-
 .hamburger {
   display: none;
   font-size: 2rem;
@@ -18,12 +17,10 @@
   z-index: 10000;
 }
 
-.asd
-  {
-    margin-left: -0.725rem;
-    margin-top: 1rem;
-  }
-
+.asd {
+  margin-left: -0.725rem;
+  margin-top: 1rem;
+}
 
 .navbar div a {
   text-decoration: none;
@@ -47,7 +44,6 @@ a {
   gap: 1rem;
   margin-top: 0.25rem;
   z-index: 1000;
-  
 }
 
 .active {
@@ -77,17 +73,16 @@ a {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 40px;
-    right: 0;
+    top: 45px;
+    right: 10px;
     width: 200px;
     padding: 1rem;
     border-radius: 5px;
-    background: rgba(0, 0, 0, 0.9); /* Világos háttér */
-
+    background: #030608;
+    border-radius: 1rem;
   }
 
-  .asd
-  {
+  .asd {
     font-size: 1rem;
     margin-left: -0.725rem;
     margin-top: 1rem;

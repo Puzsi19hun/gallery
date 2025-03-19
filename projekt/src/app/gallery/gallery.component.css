@@ -76,12 +76,12 @@ button:hover {
 
 .dialog {
   position: absolute;
-  background-color: rgba(44, 43, 43, 0.86);
+  background-color: rgba(14, 12, 12, 0.99);
   width: 50%;
   height: 90%;
   display: flex;
   flex-direction: column;
-  border-radius: 1rem;
+  border-radius: 1.5rem;
   padding: 0.1rem 0;
   color: #6dffff;
 }
@@ -126,6 +126,12 @@ button:hover {
   .dialog {
     width: 90%;
     height: 70%;
+  }
+
+  button {
+    width: 8rem;
+    height: 2rem;
+    font-size: 1rem;
   }
 }
 
