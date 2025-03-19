@@ -15,9 +15,9 @@ export class DrawingCardComponent implements AfterViewInit {
     @Input({ required: true }) image_id = "";
     @Input({ required: true }) width = "";
     @Input({ required: true }) name = "";
+    @Input({ required: true }) user_name = "";
     @Input({ required: true }) hexCodes: string[] = [];
     @Output() expandCard = new EventEmitter<any>()
-    userName = "";
     private readonly CANVAS_SIZE = 200; // Fix méretű előnézet (200x200 px)
 
     constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
@@ -27,13 +27,6 @@ export class DrawingCardComponent implements AfterViewInit {
             'X-Requested-With': 'XMLHttpRequest',
             'Content-Type': 'application/json'
         });
-
-        let user_url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getUser/" + this.user_id
-        this.http.get(user_url, { headers, withCredentials: true }).subscribe(
-            (data: any) => {
-                this.userName = data.data.name
-            }
-        );
 
         const url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getHexCodes";
 
