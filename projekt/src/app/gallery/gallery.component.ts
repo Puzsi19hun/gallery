@@ -29,7 +29,7 @@ export class GalleryComponent implements OnInit {
     this.http.get(url, { headers: headers, withCredentials: true }).subscribe(
       (data: any) => {
         console.log(data)
-        this.data = data
+        this.data = data[0]
       }
     )
   }
