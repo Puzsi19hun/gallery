@@ -17,6 +17,12 @@
         {
         <i (click)="onDelete()" class="far fa-times-circle delete"></i>
         }
+        @if(canBeEdited == 1)
+        {
+        <span (click)="onEdit()" class="material-symbols-outlined edit">
+            draw
+        </span>
+        }
         <h1 class="name">{{name}}</h1>
         <canvas (click)="onClick()" #canvas></canvas>
         <h3 style="color: #33a100; font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Your drawing

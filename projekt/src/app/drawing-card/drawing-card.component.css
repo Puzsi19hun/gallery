@@ -13,9 +13,27 @@
   transition: all 0.2s ease-out;
 }
 
+
+.edit {
+  position: absolute;
+  font-size: 2rem;
+  color: white;
+  top: 0.75rem;
+  left: 0.75rem;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  user-select: none;
+}
+
 .delete:hover {
   color: rgb(81, 255, 0);
 }
+
+.edit:hover {
+  color: rgb(81, 255, 0);
+  font-size: 2.5rem;
+}
+
 
 .card {
   display: flex;
@@ -33,24 +51,30 @@
   position: relative;
 }
 
-.card > *:not(.bottom) {
-  flex-grow: 0; /* Ne osztódjon el a tér, minden maradjon fent */
+.card>*:not(.bottom) {
+  flex-grow: 0;
+  /* Ne osztódjon el a tér, minden maradjon fent */
 }
 
 .name {
   text-align: center;
   padding: 0 0.5rem;
   margin-bottom: 1rem;
-  white-space: nowrap; /* Megakadályozza a sortörést */
-  overflow: hidden; /* Elrejti a kilógó részt */
-  text-overflow: ellipsis; /* Három ponttal jelzi a levágást */
-  width: 90%; /* Biztosítja, hogy kitöltse a szülőt */
+  white-space: nowrap;
+  /* Megakadályozza a sortörést */
+  overflow: hidden;
+  /* Elrejti a kilógó részt */
+  text-overflow: ellipsis;
+  /* Három ponttal jelzi a levágást */
+  width: 90%;
+  /* Biztosítja, hogy kitöltse a szülőt */
   max-width: 90%;
 }
 
 .bottom {
   position: absolute;
-  bottom: 0.1rem; /* Most 0.1rem a margó */
+  bottom: 0.1rem;
+  /* Most 0.1rem a margó */
   left: 50%;
   transform: translateX(-50%);
   text-align: center;

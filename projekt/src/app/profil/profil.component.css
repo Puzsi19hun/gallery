@@ -13,7 +13,6 @@
 
 .navbar {
   margin-top: 4rem;
-  margin-left: 1rem;
   display: flex;
   gap: 2rem;
   justify-content: center;
@@ -76,6 +75,7 @@ a:hover {
   .navbar {
     margin-top: 6rem;
   }
+
   .right {
     width: 80%;
   }
@@ -83,6 +83,7 @@ a:hover {
   .drawingsRight {
     width: 80%;
   }
+
   .link {
     font-size: 1rem;
   }
@@ -136,7 +137,8 @@ a:hover {
     z-index: 10;
     padding: 1rem;
     border-radius: 1rem;
-    background: #070d13; /* Világos háttér */
+    background: #070d13;
+    /* Világos háttér */
   }
 
   .left.active {
@@ -160,6 +162,7 @@ a:hover {
   .right {
     width: 95%;
   }
+
   .drawingsRight {
     width: 100%;
   }

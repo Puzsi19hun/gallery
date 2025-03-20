@@ -17,6 +17,16 @@ export class DataserviceService {
   public token = "";
   public id = 0;
 
+  private data: any = null;
+
+  setData(value: any) {
+    this.data = value;
+  }
+
+  getData() {
+    return this.data;
+  }
+
   private get_logged_in_state(): boolean {
     return !!localStorage.getItem('logged');  // Or check cookies if you're storing it there
   }

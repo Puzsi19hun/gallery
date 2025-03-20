@@ -18,7 +18,10 @@ export class DrawingCardComponent implements AfterViewInit {
     @Input({ required: true }) user_name = "";
     @Input({ required: true }) hexCodes: string[] = [];
     @Input({ required: true }) profil = false;
+    @Input({ required: true }) canBeEdited = 0;
     @Output() expandCard = new EventEmitter<any>()
+    @Output() edit = new EventEmitter<any>()
+
     private readonly CANVAS_SIZE = 200; // Fix méretű előnézet (200x200 px)
 
     constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
@@ -72,6 +75,15 @@ export class DrawingCardComponent implements AfterViewInit {
                     this.dataservice.errorPopup("Sikertelen törlés, hiba: " + error)
                 }
             );
+        }
+    }
+
+    onEdit() {
+        let conf = confirm("are you sure you want to edit this drawing?")
+        if (conf) {
+            this.dataservice.setData({ hex_codes: this.hexCodes, width: this.width })
+            this.cdr.detectChanges()
+            this.dataservice.move_to("/new-drawing")
         }
     }
 

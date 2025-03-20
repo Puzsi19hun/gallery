@@ -29,9 +29,9 @@ export class NewDrawingComponent {
   private hoverX: number | null = null;
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
+  private pixelList: any[] = []
 
   constructor(private http: HttpClient, private dataservice: DataserviceService) { }
-
 
 
   ngAfterViewInit() {
@@ -41,6 +41,7 @@ export class NewDrawingComponent {
     }
     this.initializeCanvas();
     this.resizeCanvas();
+    this.edit()
   }
 
   initializeCanvas() {
@@ -63,6 +64,57 @@ export class NewDrawingComponent {
       Array(this.gridWidth).fill(true)
     );
   }
+
+  edit() {
+    if (this.dataservice.getData() != null) {
+      let hex_codes = this.dataservice.getData().hex_codes;
+      let width = this.dataservice.getData().width;
+      if (!this.canvas) return;
+
+      const canvas = this.canvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.imageSmoothingEnabled = false; // Kikapcsolt antialiasing
+
+      const gridWidth = parseInt(width);
+      const gridHeight = Math.ceil(hex_codes.length / gridWidth);
+
+      // Canvas beállítása
+      this.gridWidth = gridWidth;
+      this.gridHeight = gridHeight;
+      this.initGrid();  // Új inicializálás, hogy megfelelő méretű legyen a pixelGrid
+
+      canvas.width = this.canvasSize;
+      canvas.height = this.canvasSize;
+
+      // Skálázás kiszámítása
+      const pixelSizeX = this.canvasSize / gridWidth;
+      const pixelSizeY = this.canvasSize / gridHeight;
+      const pixelSize = Math.min(pixelSizeX, pixelSizeY);
+
+      // Kép középre igazítása
+      const offsetX = (this.canvasSize - gridWidth * pixelSize) / 2;
+      const offsetY = (this.canvasSize - gridHeight * pixelSize) / 2;
+
+      for (let i = 0; i < hex_codes.length; i++) {
+        const x = Math.floor((i % gridWidth) * pixelSize + offsetX);
+        const y = Math.floor(Math.floor(i / gridWidth) * pixelSize + offsetY);
+
+        ctx.fillStyle = hex_codes[i];
+        ctx.fillRect(x, y, Math.ceil(pixelSize), Math.ceil(pixelSize));
+
+        // Frissítsük a pixelGrid tömböt is
+        const gridX = i % gridWidth;
+        const gridY = Math.floor(i / gridWidth);
+        this.pixelGrid[gridY][gridX] = hex_codes[i]; // Beállítjuk a színt a pixelGrid-ben
+      }
+
+      // Az új állapotot is felrajzoljuk, hogy ne tűnjön el az egér mozgatásakor
+      this.drawGrid();
+    }
+  }
+
 
   // Draw grid method
   drawGrid() {
@@ -92,6 +144,7 @@ export class NewDrawingComponent {
       ctx.fillStyle = this.color;
       ctx.fillRect(this.hoverX * cellWidth, this.hoverY * cellHeight, cellWidth, cellHeight);
     }
+
   }
 
   // tools
@@ -160,21 +213,51 @@ export class NewDrawingComponent {
   }
 
 
+  savePixels() {
+    if (!this.ctx) return;
+
+    const canvasEl = this.canvas.nativeElement;
+    const cellSizeX = canvasEl.width / this.gridWidth; // 600 / 16 = 37.5
+    const cellSizeY = canvasEl.height / this.gridHeight; // 600 / 16 = 37.5
+
+
+    for (let row = 0; row < this.gridHeight; row++) {
+      for (let col = 0; col < this.gridWidth; col++) {
+        const sampleX = Math.floor((col + 0.5) * cellSizeX); // cella közepe X
+        const sampleY = Math.floor((row + 0.5) * cellSizeY); // cella közepe Y
+
+        const imageData = this.ctx.getImageData(sampleX, sampleY, 1, 1);
+        const pixels = imageData.data;
+
+        const r = pixels[0];
+        const g = pixels[1];
+        const b = pixels[2];
+        const a = pixels[3];
+
+        if (a === 0) {
+          this.pixelList.push("transparent");
+        } else {
+          this.pixelList.push(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
+        }
+      }
+    }
+  }
+
   // Modify the clear method to capture state before clearing
-clear() {
-  if (!this.ctx) return;
+  clear() {
+    if (!this.ctx) return;
 
-  // Capture state before clearing
+    // Capture state before clearing
 
-  this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
-  // Clean up pixelGrid and dirtyGrid arrays
-  this.initGrid();
-  this.initDirtyGrid();
+    // Clean up pixelGrid and dirtyGrid arrays
+    this.initGrid();
+    this.initDirtyGrid();
 
-  // Update the drawing
-  this.drawGrid();
-}
+    // Update the drawing
+    this.drawGrid();
+  }
 
   toggleBucketMode() {
     this.bucketMode = !this.bucketMode;
@@ -189,39 +272,46 @@ clear() {
     }
   }
 
-  fillAreaRecursive(x: number, y: number, targetColor: string) {
-    if (x < 0 || x >= this.gridWidth || y < 0 || y >= this.gridHeight) return;
-    if (this.pixelGrid[y][x] !== targetColor) return;
-    if (this.pixelGrid[y][x] === this.color) return;
-
-    this.pixelGrid[y][x] = this.color;
-    this.dirtyGrid[y][x] = true;
-
-    this.fillAreaRecursive(x - 1, y, targetColor);
-    this.fillAreaRecursive(x + 1, y, targetColor);
-    this.fillAreaRecursive(x, y - 1, targetColor);
-    this.fillAreaRecursive(x, y + 1, targetColor);
-  }
-
   fillArea(event: MouseEvent) {
     if (!this.ctx) return;
-  
+
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const scaleX = this.canvas.nativeElement.width / rect.width;
     const scaleY = this.canvas.nativeElement.height / rect.height;
-  
+
     const x = Math.floor((event.clientX - rect.left) * scaleX / (this.canvas.nativeElement.width / this.gridWidth));
     const y = Math.floor((event.clientY - rect.top) * scaleY / (this.canvas.nativeElement.height / this.gridHeight));
-  
+
     if (x < 0 || x >= this.gridWidth || y < 0 || y >= this.gridHeight) return;
-  
+
     const targetColor = this.pixelGrid[y][x];
     if (targetColor === this.color) return;
-  
-  
-    this.fillAreaRecursive(x, y, targetColor);
+
+    this.fillAreaIterative(x, y, targetColor);
     this.drawGrid();
   }
+
+
+  fillAreaIterative(x: number, y: number, targetColor: string) {
+    const stack: [number, number][] = [[x, y]];
+
+    while (stack.length > 0) {
+      const [cx, cy] = stack.pop()!;
+
+      if (cx < 0 || cx >= this.gridWidth || cy < 0 || cy >= this.gridHeight) continue;
+      if (this.pixelGrid[cy][cx] !== targetColor) continue;
+      if (this.pixelGrid[cy][cx] === this.color) continue;
+
+      this.pixelGrid[cy][cx] = this.color;
+      this.dirtyGrid[cy][cx] = true;
+
+      stack.push([cx - 1, cy]);
+      stack.push([cx + 1, cy]);
+      stack.push([cx, cy - 1]);
+      stack.push([cx, cy + 1]);
+    }
+  }
+
 
 
 
@@ -322,6 +412,8 @@ clear() {
           this.erasing = true;
         }
         this.drawPixel(event);
+        this.savePixels()
+        console.log(this.pixelList)
       }
     }
 
@@ -377,7 +469,7 @@ clear() {
 
   drawPixel(event: MouseEvent) {
     if (!this.ctx || this.pipette) return;
-  
+
     if (this.hoverX !== null && this.hoverY !== null && !this.showDialog && !this.savingDialog) {
       // Capture state before making changes  
       if (this.drawing) {
@@ -385,12 +477,12 @@ clear() {
       } else if (this.erasing) {
         this.pixelGrid[this.hoverY][this.hoverX] = 'white';
       }
-  
+
       this.dirtyGrid[this.hoverY][this.hoverX] = true;
       this.drawGrid();
     }
   }
-  
+
 
 
 
@@ -496,7 +588,7 @@ clear() {
 
   // Add these methods to your NewDrawingComponent class
 
-// Keyboard event listener for Ctrl+Z (undo) and Ctrl+Y (redo)
+  // Keyboard event listener for Ctrl+Z (undo) and Ctrl+Y (redo)
 
 
 }
