@@ -19,6 +19,7 @@ export class DrawingCardComponent implements AfterViewInit {
     @Input({ required: true }) hexCodes: string[] = [];
     @Input({ required: true }) profil = false;
     @Input({ required: true }) canBeEdited = 0;
+    @Input({ required: true }) forked = 0;
     @Output() expandCard = new EventEmitter<any>()
     @Output() edit = new EventEmitter<any>()
 

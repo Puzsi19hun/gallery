@@ -4,8 +4,27 @@
     <div class="card">
         <h1 class="name">{{name}}</h1>
         <canvas style="cursor: pointer;" (click)="onClick()" #canvas></canvas>
+        @if(canBeEdited == 1)
+        {
+        <span (click)="onEdit()" class="material-symbols-outlined edit">
+            draw
+        </span>
+        }
+        @if(forked)
+        {
+        <span class="material-symbols-outlined forkOther">
+            graph_1
+        </span>
+        <h3 style="color: rgb(27, 94, 74); font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Made by:
+            {{user_name}}
+        </h3>
+        }
+        @else
+        {
         <h3 style="color: rgb(161, 173, 115); font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Made by:
-            {{user_name}}</h3>
+            {{user_name}}
+        </h3>
+        }
     </div>
 </div>
 }
@@ -23,10 +42,24 @@
             draw
         </span>
         }
+
+
         <h1 class="name">{{name}}</h1>
         <canvas (click)="onClick()" #canvas></canvas>
+        @if(forked)
+        {
+        <span class="material-symbols-outlined fork">
+            graph_1
+        </span>
+        <h3 style="color: rgb(27, 94, 74); font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Your drawing
+        </h3>
+        }
+        @else
+        {
         <h3 style="color: #33a100; font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Your drawing
         </h3>
+        }
+
     </div>
 </div>
 }

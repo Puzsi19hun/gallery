@@ -13,7 +13,6 @@
   transition: all 0.2s ease-out;
 }
 
-
 .edit {
   position: absolute;
   font-size: 2rem;
@@ -34,7 +33,6 @@
   font-size: 2.5rem;
 }
 
-
 .card {
   display: flex;
   flex-direction: column;
@@ -51,7 +49,21 @@
   position: relative;
 }
 
-.card>*:not(.bottom) {
+.fork {
+  position: absolute;
+  bottom: 3rem;
+  font-size: 2rem;
+  color: rgb(27, 94, 74);
+}
+
+.forkOther {
+  position: absolute;
+  bottom: 3rem;
+  font-size: 2rem;
+  color: rgb(27, 94, 74);
+}
+
+.card > *:not(.bottom) {
   flex-grow: 0;
   /* Ne osztódjon el a tér, minden maradjon fent */
 }
@@ -77,10 +89,14 @@
   /* Most 0.1rem a margó */
   left: 50%;
   transform: translateX(-50%);
+  white-space: nowrap;
+  /* Megakadályozza a sortörést */
+  overflow: hidden;
+  /* Elrejti a kilógó részt */
+  text-overflow: ellipsis;
   text-align: center;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  width: 100%;
+
+  width: 98%;
 }
 
 @media only screen and (max-width: 780px) {

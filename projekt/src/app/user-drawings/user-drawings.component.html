@@ -2,8 +2,8 @@
     @if(data.length > 0)
     {
     <div *ngFor="let item of data" class="drawings">
-        <app-drawing-card [canBeEdited]="item.canBeEdited" [profil]="true" [name]="item.name" [user_id]="item.user_id"
-            [image_id]="item.image_id" [width]="item.width" [user_name]="item.user_name"
+        <app-drawing-card [canBeEdited]="item.canBeEdited" [profil]="true" [forked]="item.forked" [name]="item.name"
+            [user_id]="item.user_id" [image_id]="item.image_id" [width]="item.width" [user_name]="item.user_name"
             [hexCodes]="item.hex_codes"></app-drawing-card>
     </div>
     }

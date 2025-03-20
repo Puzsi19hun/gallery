@@ -11,7 +11,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './new-drawing.component.html',
   styleUrls: ['./new-drawing.component.css']
 })
-export class NewDrawingComponent {
+export class NewDrawingComponent implements OnDestroy {
   showDialog = false;
   savingDialog = false;
   mode = "draw";
@@ -29,6 +29,7 @@ export class NewDrawingComponent {
   private hoverX: number | null = null;
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
+  private forked = false
 
   constructor(private http: HttpClient, private dataservice: DataserviceService) { }
 
@@ -41,6 +42,10 @@ export class NewDrawingComponent {
     this.initializeCanvas();
     this.resizeCanvas();
     this.edit()
+  }
+
+  ngOnDestroy(): void {
+    this.dataservice.setData(null)
   }
 
 
@@ -68,6 +73,7 @@ export class NewDrawingComponent {
 
   edit() {
     if (this.dataservice.getData() != null) {
+      this.forked = true
       let hex_codes = this.dataservice.getData().hex_codes;
       let width = this.dataservice.getData().width;
       if (!this.canvas) return;
@@ -264,6 +270,7 @@ export class NewDrawingComponent {
 
     // Update the drawing
     this.drawGrid();
+    this.forked = false
   }
 
   toggleBucketMode() {
@@ -338,6 +345,7 @@ export class NewDrawingComponent {
     // Redraw the grid after resizing
     this.drawGrid();
     this.showDialog = false
+    this.forked = false
   }
 
   @HostListener('window:resize', ['$event'])
@@ -516,6 +524,7 @@ export class NewDrawingComponent {
 
 
   sendToApi(pixelList: string[], name: any, canBeEdited: any) {
+    console.log(this.forked)
     const apiUrl = 'https://nagypeti.moriczcloud.hu/PixelArtSpotlight/save'; // API URL
     console.log(name, canBeEdited)
     let canEdit = 0
@@ -535,7 +544,9 @@ export class NewDrawingComponent {
     formData.append('width', String(this.gridWidth));
     formData.append('name', name);
     formData.append('canBeEdited', String(canEdit))
-
+    if (this.forked) {
+      formData.append('forked', String(1))
+    }
 
     if (confirm("Are you sure you want to save your drawing?")) {
       this.http.post(apiUrl, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
