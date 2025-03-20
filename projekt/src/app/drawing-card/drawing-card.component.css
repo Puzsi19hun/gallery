@@ -53,14 +53,14 @@
   position: absolute;
   bottom: 3rem;
   font-size: 2rem;
-  color: rgb(27, 94, 74);
+  color: #33a100;
 }
 
 .forkOther {
   position: absolute;
   bottom: 3rem;
   font-size: 2rem;
-  color: rgb(27, 94, 74);
+  color: rgb(161, 173, 115);
 }
 
 .card > *:not(.bottom) {
