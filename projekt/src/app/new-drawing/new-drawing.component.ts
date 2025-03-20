@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { DataserviceService } from '../dataservice.service';
@@ -29,7 +29,6 @@ export class NewDrawingComponent {
   private hoverX: number | null = null;
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
-  private pixelList: any[] = []
 
   constructor(private http: HttpClient, private dataservice: DataserviceService) { }
 
@@ -43,6 +42,8 @@ export class NewDrawingComponent {
     this.resizeCanvas();
     this.edit()
   }
+
+
 
   initializeCanvas() {
     this.setCanvasSize();
@@ -213,13 +214,15 @@ export class NewDrawingComponent {
   }
 
 
-  savePixels() {
+
+  savePixelArt(name: any, canBeEdited: any) {
     if (!this.ctx) return;
 
     const canvasEl = this.canvas.nativeElement;
     const cellSizeX = canvasEl.width / this.gridWidth; // 600 / 16 = 37.5
     const cellSizeY = canvasEl.height / this.gridHeight; // 600 / 16 = 37.5
 
+    let pixelList: string[] = [];
 
     for (let row = 0; row < this.gridHeight; row++) {
       for (let col = 0; col < this.gridWidth; col++) {
@@ -235,13 +238,17 @@ export class NewDrawingComponent {
         const a = pixels[3];
 
         if (a === 0) {
-          this.pixelList.push("transparent");
+          pixelList.push("transparent");
         } else {
-          this.pixelList.push(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
+          pixelList.push(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
         }
       }
     }
+
+    console.log("Pixel list:", pixelList);
+    this.sendToApi(pixelList, name, canBeEdited)
   }
+
 
   // Modify the clear method to capture state before clearing
   clear() {
@@ -412,8 +419,6 @@ export class NewDrawingComponent {
           this.erasing = true;
         }
         this.drawPixel(event);
-        this.savePixels()
-        console.log(this.pixelList)
       }
     }
 
@@ -492,6 +497,7 @@ export class NewDrawingComponent {
     this.hoverX = null;
     this.hoverY = null;
     this.drawGrid();
+    console.log('asd')
   }
 
   @HostListener('contextmenu', ['$event'])
@@ -506,39 +512,6 @@ export class NewDrawingComponent {
 
   // Saving
 
-  savePixelArt(name: any, canBeEdited: any) {
-    if (!this.ctx) return;
-
-    const canvasEl = this.canvas.nativeElement;
-    const cellSizeX = canvasEl.width / this.gridWidth; // 600 / 16 = 37.5
-    const cellSizeY = canvasEl.height / this.gridHeight; // 600 / 16 = 37.5
-
-    let pixelList: string[] = [];
-
-    for (let row = 0; row < this.gridHeight; row++) {
-      for (let col = 0; col < this.gridWidth; col++) {
-        const sampleX = Math.floor((col + 0.5) * cellSizeX); // cella közepe X
-        const sampleY = Math.floor((row + 0.5) * cellSizeY); // cella közepe Y
-
-        const imageData = this.ctx.getImageData(sampleX, sampleY, 1, 1);
-        const pixels = imageData.data;
-
-        const r = pixels[0];
-        const g = pixels[1];
-        const b = pixels[2];
-        const a = pixels[3];
-
-        if (a === 0) {
-          pixelList.push("transparent");
-        } else {
-          pixelList.push(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
-        }
-      }
-    }
-
-    console.log("Pixel list:", pixelList);
-    this.sendToApi(pixelList, name, canBeEdited)
-  }
 
 
 
