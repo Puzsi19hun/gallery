@@ -58,9 +58,12 @@ export class GalleryComponent implements OnInit {
   }
 
   updatePaginatedData() {
+    const reversedData = [...this.data].reverse();
+
     const start = this.currentPage * this.pageSize;
     const end = start + this.pageSize;
-    this.paginatedData = this.data.slice(start, end);
+
+    this.paginatedData = reversedData.slice(start, end);
   }
 
   @HostListener('window:resize', [])

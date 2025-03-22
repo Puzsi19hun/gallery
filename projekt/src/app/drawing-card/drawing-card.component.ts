@@ -23,7 +23,7 @@ export class DrawingCardComponent implements AfterViewInit {
     @Output() expandCard = new EventEmitter<any>()
     @Output() edit = new EventEmitter<any>()
 
-    private readonly CANVAS_SIZE = 200; // Fix méretű előnézet (200x200 px)
+    private readonly CANVAS_SIZE = 180; // Fix méretű előnézet (200x200 px)
 
     constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 

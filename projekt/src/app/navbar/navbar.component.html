@@ -14,9 +14,9 @@
         }
     </div>
     <div class="right" [class.active]="menuOpen">
-        <a #newdrawing routerLink="/new-drawing">New Drawing</a>
-        <a #gallery routerLink="/gallery">Gallery</a>
-        <a #profil routerLink="/profil">Profil</a>
+        <a [class.active]="drawingOpen" #newdrawing routerLink="/new-drawing">New Drawing</a>
+        <a [class.active]="galleryOpen" #gallery routerLink="/gallery">Gallery</a>
+        <a [class.active]="profilOpen" #profil routerLink="/profil">Profil</a>
         <a (click)="onLogout()">Logout</a>
     </div>
 </nav>
@@ -40,9 +40,9 @@
         }
     </div>
     <div class="right" [class.active]="menuOpen">
-        <a routerLink="/gallery">Gallery</a>
-        <a routerLink="/login">Login</a>
-        <a routerLink="/register">Register</a>
+        <a [class.active]="galleryOpen" routerLink="/gallery">Gallery</a>
+        <a [class.active]="loginOpen" routerLink="/login">Login</a>
+        <a [class.active]="registerOpen" routerLink="/register">Register</a>
     </div>
 </nav>
 }

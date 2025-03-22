@@ -38,7 +38,7 @@ a:hover {
   cursor: pointer;
   color: white;
   position: absolute;
-  right: 1.725rem;
+  right: 1.2rem;
   top: 7.5rem;
   z-index: 10;
 }
@@ -61,7 +61,7 @@ a:hover {
   height: 85vh;
   overflow: scroll;
   scrollbar-width: none;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 1rem;
 }
 
