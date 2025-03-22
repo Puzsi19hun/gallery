@@ -13,12 +13,19 @@
   overflow: scroll;
   scrollbar-width: none;
   border-radius: 1rem;
+  margin-top: 3rem;
+}
+
+.p-paginator {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 button {
   border: none;
   border-radius: 0.75rem;
-  background-color: #006391;
+  background-color: #06212e;
   color: white;
   height: 3rem;
   width: 10rem;
@@ -92,6 +99,10 @@ button:hover {
   color: rgba(81, 255, 0, 1);
   margin-bottom: 2rem;
   margin-top: 3rem;
+}
+
+.p-paginator {
+  font-size: 12px !important;
 }
 
 @media only screen and (max-width: 1200px) {

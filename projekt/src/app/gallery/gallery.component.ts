@@ -1,19 +1,21 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
 import { NgFor } from '@angular/common';
 import { DrawingCardComponent } from '../drawing-card/drawing-card.component';
+import { PaginatorModule } from 'primeng/paginator';
+
 
 @Component({
   selector: 'app-gallery',
-  imports: [NgFor, DrawingCardComponent],
+  imports: [NgFor, DrawingCardComponent, PaginatorModule],
   templateUrl: './gallery.component.html',
-  styleUrl: './gallery.component.css'
+  styleUrl: './gallery.component.css',
 })
 export class GalleryComponent implements OnInit {
   data: any[] = []
   user: any[] = []
-
+  dynamicPageSize: number = 5;
   cardName = "";
   userName = "";
   cardHex: any[] = [];
@@ -23,6 +25,10 @@ export class GalleryComponent implements OnInit {
   private readonly MIN_CANVAS_SIZE = 200; // Minimális méret
   private readonly MAX_CANVAS_SIZE = 500; // Eredeti méret
   canvasSize = this.MAX_CANVAS_SIZE; // Dinamikus méret
+  paginatedData: any[] = [];
+  pageSize = 10;
+  currentPage = 0;
+
 
   @ViewChild('canvass', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
 
@@ -37,16 +43,36 @@ export class GalleryComponent implements OnInit {
       (data: any) => {
         console.log(data)
         this.data = data[0]
+        this.updatePaginatedData();
+
       }
     );
-
+    this.adjustPaginator();
     this.updateCanvasSize(); // Inicializáláskor is méretezzük át
+  }
+
+  paginate(event: any) {
+    this.currentPage = event.page;
+    this.pageSize = event.rows;
+    this.updatePaginatedData();
+  }
+
+  updatePaginatedData() {
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedData = this.data.slice(start, end);
   }
 
   @HostListener('window:resize', [])
   onResize() {
     this.updateCanvasSize();
     this.drawCanvas();
+    this.adjustPaginator();
+  }
+
+
+  adjustPaginator() {
+    this.dynamicPageSize = window.innerWidth < 768 ? 3 : 5;
   }
 
   private updateCanvasSize() {
