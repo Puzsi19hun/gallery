@@ -21,11 +21,12 @@
                 [width]="item.width" [user_name]="item.user_name" [hexCodes]="item.hex_codes">
             </app-drawing-card>
         </div>
+        <p-paginator class="p-paginator" (onPageChange)="paginate($event)" [rows]="10" [totalRecords]="data.length"
+            [pageLinkSize]="dynamicPageSize">
+            >
+        </p-paginator>
     </div>
 
     <!-- Paginator -->
-    <p-paginator class="p-paginator" (onPageChange)="paginate($event)" [rows]="10" [totalRecords]="data.length"
-        [pageLinkSize]="dynamicPageSize">
-        >
-    </p-paginator>
+
 </div>
