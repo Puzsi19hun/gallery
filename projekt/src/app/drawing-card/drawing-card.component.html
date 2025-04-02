@@ -15,13 +15,13 @@
         <span class="material-symbols-outlined forkOther">
             graph_1
         </span>
-        <h3 style="color: rgb(161, 173, 115); font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Made by:
+        <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem;" class="bottomO">Made by:
             {{user_name}}
         </h3>
         }
         @else
         {
-        <h3 style="color: rgb(161, 173, 115); font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Made by:
+        <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem;" class="bottomO">Made by:
             {{user_name}}
         </h3>
         }
@@ -45,18 +45,18 @@
 
 
         <h1 class="name">{{name}}</h1>
-        <canvas (click)="onClick()" #canvas></canvas>
+        <canvas style="cursor: pointer;" (click)="onClick()" #canvas></canvas>
         @if(forked)
         {
         <span class="material-symbols-outlined fork">
             graph_1
         </span>
-        <h3 style="color:#33a100; font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Your drawing
+        <h3 style="font-size:0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
         </h3>
         }
         @else
         {
-        <h3 style="color: #33a100; font-size: 1.25rem; letter-spacing: 0.1rem;" class="bottom">Your drawing
+        <h3 style="font-size: 0.95rem; letter-spacing: 0.1rem;" class="bottom">Your drawing
         </h3>
         }
 

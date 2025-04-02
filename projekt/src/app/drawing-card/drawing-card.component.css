@@ -52,14 +52,18 @@
 
 .fork {
   position: absolute;
-  bottom: 3rem;
+  top: 0.725rem;
+  right: 0.725rem;
   font-size: 1.5rem;
   color: #33a100;
+  user-select: none;
 }
 
 .forkOther {
   position: absolute;
-  bottom: 3rem;
+  top: 0.725rem;
+  right: 0.725rem;
+  user-select: none;
   font-size: 1.5rem;
   color: rgb(161, 173, 115);
 }
@@ -86,7 +90,7 @@
   max-width: 90%;
 }
 
-.bottom {
+.bottomO {
   position: absolute;
   bottom: 0.1rem;
   /* Most 0.1rem a margó */
@@ -100,7 +104,40 @@
   text-align: center;
 
   width: 98%;
+  color: rgb(161, 173, 115);
+  transition: all 0.2s ease-in-out;
+  user-select: none;
 }
+
+.bottomY {
+  position: absolute;
+  bottom: 0.1rem;
+  /* Most 0.1rem a margó */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  /* Megakadályozza a sortörést */
+  overflow: hidden;
+  /* Elrejti a kilógó részt */
+  text-overflow: ellipsis;
+  text-align: center;
+  user-select: none;
+
+  width: 98%;
+  cursor: pointer;
+  color: #33a100;
+  transition: all 0.2s ease-in-out;
+}
+
+.bottomO:hover {
+  color: purple;
+}
+
+.bottomY:hover {
+  color: purple;
+}
+
+
 
 @media only screen and (max-width: 780px) {
   .name {
