@@ -49,6 +49,7 @@ export class LoginComponent implements AfterViewInit {
 
     this.http.post(this.url, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
       (data: any) => {
+        console.log(data)
         this.dataservice.loginPopup()
         this.dataservice.login();
         this.dataservice.set_token(data.message)

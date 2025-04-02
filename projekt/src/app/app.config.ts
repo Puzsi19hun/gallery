@@ -23,6 +23,7 @@ export const appConfig: ApplicationConfig = {
 		provideClientHydration(),
 		provideAnimationsAsync(),
 		provideHttpClient(),
+		provideClientHydration(),
 		MessageService,
 		providePrimeNG({
 			theme: {
