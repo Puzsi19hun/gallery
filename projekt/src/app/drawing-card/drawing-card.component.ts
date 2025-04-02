@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-drawing-card',
@@ -25,7 +26,7 @@ export class DrawingCardComponent implements AfterViewInit {
 
     private readonly CANVAS_SIZE = 180; // Fix méretű előnézet (200x200 px)
 
-    constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
+    constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef, private router: Router) { }
 
     ngOnInit(): void {
         const headers = new HttpHeaders({
@@ -88,6 +89,10 @@ export class DrawingCardComponent implements AfterViewInit {
         }
     }
 
+    checkProfile() {
+        this.router.navigate(['/checkProfile', this.user_id])
+    }
+
     private drawCanvas() {
         if (!this.canvasRef) return;
 
@@ -124,4 +129,8 @@ export class DrawingCardComponent implements AfterViewInit {
         }
     }
 
+
+    moveToProfil() {
+        this.dataservice.move_to("/profil")
+    }
 }

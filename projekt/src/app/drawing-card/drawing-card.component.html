@@ -15,13 +15,15 @@
         <span class="material-symbols-outlined forkOther">
             graph_1
         </span>
-        <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem;" class="bottomO">Made by:
+        <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem;" (click)="checkProfile()"
+            class="bottomO">Made by:
             {{user_name}}
         </h3>
         }
         @else
         {
-        <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem;" class="bottomO">Made by:
+        <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem;" (click)="checkProfile()"
+            class="bottomO">Made by:
             {{user_name}}
         </h3>
         }
@@ -51,12 +53,12 @@
         <span class="material-symbols-outlined fork">
             graph_1
         </span>
-        <h3 style="font-size:0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
+        <h3 (click)="moveToProfil()" style="font-size:0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
         </h3>
         }
         @else
         {
-        <h3 style="font-size: 0.95rem; letter-spacing: 0.1rem;" class="bottom">Your drawing
+        <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
         </h3>
         }
 

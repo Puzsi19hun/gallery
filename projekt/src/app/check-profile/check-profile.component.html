@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="drawingsContainer">
+        <div *ngFor="let item of paginatedData" class="drawings">
+            <app-drawing-card (expandCard)="onExpand($event)" [canBeEdited]="item.canBeEdited" [forked]="item.forked"
+                [profil]="false" [name]="item.name" [user_id]="item.user_id" [image_id]="item.image_id"
+                [width]="item.width" [user_name]="item.user_name" [hexCodes]="item.hex_codes">
+            </app-drawing-card>
+        </div>
+        <p-paginator class="p-paginator" (onPageChange)="paginate($event)" [rows]="10" [totalRecords]="data.length"
+            [pageLinkSize]="dynamicPageSize">
+            >
+        </p-paginator>
+    </div>
+</div>
