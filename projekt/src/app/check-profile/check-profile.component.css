@@ -7,17 +7,160 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    height: 86vh;
+    height: 85vh;
     width: 100%;
     justify-content: center;
     overflow: scroll;
     scrollbar-width: none;
     border-radius: 1rem;
-    margin-top: 5rem;
+    margin-top: 0rem;
 }
+
 
 .p-paginator {
     background-color: transparent !important;
     box-shadow: none !important;
     border: none !important;
+}
+
+.dialogButtons {
+    position: relative;
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.dialogContainer {
+    z-index: 1;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    height: 80vh;
+    width: 100vw;
+    align-items: center;
+}
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.name {
+    text-align: center;
+    padding: 0 0.5rem;
+    margin-top: 6rem;
+    margin-bottom: 2.2rem;
+    color: rgb(161, 173, 115);
+    font-size: 2rem;
+
+}
+
+.dialog {
+    position: absolute;
+    background-color: rgba(14, 12, 12, 0.99);
+    width: 50%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.5rem;
+    padding: 0.1rem 0;
+    color: #6dffff;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    color: rgba(81, 255, 0, 1);
+    margin-bottom: 2rem;
+    margin-top: 3rem;
+}
+
+.p-paginator {
+    font-size: 12px !important;
+    flex: 1 0 100%;
+}
+
+
+button {
+    border: none;
+    border-radius: 0.75rem;
+    background-color: #06212e;
+    color: white;
+    height: 3rem;
+    width: 10rem;
+    font-family: "HISKYFLIPPERHIBOLD", serif;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-bottom: 0rem;
+    transition: 0.2s ease-out;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), 0 15px 40px rgba(0, 0, 0, 0.05);
+}
+
+button:hover {
+    color: rgb(81, 255, 0);
+    transition: 0.2s ease-out;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3), 0 15px 40px rgba(0, 0, 0, 0.05);
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .container {
+        margin-left: 0rem;
+        margin: 0 auto;
+    }
+
+    .dialog {
+        width: 70%;
+    }
+}
+
+@media only screen and (max-width: 780px) {
+    .container {
+        margin-top: 5rem;
+    }
+
+    .drawingsContainer {
+        height: 78vh;
+    }
+
+    .name {
+        font-size: 1.35rem;
+        width: 100%;
+        margin-top: 3rem;
+        word-wrap: break-word;
+    }
+
+    .center {
+        margin-bottom: 2rem;
+    }
+
+    .show {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .dialog {
+        width: 90%;
+        height: 70%;
+    }
+
+    button {
+        width: 8rem;
+        height: 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .dialog {
+        width: 90%;
+        height: 60%;
+    }
 }

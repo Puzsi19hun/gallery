@@ -21,9 +21,10 @@ export class GalleryComponent implements OnInit {
   cardHex: any[] = [];
   cardWidth = "";
   ExpandCard = false;
+  forkedFrom = ""
 
   private readonly MIN_CANVAS_SIZE = 200; // Minimális méret
-  private readonly MAX_CANVAS_SIZE = 500; // Eredeti méret
+  private readonly MAX_CANVAS_SIZE = 400; // Eredeti méret
   canvasSize = this.MAX_CANVAS_SIZE; // Dinamikus méret
   paginatedData: any[] = [];
   pageSize = 10;
@@ -122,6 +123,9 @@ export class GalleryComponent implements OnInit {
     this.cardName = value.name;
     this.cardHex = value.hex_codes;
     this.cardWidth = value.width;
+    this.forkedFrom = value.forkedFrom
+
+    console.log(value)
 
     this.updateCanvasSize(); // Frissíteni kell a méretet
     this.cdr.detectChanges();

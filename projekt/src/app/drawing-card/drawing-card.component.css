@@ -54,7 +54,7 @@
   position: absolute;
   top: 0.725rem;
   right: 0.725rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: #33a100;
   user-select: none;
 }
@@ -64,7 +64,7 @@
   top: 0.725rem;
   right: 0.725rem;
   user-select: none;
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: rgb(161, 173, 115);
 }
 

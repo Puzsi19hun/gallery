@@ -74,6 +74,7 @@ export class NewDrawingComponent implements OnDestroy {
   edit() {
     if (this.dataservice.getData() != null) {
       this.forked = true
+      console.log(this.dataservice.getData().forked_from)
       let hex_codes = this.dataservice.getData().hex_codes;
       let width = this.dataservice.getData().width;
       if (!this.canvas) return;
@@ -546,6 +547,7 @@ export class NewDrawingComponent implements OnDestroy {
     formData.append('canBeEdited', String(canEdit))
     if (this.forked) {
       formData.append('forked', String(1))
+      formData.append('forkedFrom', this.dataservice.getData().forked_from)
     }
 
     if (confirm("Are you sure you want to save your drawing?")) {

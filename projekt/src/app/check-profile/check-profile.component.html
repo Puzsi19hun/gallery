@@ -1,4 +1,19 @@
 <div class="container">
+    @if(ExpandCard)
+    {
+    <div class="dialogContainer">
+        <div class="dialog">
+            <div class="mainContainer">
+                <h1 class="name">{{cardName}}</h1>
+                <canvas #canvass></canvas>
+            </div>
+            <div class="dialogButtons">
+                <button class="dialogButton" (click)="ExpandCard = false">Cancel</button>
+            </div>
+        </div>
+    </div>
+    }
+    <h2 class="name">{{userName}}'s drawings</h2>
     <div class="drawingsContainer">
         <div *ngFor="let item of paginatedData" class="drawings">
             <app-drawing-card (expandCard)="onExpand($event)" [canBeEdited]="item.canBeEdited" [forked]="item.forked"

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DrawingCardComponent } from '../drawing-card/drawing-card.component';
 import { CommonModule } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-check-profile',
@@ -30,12 +31,31 @@ export class CheckProfileComponent implements OnInit {
   @ViewChild('canvass', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
 
 
-  constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
+  constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef, private http: HttpClient) { }
 
-  ngOnInit() {
-    // Access route parameter
+
+  ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('id');
-    console.log(this.userId)
+    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getHexCodesbyid";
+    let headers = new HttpHeaders();
+    headers.set('X-Requested-With', 'XMLHttpRequest');
+    headers.set('Content-Type', 'application/json');
+    let formData: FormData = new FormData();
+    formData.append('user_id', String(this.userId));
+
+    this.http.post(url, formData, { headers: headers, withCredentials: true }).subscribe(
+      (data: any) => {
+        console.log(data)
+        if (data) {
+          this.data = data
+          this.userName = data[0].user_name
+        }
+
+        this.updatePaginatedData();
+      }
+    );
+    this.adjustPaginator();
+    this.updateCanvasSize(); // Inicializáláskor is méretezzük át
   }
 
   paginate(event: any) {

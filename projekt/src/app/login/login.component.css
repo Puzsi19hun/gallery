@@ -20,7 +20,19 @@
     rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
 }
 
-.link{
+.center {
+  text-decoration: underline;
+  margin: 0 auto;
+  transition: 0.2s all ease-in-out;
+  cursor: pointer;
+  color: greenyellow;
+}
+
+.center:hover {
+  color: purple;
+}
+
+.link {
   cursor: pointer;
   text-decoration: underline;
 }
@@ -40,7 +52,7 @@
   flex-direction: column;
 }
 
-form > div > label {
+form>div>label {
   margin-left: 0.1rem;
   margin-bottom: 0.5rem;
 }
@@ -88,7 +100,7 @@ button:hover {
     height: 2rem;
     font-size: 0.8rem;
   }
-  
+
   button {
     height: 2.5rem;
     width: 8rem;
@@ -104,10 +116,12 @@ button:hover {
     box-shadow: rgba(155, 220, 188, 0.05) 0px 30px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
   }
+
   50% {
     box-shadow: rgba(155, 220, 188, 0.5) 0px 30px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
   }
+
   100% {
     box-shadow: rgba(155, 220, 188, 0.05) 0px 30px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;

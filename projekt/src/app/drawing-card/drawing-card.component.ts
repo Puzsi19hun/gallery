@@ -21,6 +21,7 @@ export class DrawingCardComponent implements AfterViewInit {
     @Input({ required: true }) profil = false;
     @Input({ required: true }) canBeEdited = 0;
     @Input({ required: true }) forked = 0;
+    @Input({ required: true }) forkedFrom = "";
     @Output() expandCard = new EventEmitter<any>()
     @Output() edit = new EventEmitter<any>()
 
@@ -33,15 +34,6 @@ export class DrawingCardComponent implements AfterViewInit {
             'X-Requested-With': 'XMLHttpRequest',
             'Content-Type': 'application/json'
         });
-
-        const url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getHexCodes";
-
-
-        this.http.get(url, { headers, withCredentials: true }).subscribe(
-            (data: any) => {
-                this.data = data[0];
-            }
-        );
     }
 
 
@@ -54,7 +46,7 @@ export class DrawingCardComponent implements AfterViewInit {
     }
 
     onClick() {
-        this.expandCard.emit({ name: this.name, hex_codes: this.hexCodes, width: this.width })
+        this.expandCard.emit({ name: this.name, hex_codes: this.hexCodes, width: this.width, forkedFrom: this.forkedFrom })
     }
 
     onDelete() {
@@ -83,7 +75,7 @@ export class DrawingCardComponent implements AfterViewInit {
     onEdit() {
         let conf = confirm("are you sure you want to edit this drawing?")
         if (conf) {
-            this.dataservice.setData({ hex_codes: this.hexCodes, width: this.width })
+            this.dataservice.setData({ hex_codes: this.hexCodes, width: this.width, forked_from: this.user_name })
             this.cdr.detectChanges()
             this.dataservice.move_to("/new-drawing")
         }
