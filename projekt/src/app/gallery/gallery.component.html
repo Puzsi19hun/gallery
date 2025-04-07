@@ -8,11 +8,11 @@
                 <h1 class="name">{{cardName}}</h1>
                 <canvas #canvass></canvas>
             </div>
-            <div class="dialogButtons">
-                @if(forkedFrom != "")
+            @if(forkedFrom != null)
                 {
-                <p>Forked from: {{forkedFrom}}</p>
+                <p class="forkedLabel">Forked from: {{forkedFrom}}</p>
                 }
+            <div class="dialogButtons">
                 <button class="dialogButton" (click)="ExpandCard = false">Cancel</button>
             </div>
         </div>

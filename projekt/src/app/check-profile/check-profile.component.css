@@ -13,7 +13,7 @@
     overflow: scroll;
     scrollbar-width: none;
     border-radius: 1rem;
-    margin-top: 0rem;
+    margin-top: 2rem;
 }
 
 
@@ -54,11 +54,15 @@
 .name {
     text-align: center;
     padding: 0 0.5rem;
-    margin-top: 6rem;
+    margin-top: 5rem;
     margin-bottom: 2.2rem;
-    color: rgb(161, 173, 115);
-    font-size: 2rem;
+    color: rgb(81, 255, 0);
+    font-size: 2.25rem;
+}
 
+.nameD
+{
+    margin-top: 3rem;
 }
 
 .dialog {
@@ -76,7 +80,7 @@
 .center {
     display: flex;
     justify-content: center;
-    color: rgba(81, 255, 0, 1);
+    color: #51ff00;
     margin-bottom: 2rem;
     margin-top: 3rem;
 }
@@ -164,3 +168,39 @@ button:hover {
         height: 60%;
     }
 }
+
+@-webkit-keyframes glow {
+    from {
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff, 0 0 50px #fff, 0 0 60px #fff, 0 0 70px #fff;
+    }
+    to {
+      text-shadow: 0 0 20px #fff, 0 0 30px #51ff00, 0 0 40px #51ff00, 0 0 50px #51ff00, 0 0 60px #51ff00, 0 0 70px #51ff00, 0 0 80px #51ff00;
+    }
+  }
+
+  @keyframes pulsate {
+    100% {
+      /* Larger blur radius */
+      text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #f09,
+        0 0 80px #f09,
+        0 0 90px #f09,
+        0 0 100px #f09,
+        0 0 150px #f09;
+    }
+   0% {
+      /* A slightly smaller blur radius */
+      text-shadow:
+        0 0 4px #fff,
+        0 0 10px #fff,
+        0 0 18px #fff,
+        0 0 38px #f09,
+        0 0 73px #f09,
+        0 0 80px #f09,
+        0 0 94px #f09,
+        0 0 140px #f09;
+    }
+  }

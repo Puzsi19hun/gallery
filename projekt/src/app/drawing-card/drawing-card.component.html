@@ -48,18 +48,37 @@
 
         <h1 class="name">{{name}}</h1>
         <canvas style="cursor: pointer;" (click)="onClick()" #canvas></canvas>
-        @if(forked)
+        @if(!profil)
         {
-        <span class="material-symbols-outlined fork">
-            graph_1
-        </span>
-        <h3 (click)="moveToProfil()" style="font-size:0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
-        </h3>
+            @if(forked)
+            {
+            <span class="material-symbols-outlined fork">
+                graph_1
+            </span>
+            <h3 (click)="moveToProfil()" style="font-size:0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
+            </h3>
+            }
+            @else
+            {
+            <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
+            </h3>
+            }
         }
         @else
         {
-        <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
-        </h3>
+            @if(forked)
+            {
+            <span class="material-symbols-outlined fork">
+                graph_1
+            </span>
+            <h3 style="font-size:0.95rem; letter-spacing: 0.1rem; color: #33a100; cursor: auto;" class="bottomY">Your drawing
+            </h3>
+            }
+            @else
+            {
+            <h3 style="font-size: 0.95rem; letter-spacing: 0.1rem; color: #33a100; cursor: auto;" class="bottomY">Your drawing
+            </h3>
+            }
         }
 
     </div>

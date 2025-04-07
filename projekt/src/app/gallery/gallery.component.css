@@ -14,6 +14,7 @@
   scrollbar-width: none;
   border-radius: 1rem;
   margin-top: 5rem;
+  
 }
 
 .p-paginator {
@@ -38,10 +39,21 @@ button {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), 0 15px 40px rgba(0, 0, 0, 0.05);
 }
 
+.forkedLabel
+{
+  position: absolute;
+  bottom: 5rem;
+  font-size: 1.25rem;
+  color: rgb(161, 173, 115);
+  left: 0px;
+  width: 100%;
+  text-align: center;
+}
+
 button:hover {
   color: rgb(81, 255, 0);
   transition: 0.2s ease-out;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3), 0 15px 40px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 5px 10px rgba(216, 216, 216, 0.3), 0 15px 40px rgba(0, 0, 0, 0.05);
 }
 
 .dialogButtons {
@@ -93,6 +105,7 @@ canvas {
 
 .dialog {
   position: absolute;
+
   background-color: rgba(14, 12, 12, 0.99);
   width: 50%;
   height: 90%;
@@ -165,6 +178,6 @@ canvas {
 @media only screen and (max-width: 550px) {
   .dialog {
     width: 90%;
-    height: 60%;
+    height: 90%;
   }
 }

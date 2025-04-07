@@ -546,8 +546,11 @@ export class NewDrawingComponent implements OnDestroy {
     formData.append('name', name);
     formData.append('canBeEdited', String(canEdit))
     if (this.forked) {
+      console.log("fifififififi")
       formData.append('forked', String(1))
       formData.append('forkedFrom', this.dataservice.getData().forked_from)
+
+      console.log(formData.get('forkedFrom'))
     }
 
     if (confirm("Are you sure you want to save your drawing?")) {

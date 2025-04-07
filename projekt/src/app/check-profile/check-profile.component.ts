@@ -21,9 +21,11 @@ export class CheckProfileComponent implements OnInit {
   cardHex: any[] = [];
   cardWidth = "";
   ExpandCard = false;
+  forkedFrom = ""
+
 
   private readonly MIN_CANVAS_SIZE = 200; // Minimális méret
-  private readonly MAX_CANVAS_SIZE = 500; // Eredeti méret
+  private readonly MAX_CANVAS_SIZE = 400; // Eredeti méret
   canvasSize = this.MAX_CANVAS_SIZE; // Dinamikus méret
   paginatedData: any[] = [];
   pageSize = 10;
