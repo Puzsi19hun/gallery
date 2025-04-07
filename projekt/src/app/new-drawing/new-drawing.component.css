@@ -1,5 +1,6 @@
 * {
-  user-select: none; /* Tiltja a szöveg kijelölését */
+  user-select: none;
+  /* Tiltja a szöveg kijelölését */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -25,7 +26,8 @@ button {
   transition: 0.2s ease-out;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), 0 15px 40px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease-out;
-  pointer-events: auto; /* Gombok továbbra is kattinthatók */
+  pointer-events: auto;
+  /* Gombok továbbra is kattinthatók */
 }
 
 button:hover {
@@ -76,21 +78,21 @@ input {
 .savingDialog {
   position: absolute;
   background-color: rgb(44, 43, 43);
-  width: 30%;
+  width: 40%;
   font-size: 2rem;
-  height: 60%;
+  height: 75%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   border-radius: 1rem;
   padding: 2rem 0;
   border: 2px solid rgba(81, 255, 0.5);
-  animation: flickerAnimation 2s infinite;
 }
 
 .saveInput {
   width: 60%;
   margin: 0 auto;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
@@ -136,11 +138,11 @@ input {
   width: 26px;
 }
 
-.checkbox-wrapper-22 input:checked + .slider {
+.checkbox-wrapper-22 input:checked+.slider {
   background-color: rgb(81, 255, 0);
 }
 
-.checkbox-wrapper-22 input:checked + .slider:before {
+.checkbox-wrapper-22 input:checked+.slider:before {
   transform: translateX(26px);
 }
 
@@ -243,10 +245,12 @@ canvas {
     width: 50%;
     height: 60%;
   }
+
   .buttons {
     height: 88vh;
     padding: 0.1rem 0.5rem;
   }
+
   .check {
     display: flex;
     flex-direction: column;
@@ -303,7 +307,7 @@ canvas {
     font-size: 0.8rem;
   }
 
-  .dialog button{
+  .dialog button {
     font-size: 1.25rem;
   }
 
@@ -327,10 +331,12 @@ canvas {
     box-shadow: rgba(155, 220, 188, 0.05) 0px 0px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
   }
+
   50% {
     box-shadow: rgba(155, 220, 188, 0.5) 0px 0px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
   }
+
   100% {
     box-shadow: rgba(155, 220, 188, 0.05) 0px 0px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;

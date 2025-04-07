@@ -14,7 +14,7 @@
   scrollbar-width: none;
   border-radius: 1rem;
   margin-top: 5rem;
-  
+
 }
 
 .p-paginator {
@@ -39,10 +39,9 @@ button {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), 0 15px 40px rgba(0, 0, 0, 0.05);
 }
 
-.forkedLabel
-{
+.forkedLabel {
   position: absolute;
-  bottom: 5rem;
+  bottom: 4rem;
   font-size: 1.25rem;
   color: rgb(161, 173, 115);
   left: 0px;
@@ -92,12 +91,10 @@ canvas {
   text-align: center;
   padding: 0 0.5rem;
   margin-bottom: 1rem;
-  white-space: nowrap;
-  /* Megakadályozza a sortörést */
-  overflow: hidden;
-  /* Elrejti a kilógó részt */
+  white-space: none;
+  word-break: break-all;
+  word-wrap: all;
   text-overflow: ellipsis;
-  /* Három ponttal jelzi a levágást */
   width: 100%;
   /* Biztosítja, hogy kitöltse a szülőt */
   max-width: 100%;
@@ -178,6 +175,6 @@ canvas {
 @media only screen and (max-width: 550px) {
   .dialog {
     width: 90%;
-    height: 90%;
+    height: 80%;
   }
 }

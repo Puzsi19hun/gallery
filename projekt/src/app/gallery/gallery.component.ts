@@ -42,7 +42,6 @@ export class GalleryComponent implements OnInit {
     headers.set('Content-Type', 'application/json');
     this.http.get(url, { headers: headers, withCredentials: true }).subscribe(
       (data: any) => {
-        console.log(data)
         this.data = data[0]
         this.updatePaginatedData();
 
@@ -124,8 +123,6 @@ export class GalleryComponent implements OnInit {
     this.cardHex = value.hex_codes;
     this.cardWidth = value.width;
     this.forkedFrom = value.forkedFrom
-
-    console.log(value)
 
     this.updateCanvasSize(); // Frissíteni kell a méretet
     this.cdr.detectChanges();

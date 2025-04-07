@@ -28,7 +28,6 @@ export class BasicComponent {
     else {
       this.http.get(url, { withCredentials: true }).subscribe(
         (data: any) => {
-          console.log(data);
           this.nev = data.name;
           this.email = data.email;
         },

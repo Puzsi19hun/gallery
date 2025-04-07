@@ -25,8 +25,12 @@
         <form (ngSubmit)="onSave(name.value, canBeEdited.checked)" class="inputs">
             <div style="display: flex; flex-direction: column;">
                 <input class="saveInput" #name required type="text" placeholder="Name: ">
+                <input class="saveInput" #name required type="text" placeholder="Hashtags: ">
+                <div class="hashtags">
+
+                </div>
                 <div class="check" style="display: flex; margin: 1.5rem auto;">
-                    <label for="">Others can copy/edit</label>
+                    <label for="">Others can fork/edit</label>
                     <div style="margin-left: 0.725rem;" class="checkbox-wrapper-22">
                         <label class="switch" for="checkbox">
                             <input checked #canBeEdited type="checkbox" id="checkbox" />

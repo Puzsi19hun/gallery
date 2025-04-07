@@ -59,7 +59,6 @@ export class DrawingCardComponent implements AfterViewInit {
             const url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/delete";
             let formData: FormData = new FormData();
             formData.append('kepid', this.image_id);
-            console.log(formData.get('kepid'))
             this.http.post(url, formData, { headers: headers, withCredentials: true }).subscribe(
                 (data: any) => {
                     window.location.reload()
