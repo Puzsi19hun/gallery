@@ -1,17 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { DataserviceService } from '../dataservice.service';
-import { NgClass } from '@angular/common';
-
+import { CommonModule, NgClass } from '@angular/common';
+import { debounceTime, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-new-drawing',
-  imports: [ColorPickerModule, FormsModule, NgClass],
+  imports: [ColorPickerModule, FormsModule, NgClass, CommonModule],
   templateUrl: './new-drawing.component.html',
   styleUrls: ['./new-drawing.component.css']
 })
-export class NewDrawingComponent implements OnDestroy {
+export class NewDrawingComponent implements OnDestroy, OnInit {
   showDialog = false;
   savingDialog = false;
   mode = "draw";
@@ -25,13 +26,61 @@ export class NewDrawingComponent implements OnDestroy {
   gridWidth: number = 16;
   gridHeight: number = 16;
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('hashtags') hashtags!: ElementRef<HTMLInputElement>;
   private canvasSize: number = 600;
   private hoverX: number | null = null;
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
   private forked = false
+  private hashtagSubject = new Subject<string>(); // A felhasználó által beírt hashtagokat kezeljük
+  private hashtagCache: { [query: string]: any[] } = {};
 
-  constructor(private http: HttpClient, private dataservice: DataserviceService) { }
+  options: any[] = [];
+  selected: string | null = null;
+  private selectedOptions: any[] = []
+  showDropdown: boolean = true;
+  constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
+
+  selectOption(option: any) {
+    this.selected = option;
+    this.showDropdown = false;
+    this.hashtags.nativeElement.value = "";
+
+    const newDiv = document.createElement("div");
+    newDiv.appendChild(option.name)
+
+    document.getElementById('hashtagss')!.innerHTML += newDiv
+
+
+    if (!this.selectedOptions.includes(option.name)) {
+      this.selectedOptions.push(option.name);
+    }
+  }
+
+  ngOnInit(): void {
+    const savedCache = localStorage.getItem('hashtagCache');
+    if (savedCache) {
+      try {
+        this.hashtagCache = JSON.parse(savedCache);
+      } catch (e) {
+        console.error('Hibás cache formátum:', e);
+      }
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event): void {
+    // Ha nem az input mezőn vagy a dropdown menün kattintottak, akkor elrejtjük a dropdown-t
+    const dropdown = document.querySelector('.dropdown-wrapper');
+    const input = document.querySelector('.saveInput') as HTMLElement;
+
+    if (dropdown && input) {
+      if (!dropdown.contains(event.target as Node) && !input.contains(event.target as Node)) {
+        this.showDropdown = false;
+      }
+    }
+  }
+
 
 
   ngAfterViewInit() {
@@ -42,12 +91,81 @@ export class NewDrawingComponent implements OnDestroy {
     this.initializeCanvas();
     this.resizeCanvas();
     this.edit()
+
+
   }
+
+  checkHashtag(value: string): void {
+    const query = value.trim().toLowerCase();
+
+    // Túl rövid a query? Ne csináljunk semmit
+    if (query.length < 1) {
+      this.showDropdown = false;
+      return;
+    }
+
+    // Ha van már cache-ben a query, akkor frissítjük az options-t, de nem rakjuk be újra a kiválasztott elemeket
+    if (this.hashtagCache[query]) {
+      // Csak azokat az elemeket adjuk hozzá az options-hoz, amelyek nem szerepelnek még a selectedOptions-ban
+      this.options = this.hashtagCache[query].filter(element =>
+        element.name && !this.selectedOptions.includes(element.name)
+      );
+      this.showDropdown = true;
+      return;
+    }
+
+    // Ha nincs még cache-ben, kérdezzük le az API-t
+    const headers = new HttpHeaders({
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'application/json'
+    });
+
+    const url = `https://nagypeti.moriczcloud.hu/PixelArtSpotlight/hashtags/search/${encodeURIComponent(query)}`;
+
+    this.http.get<any[]>(url, { headers, withCredentials: true }).subscribe((data: any) => {
+      // Ha az API adatait kaptuk, tároljuk a cache-ben
+      this.hashtagCache[query] = data;
+
+      // Csak akkor mentsük el a localStorage-ba, ha még nincs benne a query
+      const savedCache = localStorage.getItem('hashtagCache');
+      if (savedCache) {
+        const parsedCache = JSON.parse(savedCache);
+
+        // Ha a query még nincs benne a localStorage-ben, mentjük el
+        if (!parsedCache[query]) {
+          parsedCache[query] = data;
+          localStorage.setItem('hashtagCache', JSON.stringify(parsedCache));
+        }
+      } else {
+        // Ha még nincs cache a localStorage-ban, mentsük el
+        localStorage.setItem('hashtagCache', JSON.stringify(this.hashtagCache));
+      }
+
+      // Frissítjük az options-t, de csak akkor rakjuk bele az adatokat, ha nincs benne a selectedOptions-ban
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+
+        // Csak azokat az elemeket adjuk hozzá, amik még nincsenek benne a selectedOptions-ban
+        if (element.name && !this.selectedOptions.includes(element.name)) {
+          this.options.push(element);
+        }
+      }
+
+      this.showDropdown = true;
+    });
+  }
+
+
+
+
+
+
+
+
 
   ngOnDestroy(): void {
     this.dataservice.setData(null)
   }
-
 
 
   initializeCanvas() {
@@ -63,6 +181,7 @@ export class NewDrawingComponent implements OnDestroy {
       Array(this.gridWidth).fill('white')
     );
   }
+
 
   // Initialize the dirty grid
   initDirtyGrid() {
@@ -304,6 +423,9 @@ export class NewDrawingComponent implements OnDestroy {
 
     this.fillAreaIterative(x, y, targetColor);
     this.drawGrid();
+    this.bucketMode = false
+    document.querySelector('#bucket')?.classList.remove('bucketActive');
+
   }
 
 
@@ -497,7 +619,9 @@ export class NewDrawingComponent implements OnDestroy {
     }
   }
 
-
+  convertToInt(value: any) {
+    return parseInt(value)
+  }
 
 
 
@@ -540,30 +664,26 @@ export class NewDrawingComponent implements OnDestroy {
     let headerss = new HttpHeaders();
     headerss.set('X-Requested-With', 'XMLHttpRequest')
     headerss.set('Content-Type', 'application/json')
+
     let formData: FormData = new FormData();
     formData.append('hex_codes', JSON.stringify(pixelList));
     formData.append('width', String(this.gridWidth));
     formData.append('name', name);
     formData.append('canBeEdited', String(canEdit))
     if (this.forked) {
-      console.log("fifififififi")
       formData.append('forked', String(1))
       formData.append('forkedFrom', this.dataservice.getData().forked_from)
-
-      console.log(formData.get('forkedFrom'))
     }
 
     if (confirm("Are you sure you want to save your drawing?")) {
       this.http.post(apiUrl, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
         data => {
           console.log(data)
-
         },
         error => console.log(error)
 
       )
     }
-
     this.savingDialog = false
   }
 
@@ -575,6 +695,28 @@ export class NewDrawingComponent implements OnDestroy {
     this.savePixelArt(name, canBeEdited)
   }
 
+
+  forceHeight() {
+    let height = document.getElementById('height')!
+    if (parseInt((height as HTMLInputElement).value) > 150) {
+      (height as HTMLInputElement).value = "150"
+    }
+
+    if (parseInt((height as HTMLInputElement).value) < 1) {
+      (height as HTMLInputElement).value = "1"
+    }
+  }
+
+  forceWidth() {
+    let width = document.getElementById('width')!
+    if (parseInt((width as HTMLInputElement).value) > 150) {
+      (width as HTMLInputElement).value = "150"
+    }
+
+    if (parseInt((width as HTMLInputElement).value) < 1) {
+      (width as HTMLInputElement).value = "1"
+    }
+  }
   // Add these methods to your NewDrawingComponent class
 
   // Keyboard event listener for Ctrl+Z (undo) and Ctrl+Y (redo)

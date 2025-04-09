@@ -4,10 +4,13 @@
     <div class="dialog">
         <div class="selectSize">
             <div>
-                <input #height required type="text" placeholder="Height: ">
+                <input (change)="forceHeight()" #height style="width: 5rem;" required type="text" type="number"
+                    max="150" min="1" id="height" placeholder="Height: "> PX
             </div>
             <div>
-                <input #width required type="text" name="" placeholder="Width:" id="">
+                <input (change)="forceWidth()" #width style="width: 5rem;" required type="number" max="150" min="1"
+                    placeholder="Width:" id="width">
+                PX
             </div>
         </div>
         <div class="dialogButtons">
@@ -21,16 +24,38 @@
 @if(savingDialog)
 {
 <div class="savingContainer">
-    <div class="savingDialog">
+    <div class="savingDialog" (clickOutside)="onClickOutside($event)">
         <form (ngSubmit)="onSave(name.value, canBeEdited.checked)" class="inputs">
             <div style="display: flex; flex-direction: column;">
                 <input class="saveInput" #name required type="text" placeholder="Name: ">
-                <input class="saveInput" #name required type="text" placeholder="Hashtags: ">
-                <div class="hashtags">
+                <input (input)="checkHashtag(hashtags.value)" class="saveInput" #hashtags required type="text"
+                    placeholder="Hashtags: ">
+                @if(hashtags.value.length > 0)
+                {
+                <div *ngIf="showDropdown" class="dropdown-wrapper">
+                    <div class="custom-dropdown">
+                        <div class="dropdown-options">
+                            @if(options.length > 0)
+                            {
+                            <div class="dropdown-option" *ngFor="let asd of options" (click)="selectOption(asd)">
+                                {{ asd.name }}
+                            </div>
+                            }
+                            @else{
+                            <div class="dropdown-option">
+                                New hashtag
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                }
+                <div id="hashtagss">
 
                 </div>
                 <div class="check" style="display: flex; margin: 1.5rem auto;">
-                    <label for="">Others can fork/edit</label>
+                    <label style="font-family: Minecraft;" for="">Others can fork/edit</label>
                     <div style="margin-left: 0.725rem;" class="checkbox-wrapper-22">
                         <label class="switch" for="checkbox">
                             <input checked #canBeEdited type="checkbox" id="checkbox" />

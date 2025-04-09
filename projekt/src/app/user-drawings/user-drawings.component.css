@@ -1,9 +1,9 @@
 .drawingsContainer {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   width: 100%;
   justify-content: center;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1rem;
 }

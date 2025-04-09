@@ -52,7 +52,7 @@ input {
   font-size: 0.85rem;
   padding: 0 0.5rem 0 0.5rem;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2), 0 15px 40px rgba(0, 0, 0, 0.05);
-  font-family: "Public Pixel", serif;
+  font-family: "Minecraft", serif;
 }
 
 .dialogContainer {
@@ -93,6 +93,7 @@ input {
   width: 60%;
   margin: 0 auto;
   margin-bottom: 1rem;
+  font-size: 1.15rem;
   text-align: center;
 }
 
@@ -235,6 +236,51 @@ canvas {
   font-size: 2rem;
 }
 
+.dropdown-wrapper {
+  position: relative;
+  height: 0;
+  /* fontos: így nem foglal helyet */
+}
+
+.custom-dropdown {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  margin: 0 auto;
+  z-index: 10;
+}
+
+.dropdown-options {
+  background-color: black;
+  border-radius: 0.5rem;
+  color: white;
+  border: 1px solid #444;
+  font-family: "Minecraft";
+  text-align: center;
+}
+
+.dropdown-option {
+  padding: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.tag {
+  color: rebeccapurple !important;
+  background-color: purple;
+  border: 1px black solid;
+  width: fit-content;
+  border-radius: 0.1rem;
+}
+
+.dropdown-option:hover {
+  background-color: #222;
+  border-radius: 0.5rem;
+
+}
+
 @media only screen and (max-width: 1450px) {
   .dialog {
     width: 40%;
@@ -312,9 +358,10 @@ canvas {
   }
 
   .savingDialog {
+    margin-top: 5rem;
     font-size: 1.25rem;
-    width: 80%;
-    height: 50%;
+    width: 90%;
+    height: 80%;
   }
 
   .check {
