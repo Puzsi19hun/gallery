@@ -11,6 +11,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'HISKYFLIPPERHIBOLD';
+  src: url('assets/HISKYFLIPPERHIBOLD.woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* You can add global styles to this file, and also import other style files */
 body {
   overflow: hidden;

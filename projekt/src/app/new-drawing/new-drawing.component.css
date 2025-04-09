@@ -259,6 +259,9 @@ canvas {
   border: 1px solid #444;
   font-family: "Minecraft";
   text-align: center;
+  overflow: scroll;
+  scrollbar-width: none;
+  height: 20rem;
 }
 
 .dropdown-option {
@@ -268,11 +271,22 @@ canvas {
 }
 
 .tag {
-  color: rebeccapurple !important;
   background-color: purple;
   border: 1px black solid;
   width: fit-content;
   border-radius: 0.1rem;
+}
+
+#hashtagss {
+  font-family: "HISKYFLIPPERHIBOLD", serif;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  gap: 0.33rem;
+  height: 8rem;
+  overflow: scroll;
+  scrollbar-width: none;
+  padding: 1rem;
 }
 
 .dropdown-option:hover {
@@ -289,7 +303,7 @@ canvas {
 
   .savingDialog {
     width: 50%;
-    height: 60%;
+    height: 80%;
   }
 
   .buttons {
@@ -320,6 +334,10 @@ canvas {
     width: 6rem;
     height: 2rem;
     font-size: 1rem;
+  }
+
+  .dropdown-options {
+    width: 12rem;
   }
 
   .buttons {

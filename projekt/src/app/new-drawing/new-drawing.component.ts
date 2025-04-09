@@ -6,13 +6,15 @@ import { DataserviceService } from '../dataservice.service';
 import { CommonModule, NgClass } from '@angular/common';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
 @Component({
   selector: 'app-new-drawing',
   imports: [ColorPickerModule, FormsModule, NgClass, CommonModule],
   templateUrl: './new-drawing.component.html',
   styleUrls: ['./new-drawing.component.css']
 })
-export class NewDrawingComponent implements OnDestroy, OnInit {
+export class NewDrawingComponent implements OnDestroy {
   showDialog = false;
   savingDialog = false;
   mode = "draw";
@@ -32,13 +34,13 @@ export class NewDrawingComponent implements OnDestroy, OnInit {
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
   private forked = false
-  private hashtagSubject = new Subject<string>(); // A felhasználó által beírt hashtagokat kezeljük
-  private hashtagCache: { [query: string]: any[] } = {};
 
   options: any[] = [];
   selected: string | null = null;
   private selectedOptions: any[] = []
-  showDropdown: boolean = true;
+  showDropdown: boolean = false;
+  private lastQuery = '';
+
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
   selectOption(option: any) {
@@ -47,27 +49,32 @@ export class NewDrawingComponent implements OnDestroy, OnInit {
     this.hashtags.nativeElement.value = "";
 
     const newDiv = document.createElement("div");
-    newDiv.appendChild(option.name)
+    newDiv.style.backgroundColor = 'purple';
+    newDiv.style.padding = '0.5rem';
+    newDiv.style.borderRadius = '1rem';
+    newDiv.style.fontSize = '0.66rem';
+    newDiv.style.width = 'fit-content';
+    newDiv.style.height = 'fit-content';
+    newDiv.style.textAlign = 'center';
+    newDiv.style.display = 'flex';
+    newDiv.style.alignItems = 'center';
+    newDiv.style.justifyContent = 'center';
+    newDiv.style.margin = '0 auto';
+    
 
-    document.getElementById('hashtagss')!.innerHTML += newDiv
 
+
+    const newContent = document.createTextNode(option.name);
+
+    newDiv.appendChild(newContent);
+
+    const currentDiv = document.getElementById("hashtagss");
+    currentDiv?.appendChild(newDiv)
 
     if (!this.selectedOptions.includes(option.name)) {
       this.selectedOptions.push(option.name);
     }
   }
-
-  ngOnInit(): void {
-    const savedCache = localStorage.getItem('hashtagCache');
-    if (savedCache) {
-      try {
-        this.hashtagCache = JSON.parse(savedCache);
-      } catch (e) {
-        console.error('Hibás cache formátum:', e);
-      }
-    }
-  }
-
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event): void {
     // Ha nem az input mezőn vagy a dropdown menün kattintottak, akkor elrejtjük a dropdown-t
@@ -95,65 +102,36 @@ export class NewDrawingComponent implements OnDestroy, OnInit {
 
   }
 
-  checkHashtag(value: string): void {
-    const query = value.trim().toLowerCase();
-
-    // Túl rövid a query? Ne csináljunk semmit
-    if (query.length < 1) {
+  checkHashtag(value: string) {
+    const query = value?.trim().toLowerCase();
+    if (!query || query.length < 1) {
       this.showDropdown = false;
       return;
     }
-
-    // Ha van már cache-ben a query, akkor frissítjük az options-t, de nem rakjuk be újra a kiválasztott elemeket
-    if (this.hashtagCache[query]) {
-      // Csak azokat az elemeket adjuk hozzá az options-hoz, amelyek nem szerepelnek még a selectedOptions-ban
-      this.options = this.hashtagCache[query].filter(element =>
-        element.name && !this.selectedOptions.includes(element.name)
-      );
-      this.showDropdown = true;
-      return;
-    }
-
-    // Ha nincs még cache-ben, kérdezzük le az API-t
+  
+    // Amíg új adatot kérünk, ne jelenjen meg a dropdown
+    this.showDropdown = false;
+  
     const headers = new HttpHeaders({
       'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json'
     });
-
+  
     const url = `https://nagypeti.moriczcloud.hu/PixelArtSpotlight/hashtags/search/${encodeURIComponent(query)}`;
-
-    this.http.get<any[]>(url, { headers, withCredentials: true }).subscribe((data: any) => {
-      // Ha az API adatait kaptuk, tároljuk a cache-ben
-      this.hashtagCache[query] = data;
-
-      // Csak akkor mentsük el a localStorage-ba, ha még nincs benne a query
-      const savedCache = localStorage.getItem('hashtagCache');
-      if (savedCache) {
-        const parsedCache = JSON.parse(savedCache);
-
-        // Ha a query még nincs benne a localStorage-ben, mentjük el
-        if (!parsedCache[query]) {
-          parsedCache[query] = data;
-          localStorage.setItem('hashtagCache', JSON.stringify(parsedCache));
-        }
-      } else {
-        // Ha még nincs cache a localStorage-ban, mentsük el
-        localStorage.setItem('hashtagCache', JSON.stringify(this.hashtagCache));
-      }
-
-      // Frissítjük az options-t, de csak akkor rakjuk bele az adatokat, ha nincs benne a selectedOptions-ban
-      for (let index = 0; index < data.length; index++) {
-        const element = data[index];
-
-        // Csak azokat az elemeket adjuk hozzá, amik még nincsenek benne a selectedOptions-ban
-        if (element.name && !this.selectedOptions.includes(element.name)) {
-          this.options.push(element);
-        }
-      }
-
+  
+    this.http.get<any[]>(url, { headers, withCredentials: true }).subscribe((data: any[]) => {
+      // Szűrés a selectedOptions alapján
+      const selectedSet = new Set(this.selectedOptions);
+      this.options = data
+        .filter(item => item.name && !selectedSet.has(item.name))
+        .slice(0, 10); // ha kell, limitálhatod
+  
+      // Csak ezután jelenik meg újra a dropdown
       this.showDropdown = true;
     });
   }
+  
+  
 
 
 
