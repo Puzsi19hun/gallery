@@ -69,10 +69,12 @@ input {
   z-index: 1;
   position: absolute;
   display: flex;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   justify-content: center;
   height: 80vh;
   width: 100vw;
-  align-items: center;
 }
 
 .savingDialog {
@@ -86,6 +88,7 @@ input {
   flex-direction: column;
   border-radius: 1rem;
   padding: 2rem 0;
+  align-self: center;
   border: 2px solid rgba(81, 255, 0.5);
 }
 
@@ -281,12 +284,19 @@ canvas {
   font-family: "HISKYFLIPPERHIBOLD", serif;
   display: flex;
   flex-wrap: wrap;
-  margin: 0 auto;
-  gap: 0.33rem;
+  gap: 0.5rem;
+  /* Egységes, de nagyobb gap */
   height: 8rem;
-  overflow: scroll;
-  scrollbar-width: none;
+  width: 100%;
+  justify-content: center;
+  /* Center helyett kezdje az elejétől */
+  align-content: flex-start;
+  /* A sorok felülről kezdődjenek */
+  overflow-y: auto;
+  /* Csak szükség esetén jelenjen meg görgetősáv */
   padding: 1rem;
+  box-sizing: border-box;
+  /* Hogy a padding ne növelje a méretét */
 }
 
 .dropdown-option:hover {
@@ -376,7 +386,6 @@ canvas {
   }
 
   .savingDialog {
-    margin-top: 5rem;
     font-size: 1.25rem;
     width: 90%;
     height: 80%;

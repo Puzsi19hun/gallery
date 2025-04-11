@@ -37,12 +37,13 @@
                         <div class="dropdown-options">
                             @if(options.length > 0)
                             {
-                            <div class="dropdown-option" *ngFor="let asd of options" (click)="selectOption(asd)">
+                            <div class="dropdown-option" *ngFor="let asd of options; trackBy: trackByFn"
+                                (click)="selectOption(asd,0)">
                                 {{ asd.name }}
                             </div>
                             }
                             @else{
-                            <div class="dropdown-option">
+                            <div class="dropdown-option" (click)="selectOption(hashtags.value, 1)">
                                 New hashtag
                             </div>
                             }
@@ -65,7 +66,7 @@
                 </div>
             </div>
             <div class="dialogButtons">
-                <button class="dialogButton">Save</button>
+                <button class="dialogButton" (click)="saveHashtags()">Save</button>
                 <button class="dialogButton" (click)="savingDialog = false">Cancel</button>
             </div>
         </form>

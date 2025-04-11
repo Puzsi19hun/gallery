@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { DataserviceService } from '../dataservice.service';
 import { CommonModule, NgClass } from '@angular/common';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
@@ -34,47 +34,151 @@ export class NewDrawingComponent implements OnDestroy {
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
   private forked = false
+  searchTimeout: any = null;
 
   options: any[] = [];
   selected: string | null = null;
   private selectedOptions: any[] = []
   showDropdown: boolean = false;
   private lastQuery = '';
+  private cache = new Map<string, any[]>();
+  cachedHashtags: { name: string }[] = [];
+
 
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
-  selectOption(option: any) {
+  selectOption(option: any, newtag: any) {
     this.selected = option;
+    const currentDiv = document.getElementById("hashtagss");
+
+    // Ellenőrizzük, hogy már létezik-e a DOM-ban
+    if (currentDiv) {
+      const existingTags = Array.from(currentDiv.children);
+      const tagText = newtag === 1 ? option : option.name;
+
+      const alreadyExists = existingTags.some(child =>
+        child.textContent?.toLowerCase().includes(tagText.toLowerCase())
+      );
+
+      if (alreadyExists) {
+        console.log("Hashtag már létezik a DOM-ban:", tagText);
+        return;
+      }
+    }
+
     this.showDropdown = false;
     this.hashtags.nativeElement.value = "";
 
+    // Ha új hashtag (newtag == 1), akkor küldjünk POST kérést
+    if (newtag == 1) {
+      if (!this.selectedOptions.includes(option)) {
+        const url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/hashtags";
+        const headers = new HttpHeaders({
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json'  // JSON típus, nem FormData
+        });
+
+        const body = {
+          name: option  // Az adat JSON formátumban
+        };
+
+        this.http.post<any>(url, body, { headers: headers, withCredentials: true })
+          .pipe(
+            tap((res: any) => {
+              this.cdr.detectChanges()
+              // Ha sikeres válasz érkezik, adjuk hozzá az id-t a selectedOptions-hoz
+              this.selectedOptions.push(res.data.id);
+              console.log('Sikeresen hozzáadva:', res.data.id);
+
+              // Most jöhet a DOM manipulálása
+              this.addTagToDom(option, res.id, newtag);
+
+            })
+          )
+          .subscribe((response) => {
+            console.log('Response:', response);
+          }, (error) => {
+            console.error('Error:', error); // Hiba kezelés, ha valami probléma történik
+          });
+      }
+    }
+    // Ha nem új hashtag, akkor csak a már létező opcióval dolgozunk
+    else {
+      if (!this.selectedOptions.includes(option.name)) {
+        this.selectedOptions.push(option.id);
+      }
+
+      // Már létező hashtag hozzáadása a DOM-hoz
+      this.addTagToDom(option, option.id, newtag);
+    }
+
+    console.log(this.selectedOptions);
+  }
+
+  // Segédmetódus a DOM frissítésére
+  addTagToDom(option: any, id: any, newtag: any) {
+    const currentDiv = document.getElementById("hashtagss");
+
     const newDiv = document.createElement("div");
-    newDiv.style.backgroundColor = 'purple';
+    newDiv.style.backgroundColor = '#0073e6';
+    newDiv.style.color = "white";
     newDiv.style.padding = '0.5rem';
-    newDiv.style.borderRadius = '1rem';
-    newDiv.style.fontSize = '0.66rem';
+    newDiv.style.borderRadius = '0.5rem';
+    newDiv.style.fontSize = '0.75rem';
     newDiv.style.width = 'fit-content';
     newDiv.style.height = 'fit-content';
     newDiv.style.textAlign = 'center';
     newDiv.style.display = 'flex';
     newDiv.style.alignItems = 'center';
     newDiv.style.justifyContent = 'center';
-    newDiv.style.margin = '0 auto';
-    
+    newDiv.style.margin = '0';
+    newDiv.style.gap = '6px'; // Szöveges rész és az X gomb közötti távolság
 
+    // Hashtag szövege
+    const textSpan = document.createElement("span");
+    const newContent = document.createTextNode(newtag == 1 ? option : option.name);
+    textSpan.appendChild(newContent);
+    newDiv.appendChild(textSpan);
 
+    // X gomb hozzáadása
+    const deleteBtn = document.createElement("span");
+    deleteBtn.textContent = "X"; // × karakter az X-hez
+    deleteBtn.style.cursor = "pointer";
+    deleteBtn.style.color = "red";
+    deleteBtn.style.fontWeight = "bold";
+    deleteBtn.style.marginLeft = "3px";
+    deleteBtn.style.fontSize = "1.33rem";
+    deleteBtn.style.lineHeight = "1";
+    deleteBtn.style.display = "inline-flex";
+    deleteBtn.style.alignItems = "center";
+    deleteBtn.style.justifyContent = "center";
 
-    const newContent = document.createTextNode(option.name);
+    // X gomb eseménykezelő
+    deleteBtn.addEventListener("click", (event) => {
+      // Buborékozás megállítása
+      event.stopPropagation();
 
-    newDiv.appendChild(newContent);
+      // Hashtag törlése a DOM-ból
+      newDiv.remove();
 
-    const currentDiv = document.getElementById("hashtagss");
-    currentDiv?.appendChild(newDiv)
+      // Hashtag törlése a selectedOptions tömbből is
+      const index = this.selectedOptions.indexOf(newtag == 1 ? option : option.name);
+      if (index !== -1) {
+        this.selectedOptions.splice(index, 1);
+      }
+    });
 
-    if (!this.selectedOptions.includes(option.name)) {
-      this.selectedOptions.push(option.name);
-    }
+    newDiv.appendChild(deleteBtn);
+
+    // Hozzáadás a konténerhez
+    currentDiv?.appendChild(newDiv);
   }
+
+
+  saveHashtags() {
+
+  }
+
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event): void {
     // Ha nem az input mezőn vagy a dropdown menün kattintottak, akkor elrejtjük a dropdown-t
@@ -102,36 +206,39 @@ export class NewDrawingComponent implements OnDestroy {
 
   }
 
+  trackByFn(index: number, item: any): string {
+    return item.name;
+  }
+
   checkHashtag(value: string) {
     const query = value?.trim().toLowerCase();
     if (!query || query.length < 1) {
       this.showDropdown = false;
       return;
     }
-  
-    // Amíg új adatot kérünk, ne jelenjen meg a dropdown
-    this.showDropdown = false;
-  
+
+    // Ha épp most választottunk opciót, akkor csak akkor nyitunk újra dropdown-t, ha az új adat visszajött
+
     const headers = new HttpHeaders({
       'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json'
     });
-  
+
     const url = `https://nagypeti.moriczcloud.hu/PixelArtSpotlight/hashtags/search/${encodeURIComponent(query)}`;
-  
+
     this.http.get<any[]>(url, { headers, withCredentials: true }).subscribe((data: any[]) => {
-      // Szűrés a selectedOptions alapján
       const selectedSet = new Set(this.selectedOptions);
       this.options = data
         .filter(item => item.name && !selectedSet.has(item.name))
-        .slice(0, 10); // ha kell, limitálhatod
-  
-      // Csak ezután jelenik meg újra a dropdown
+        .slice(0, 10);
+
+      // Ha nem vagyunk "várakozós" állapotban, azonnal megmutatjuk
+      // Ha igen, akkor csak most engedélyezzük újra a dropdown-t
       this.showDropdown = true;
     });
   }
-  
-  
+
+
 
 
 
@@ -143,6 +250,9 @@ export class NewDrawingComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.dataservice.setData(null)
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
   }
 
 
@@ -648,6 +758,7 @@ export class NewDrawingComponent implements OnDestroy {
     formData.append('width', String(this.gridWidth));
     formData.append('name', name);
     formData.append('canBeEdited', String(canEdit))
+    formData.append('hashtags', JSON.stringify(this.selectedOptions))
     if (this.forked) {
       formData.append('forked', String(1))
       formData.append('forkedFrom', this.dataservice.getData().forked_from)
