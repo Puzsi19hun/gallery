@@ -8,6 +8,7 @@ import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
+
 @Component({
   selector: 'app-new-drawing',
   imports: [ColorPickerModule, FormsModule, NgClass, CommonModule],
@@ -54,11 +55,13 @@ export class NewDrawingComponent implements OnDestroy {
     // Ellenőrizzük, hogy már létezik-e a DOM-ban
     if (currentDiv) {
       const existingTags = Array.from(currentDiv.children);
-      const tagText = newtag === 1 ? option : option.name;
+      const tagText = (newtag === 1 ? option : option.name).toLowerCase().trim();
 
-      const alreadyExists = existingTags.some(child =>
-        child.textContent?.toLowerCase().includes(tagText.toLowerCase())
-      );
+      const alreadyExists = existingTags.some(child => {
+        const span = child.querySelector("span");
+        const childText = span?.textContent?.toLowerCase().trim();
+        return childText === tagText;
+      });
 
       if (alreadyExists) {
         console.log("Hashtag már létezik a DOM-ban:", tagText);
@@ -229,7 +232,7 @@ export class NewDrawingComponent implements OnDestroy {
     this.http.get<any[]>(url, { headers, withCredentials: true }).subscribe((data: any[]) => {
       const selectedSet = new Set(this.selectedOptions);
       this.options = data
-        .filter(item => item.name && !selectedSet.has(item.name))
+        .filter(item => !selectedSet.has(item.id)) // csak azokat mutatja, amik még nincsenek selectedOptions-ben
         .slice(0, 10);
 
       // Ha nem vagyunk "várakozós" állapotban, azonnal megmutatjuk

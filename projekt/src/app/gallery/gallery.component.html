@@ -1,38 +1,52 @@
 <div class="container">
-    @if(ExpandCard)
-    {
+  @if(ExpandCard) {
 
-    <div class="dialogContainer">
-        <div class="dialog">
-            <div class="mainContainer">
-                <h1 class="name">{{cardName}}</h1>
-                <canvas #canvass></canvas>
-            </div>
-            @if(forkedFrom != null)
-                {
-                <p class="forkedLabel">Forked from: {{forkedFrom}}</p>
-                }
-            <div class="dialogButtons">
-                <button class="dialogButton" (click)="ExpandCard = false">Cancel</button>
-            </div>
-        </div>
+  <div class="dialogContainer">
+    <div class="dialog">
+      <div class="mainContainer">
+        <h1 class="name">{{ cardName }}</h1>
+        <canvas #canvass></canvas>
+      </div>
+      @if(forkedFrom != null) {
+      <p class="forkedLabel">Forked from: {{ forkedFrom }}</p>
+      }
+      <div class="dialogButtons">
+        <button class="dialogButton" (click)="ExpandCard = false">
+          Cancel
+        </button>
+      </div>
     </div>
-    }
+  </div>
+  }
 
-    <div class="drawingsContainer">
-        <div *ngFor="let item of paginatedData" class="drawings">
-            <app-drawing-card (expandCard)="onExpand($event)" [canBeEdited]="item.canBeEdited" [forked]="item.forked"
-                [profil]="false" [forkedFrom]="item.forkedFrom" [name]="item.name" [user_id]="item.user_id"
-                [image_id]="item.image_id" [width]="item.width" [user_name]="item.user_name"
-                [hexCodes]="item.hex_codes">
-            </app-drawing-card>
-        </div>
-        <p-paginator class="p-paginator" (onPageChange)="paginate($event)" [rows]="10" [totalRecords]="data.length"
-            [pageLinkSize]="dynamicPageSize">
-            >
-        </p-paginator>
+  <div class="drawingsContainer">
+    <div *ngFor="let item of paginatedData" class="drawings">
+      <app-drawing-card
+        (expandCard)="onExpand($event)"
+        [hashtags]="item.hashtags"
+        [canBeEdited]="item.canBeEdited"
+        [forked]="item.forked"
+        [profil]="false"
+        [forkedFrom]="item.forkedFrom"
+        [name]="item.name"
+        [user_id]="item.user_id"
+        [image_id]="item.image_id"
+        [width]="item.width"
+        [user_name]="item.user_name"
+        [hexCodes]="item.hex_codes"
+      >
+      </app-drawing-card>
     </div>
+    <p-paginator
+      class="p-paginator"
+      (onPageChange)="paginate($event)"
+      [rows]="10"
+      [totalRecords]="data.length"
+      [pageLinkSize]="dynamicPageSize"
+    >
+      >
+    </p-paginator>
+  </div>
 
-    <!-- Paginator -->
-
+  <!-- Paginator -->
 </div>

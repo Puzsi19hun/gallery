@@ -1,86 +1,82 @@
-@if(user_id != readLocalStorageValue("id"))
-{
+@if(user_id != readLocalStorageValue("id")) {
 <div class="drawingsContainer">
-    <div class="card">
-        <h1 class="name">{{name}}</h1>
-        <canvas style="cursor: pointer;" (click)="onClick()" #canvas></canvas>
-        @if(canBeEdited == 1)
-        {
-        <span (click)="onEdit()" class="material-symbols-outlined edit">
-            draw
-        </span>
-        }
-        @if(forked)
-        {
-        <span class="material-symbols-outlined forkOther">
-            graph_1
-        </span>
-        <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem;" (click)="checkProfile()"
-            class="bottomO">Made by:
-            {{user_name}}
-        </h3>
-        }
-        @else
-        {
-        <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem;" (click)="checkProfile()"
-            class="bottomO">Made by:
-            {{user_name}}
-        </h3>
-        }
-    </div>
+  <div class="card">
+    <h1 class="name">{{ name }}</h1>
+    <canvas style="cursor: pointer" (click)="onClick()" #canvas></canvas>
+    @if(canBeEdited == 1) {
+    <span (click)="onEdit()" class="material-symbols-outlined edit">
+      draw
+    </span>
+    } @if(forked) {
+    <span class="material-symbols-outlined forkOther"> graph_1 </span>
+    <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem" (click)="checkProfile()" class="bottomO">
+      Made by:
+      {{ user_name }}
+    </h3>
+    }
+    @else {
+    <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem" (click)="checkProfile()" class="bottomO">
+      Made by:
+      {{ user_name }}
+    </h3>
+    }
+  </div>
 </div>
-}
-@else
-{
+} @else {
 <div class="drawingsContainer">
-    <div class="card">
-        @if(profil)
-        {
-        <i (click)="onDelete()" class="far fa-times-circle delete"></i>
-        }
-        @if(canBeEdited == 1)
-        {
-        <span (click)="onEdit()" class="material-symbols-outlined edit">
-            draw
-        </span>
-        }
+  <div class="card">
+    @if(profil) {
+    <i (click)="onDelete()" class="far fa-times-circle delete"></i>
+    } @if(canBeEdited == 1) {
+    <span (click)="onEdit()" class="material-symbols-outlined edit">
+      draw
+    </span>
+    }
 
+    <h1 class="name">{{ name }}</h1>
+    <canvas style="cursor: pointer" (click)="onClick()" #canvas></canvas>
 
-        <h1 class="name">{{name}}</h1>
-        <canvas style="cursor: pointer;" (click)="onClick()" #canvas></canvas>
-        @if(!profil)
-        {
-            @if(forked)
-            {
-            <span class="material-symbols-outlined fork">
-                graph_1
-            </span>
-            <h3 (click)="moveToProfil()" style="font-size:0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
-            </h3>
-            }
-            @else
-            {
-            <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem;" class="bottomY">Your drawing
-            </h3>
-            }
-        }
-        @else
-        {
-            @if(forked)
-            {
-            <span class="material-symbols-outlined fork">
-                graph_1
-            </span>
-            <h3 style="font-size:0.95rem; letter-spacing: 0.1rem; color: #33a100; cursor: auto;" class="bottomY">Your drawing
-            </h3>
-            }
-            @else
-            {
-            <h3 style="font-size: 0.95rem; letter-spacing: 0.1rem; color: #33a100; cursor: auto;" class="bottomY">Your drawing
-            </h3>
-            }
-        }
-
+    @if(hashtags.length > 0) {
+    <div class="hashtagsContainer">
+      <div class="hashtags" *ngFor="let item of hashtags">
+        {{ item }}
+      </div>
     </div>
+    }
+
+    @if(!profil) { @if(forked) {
+    <span class="material-symbols-outlined fork"> graph_1 </span>
+    <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem" class="bottomY">
+      Your drawing
+    </h3>
+    }
+
+    @else {
+    <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem" class="bottomY">
+      Your drawing
+    </h3>
+    } }
+    @else {
+    @if(forked) {
+    <span class="material-symbols-outlined fork"> graph_1 </span>
+    <h3 style="
+        font-size: 0.95rem;
+        letter-spacing: 0.1rem;
+        color: #33a100;
+        cursor: auto;
+      " class="bottomY">
+      Your drawing
+    </h3>
+    } @else {
+    <h3 style="
+        font-size: 0.95rem;
+        letter-spacing: 0.1rem;
+        color: #33a100;
+        cursor: auto;
+      " class="bottomY">
+      Your drawing
+    </h3>
+    } }
+  </div>
 </div>
 }
