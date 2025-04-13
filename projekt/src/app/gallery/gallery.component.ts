@@ -4,6 +4,7 @@ import { DataserviceService } from '../dataservice.service';
 import { NgFor } from '@angular/common';
 import { DrawingCardComponent } from '../drawing-card/drawing-card.component';
 import { PaginatorModule } from 'primeng/paginator';
+import { catchError, of, throwError } from 'rxjs';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class GalleryComponent implements OnInit {
   paginatedData: any[] = [];
   pageSize = 10;
   currentPage = 0;
+  @ViewChild('searchDiv') myInput!: ElementRef;
 
 
   @ViewChild('canvass', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -45,11 +47,20 @@ export class GalleryComponent implements OnInit {
         console.log(data)
         this.data = data[0]
         this.updatePaginatedData();
-
       }
     );
     this.adjustPaginator();
     this.updateCanvasSize(); // Inicializáláskor is méretezzük át
+  }
+
+  @HostListener('document:click', ['$event.target'])
+  onClick(target: HTMLElement) {
+    const clickedInside = this.myInput.nativeElement.contains(target);
+    if (!clickedInside) {
+      document.getElementById('searchDiv')!.style.borderColor = "rgb(41, 41, 41)"
+      document.getElementById('search')!.style.color = "gray"
+      document.getElementById('searchLabel')!.style.color = "gray"
+    }
   }
 
   paginate(event: any) {
@@ -116,6 +127,61 @@ export class GalleryComponent implements OnInit {
       ctx.strokeStyle = 'transparent';
       ctx.fillRect(x, y, Math.ceil(pixelSize), Math.ceil(pixelSize));
     }
+  }
+
+
+
+  searchFocus() {
+    document.getElementById('search')?.focus()
+    document.getElementById('searchDiv')!.style.borderColor = "white"
+    document.getElementById('searchLabel')!.style.color = "white"
+    document.getElementById('search')!.style.color = "white"
+  }
+
+  searching(value: any) {
+    if (value.length == 0) {
+      let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getHexCodes";
+      let headers = new HttpHeaders();
+      headers.set('X-Requested-With', 'XMLHttpRequest');
+      headers.set('Content-Type', 'application/json');
+      this.http.get(url, { headers: headers, withCredentials: true }).subscribe(
+        (data: any) => {
+          console.log(data)
+          this.data = data[0]
+          this.updatePaginatedData();
+        }
+      );
+      this.adjustPaginator();
+      return
+    }
+
+    let headers = new HttpHeaders();
+    headers.set('X-Requested-With', 'XMLHttpRequest');
+    headers.set('Content-Type', 'application/json');
+    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/kepek/search/" + value
+
+    this.http.get(url, { headers: headers, withCredentials: true }).pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          // Elnyeljük a hibát, nem logoljuk a konzolba
+          return of([]); // Üres lista visszaadása pl.
+        }
+        // Egyéb hibák, ha akarod, kezeld külön
+        return throwError(() => error);
+      })
+    ).subscribe
+      (
+        (res: any) => {
+          console.log(res)
+          this.data = res
+          this.updatePaginatedData();
+        },
+        (error: any) => {
+          console.log('Hiba történt')
+          this.data = []
+          this.updatePaginatedData();
+        }
+      )
   }
 
   onExpand(value: any) {

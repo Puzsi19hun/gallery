@@ -1,20 +1,63 @@
 .container {
-  margin-top: 2rem;
   margin: auto 1.5rem;
+  margin-top: 3rem;
 }
 
 .drawingsContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  height: 86vh;
+  height: 85vh;
   width: 100%;
   justify-content: center;
   overflow: scroll;
   scrollbar-width: none;
   border-radius: 1rem;
-  margin-top: 5rem;
+  
 
+}
+
+.searchContainer
+{
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.search
+{
+  display: flex;
+  width: fit-content;
+  padding: 0.2rem;
+  border: 1px solid rgb(41, 41, 41);
+  border-radius: 0.33rem;
+  background-color: #121212;
+}
+
+.searchLabel
+{
+  user-select: none;
+  cursor:text;
+  color: gray;
+  display: flex;
+  align-items: center;
+}
+
+input
+{
+  border: none;
+  color: white;
+  font-family: 'Minercraftory', sans-serif;
+  font-size: 1.1rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: inherit;
+  color: inherit;
+  background-color: #121212;
 }
 
 .p-paginator {
@@ -129,12 +172,16 @@ canvas {
 @media only screen and (max-width: 1200px) {
   .container {
     margin-left: 0rem;
-    margin: 0 auto;
   }
 
   .dialog {
     width: 70%;
   }
+
+  .drawingsContainer {
+    height: 95vh;
+  }
+  
 }
 
 @media only screen and (max-width: 780px) {
@@ -147,7 +194,7 @@ canvas {
   }
 
   .drawingsContainer {
-    height: 78vh;
+    height: 80vh;
   }
 
   .center {
@@ -156,6 +203,11 @@ canvas {
 
   .show {
     display: none;
+  }
+
+  input
+  {
+    font-size: 0.9rem;
   }
 }
 

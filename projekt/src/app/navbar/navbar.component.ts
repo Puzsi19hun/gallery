@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
   profilOpen = false
   loginOpen = false
   registerOpen = false
+  searching = false
   @Input({ required: true }) logged_in: boolean = false
 
   menuOpen = false;
@@ -38,7 +39,9 @@ export class NavbarComponent implements OnInit {
     this.menuOpen = !this.menuOpen;
   }
 
-
+  expandSearch() {
+    this.searching = true
+  }
 
   navigateGuest() {
     this.router.navigateByUrl('/guest')
