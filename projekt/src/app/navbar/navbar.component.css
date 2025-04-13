@@ -61,6 +61,8 @@ a {
   display: flex;
   align-items: flex-start;
   margin-left: -0.725rem;
+  top: 0;
+  left: 0;
   text-decoration: none;
   cursor: pointer;
 }

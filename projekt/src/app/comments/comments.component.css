@@ -1,0 +1,185 @@
+.container {
+    margin: auto 0.725rem;
+    margin-top: 3rem;
+  }
+
+.canvasContainer
+{
+  width: 50%;
+  line-height: 0;
+  padding: 0;
+  margin: 0;
+}
+
+
+.upSection
+{
+  display: flex;
+  overflow: scroll;
+  flex-direction: row;
+  justify-content: center;
+  height: 100%;
+  gap: 5%;
+  align-items: flex-start;
+    scrollbar-width: none;
+}
+
+canvas
+{
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.artistInfo
+{
+  color: #6dffff;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.imageInfo {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+}
+
+.upSection,
+.canvasContainer,
+.imageInfo {
+  margin: 0;
+  padding: 0;
+}
+
+.imageInfo h1 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.hashtagsContainer
+{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  width: 100%;
+  flex-wrap: wrap;
+  scrollbar-width: none;
+
+}
+
+.hashtags {
+  background-color: #0073e6;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-family: 'Minercraftory', sans-serif;
+  font-size: 0.75rem;
+  text-align: center;
+  gap: 1rem; /* Szöveg és X gomb közötti távolság */
+}
+
+.comments {
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 2rem;
+
+  font-family: "Minercraftory";
+}
+
+.commentWrite {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: "Minercraftory";
+}
+
+.pfp {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.inputWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.inputWrapper input {
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 15px;
+  outline: none;
+  font-family: "Arial";
+  transition: border-color 0.2s;
+}
+
+.inputWrapper input:focus {
+  border-bottom: 1px solid #0073ff;
+}
+
+.sendBtn {
+  align-self: flex-end;
+  margin-top: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  background-color: #0073ff;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-family: "Minercraftory";
+
+}
+
+.sendBtn:hover {
+  background-color: #005dd1;
+}
+
+@media only screen and (max-width: 780px) {
+  .upSection
+{
+  gap: 1rem;
+  flex-direction: column;
+  height: 100%;
+}
+
+.imageInfo
+{
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.canvasContainer
+{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.hashtagsContainer
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  flex-wrap: wrap;
+  scrollbar-width: none;
+}
+.artistInfo
+{
+  margin-bottom: 1rem;
+}
+}

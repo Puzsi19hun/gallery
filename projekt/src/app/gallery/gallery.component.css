@@ -1,6 +1,6 @@
 .container {
   margin: auto 1.5rem;
-  margin-top: 3rem;
+  margin-top: 2.5rem;
 }
 
 .drawingsContainer {
@@ -51,6 +51,7 @@ input
   color: white;
   font-family: 'Minercraftory', sans-serif;
   font-size: 1.1rem;
+  background-color: #121212;
 }
 
 input:focus {

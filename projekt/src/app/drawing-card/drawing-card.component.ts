@@ -47,7 +47,7 @@ export class DrawingCardComponent implements AfterViewInit {
     private dataservice: DataserviceService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const headers = new HttpHeaders({
@@ -110,6 +110,10 @@ export class DrawingCardComponent implements AfterViewInit {
       this.cdr.detectChanges();
       this.dataservice.move_to('/new-drawing');
     }
+  }
+
+  checkComments() {
+    this.router.navigate(['/comments', this.image_id]);
   }
 
   checkProfile() {

@@ -9,6 +9,7 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { NewPassComponent } from './new-pass/new-pass.component';
 import { CheckProfileComponent } from './check-profile/check-profile.component';
+import { CommentsComponent } from './comments/comments.component';
 
 export const routes: Routes = [
     { path: '', component: LoginComponent },
@@ -22,4 +23,5 @@ export const routes: Routes = [
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'new-pass', component: NewPassComponent },
     { path: 'checkProfile/:id', component: CheckProfileComponent },
+    { path: 'comments/:id', component: CommentsComponent },
 ];

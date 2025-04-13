@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="artistInfo">
+        <h1>Author: {{userName}}</h1>
+    </div>
+    <div class="upSection">
+        <div class="canvasContainer">
+            <canvas #canvas></canvas>
+        </div>
+        <div class="imageInfo">
+            <div class="hashtagsContainer">
+                <div class="hashtags" *ngFor="let item of hashtags">
+                    {{ item }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="comments">
+        <div class="commentWrite">
+            <img src="assets/pfp.png" class="pfp" alt="Profilkép">
+            <div class="inputWrapper">
+                <input type="text" placeholder="Add a comment..." />
+                <button class="sendBtn">Send</button>
+            </div>
+        </div>
+    </div>
+</div>

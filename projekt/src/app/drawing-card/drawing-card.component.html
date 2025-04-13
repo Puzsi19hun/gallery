@@ -1,7 +1,7 @@
 @if(user_id != readLocalStorageValue("id")) {
 <div class="drawingsContainer">
   <div class="card">
-    <h1 class="name">{{ name }}</h1>
+    <h1 (click)="checkComments()" class="name">{{ name }}</h1>
     <canvas style="cursor: pointer" (click)="onClick()" #canvas></canvas>
     @if(hashtags.length > 0) {
     <div class="hashtagsContainer">
@@ -10,6 +10,9 @@
       </div>
     </div>
     }
+    <span (click)="checkComments()" class="material-symbols-outlined comments">
+      forum
+    </span>
     @if(canBeEdited == 1) {
     <span (click)="onEdit()" class="material-symbols-outlined edit">
       draw
@@ -29,7 +32,9 @@
     }
   </div>
 </div>
-} @else {
+}
+
+@else {
 <div class="drawingsContainer">
   <div class="card">
     @if(profil) {
@@ -40,7 +45,7 @@
     </span>
     }
 
-    <h1 class="name">{{ name }}</h1>
+    <h1 (click)="checkComments()" class="name">{{ name }}</h1>
     <canvas style="cursor: pointer" (click)="onClick()" #canvas></canvas>
 
     @if(hashtags.length > 0) {
@@ -50,7 +55,9 @@
       </div>
     </div>
     }
-
+    <span (click)="checkComments()" class="material-symbols-outlined comments">
+      forum
+    </span>
     @if(!profil) { @if(forked) {
     <span class="material-symbols-outlined fork"> graph_1 </span>
     <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem" class="bottomY">
