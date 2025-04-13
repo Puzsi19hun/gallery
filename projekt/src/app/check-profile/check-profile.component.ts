@@ -48,6 +48,7 @@ export class CheckProfileComponent implements OnInit {
     this.http.post(url, formData, { headers: headers, withCredentials: true }).subscribe(
       (data: any) => {
         if (data) {
+          console.log(data)
           this.data = data
           this.userName = data[0].user_name
         }
