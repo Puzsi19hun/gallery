@@ -23,4 +23,10 @@
 body {
   background-color: #0a1119;
   font-family: "Minecraft", serif;
+  scrollbar-width: none;
+}
+
+*{
+  scrollbar-width: none;
+
 }

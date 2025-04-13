@@ -50,6 +50,7 @@ export class DrawingCardComponent implements AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.user_id)
     const headers = new HttpHeaders({
       'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json',

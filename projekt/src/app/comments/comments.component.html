@@ -1,16 +1,38 @@
 <div class="container">
     <div class="artistInfo">
-        <h1>Author: {{userName}}</h1>
+        <h1>Artist: {{userName}}</h1>
     </div>
     <div class="upSection">
         <div class="canvasContainer">
             <canvas #canvas></canvas>
         </div>
         <div class="imageInfo">
+            <h1 class="tagsLabel">Tags:</h1>
+            @if(hashtags.length > 0)
+            {
             <div class="hashtagsContainer">
                 <div class="hashtags" *ngFor="let item of hashtags">
                     {{ item }}
                 </div>
+            </div>
+            }
+            @else
+            {
+            <p>This drawing doesn't have any tags...</p>
+            }
+            <div class="desc">
+                <h2 class="descLabel">
+                    Description:
+                </h2>
+                @if(description != '')
+                {
+
+                <p class="description">{{description}}</p>
+                }
+                @else
+                {
+                <p>This drawing doesnt have a description...</p>
+                }
             </div>
         </div>
     </div>

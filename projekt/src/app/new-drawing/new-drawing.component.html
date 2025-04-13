@@ -26,9 +26,10 @@
 {
 <div class="savingContainer">
     <div class="savingDialog" (clickOutside)="onClickOutside($event)">
-        <form (ngSubmit)="onSave(name.value, canBeEdited.checked)" class="inputs">
+        <form (ngSubmit)="onSave(name.value, canBeEdited.checked, desc.value)" class="inputs">
             <div style="display: flex; flex-direction: column;">
                 <input class="saveInput" #name required type="text" placeholder="Name: ">
+                <textarea class="saveInput" #desc placeholder="Description:"></textarea>
                 <input (input)="checkHashtag(hashtags.value)" class="saveInput" #hashtags required type="text"
                     placeholder="Hashtags: ">
                 @if(hashtags.value.length > 0)

@@ -44,13 +44,23 @@ export class NewDrawingComponent implements OnDestroy {
   private lastQuery = '';
   private cache = new Map<string, any[]>();
   cachedHashtags: { name: string }[] = [];
+  readonly MAX_HASHTAGS = 8;
 
 
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
   selectOption(option: any, newtag: any) {
+
     this.selected = option;
     const currentDiv = document.getElementById("hashtagss");
+
+    // Limit check
+    if (currentDiv && currentDiv.children.length >= this.MAX_HASHTAGS) {
+      console.warn("Elérted a maximum 8 hashtaget.");
+      alert("Legfeljebb 8 hashtaget adhatsz meg.");
+
+      return;
+    }
 
     // Ellenőrizzük, hogy már létezik-e a DOM-ban
     if (currentDiv) {
@@ -432,7 +442,7 @@ export class NewDrawingComponent implements OnDestroy {
 
 
 
-  savePixelArt(name: any, canBeEdited: any) {
+  savePixelArt(name: any, canBeEdited: any, desc: any) {
     if (!this.ctx) return;
 
     const canvasEl = this.canvas.nativeElement;
@@ -463,7 +473,7 @@ export class NewDrawingComponent implements OnDestroy {
     }
 
     console.log("Pixel list:", pixelList);
-    this.sendToApi(pixelList, name, canBeEdited)
+    this.sendToApi(pixelList, name, canBeEdited, desc)
   }
 
 
@@ -739,10 +749,8 @@ export class NewDrawingComponent implements OnDestroy {
 
 
 
-  sendToApi(pixelList: string[], name: any, canBeEdited: any) {
-    console.log(this.forked)
+  sendToApi(pixelList: string[], name: any, canBeEdited: any, desc: any) {
     const apiUrl = 'https://nagypeti.moriczcloud.hu/PixelArtSpotlight/save'; // API URL
-    console.log(name, canBeEdited)
     let canEdit = 0
 
     if (canBeEdited == true) {
@@ -762,6 +770,7 @@ export class NewDrawingComponent implements OnDestroy {
     formData.append('name', name);
     formData.append('canBeEdited', String(canEdit))
     formData.append('hashtags', JSON.stringify(this.selectedOptions))
+    formData.append('description', desc)
     if (this.forked) {
       formData.append('forked', String(1))
       formData.append('forkedFrom', this.dataservice.getData().forked_from)
@@ -783,8 +792,8 @@ export class NewDrawingComponent implements OnDestroy {
     this.savingDialog = true
   }
 
-  onSave(name: any, canBeEdited: any) {
-    this.savePixelArt(name, canBeEdited)
+  onSave(name: any, canBeEdited: any, desc: any) {
+    this.savePixelArt(name, canBeEdited, desc)
   }
 
 

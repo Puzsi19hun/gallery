@@ -43,7 +43,7 @@ button:hover {
   align-items: flex-end;
 }
 
-input {
+input, textarea {
   text-align: justify;
   height: 1.5rem;
   border: none;
@@ -53,6 +53,11 @@ input {
   padding: 0 0.5rem 0 0.5rem;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2), 0 15px 40px rgba(0, 0, 0, 0.05);
   font-family: "Minecraft", serif;
+}
+
+textarea {
+  resize: none;
+  height: 5rem;
 }
 
 .dialogContainer {
@@ -73,16 +78,16 @@ input {
   left: 50%;
   transform: translate(-50%, -50%);
   justify-content: center;
-  height: 80vh;
+  height: 100vh;
   width: 100vw;
 }
 
 .savingDialog {
   position: absolute;
   background-color: rgb(44, 43, 43);
-  width: 40%;
+  width: 60%;
   font-size: 2rem;
-  height: 75%;
+  height: 80%;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -312,7 +317,7 @@ canvas {
   }
 
   .savingDialog {
-    width: 50%;
+    width: 80%;
     height: 80%;
   }
 

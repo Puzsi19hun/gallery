@@ -31,7 +31,7 @@ export class CommentsComponent implements OnInit {
   user: User[] = []
   @ViewChild('canvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
   private readonly MIN_CANVAS_SIZE = 200; // Minimális méret
-  private readonly MAX_CANVAS_SIZE = 400; // Eredeti méret
+  private readonly MAX_CANVAS_SIZE = 550; // Eredeti méret
   canvasSize = this.MAX_CANVAS_SIZE; // Dinamikus méret
   id: any = "";
   width = ""
@@ -39,7 +39,8 @@ export class CommentsComponent implements OnInit {
   userId = ""
   userName = ""
   hashtags: any[] = []
-
+  userDrawings: any[] = []
+  description = ''
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
@@ -64,6 +65,7 @@ export class CommentsComponent implements OnInit {
         this.userName = imageData.user?.name ?? 'Ismeretlen';
         this.userId = imageData.user?.id;
         this.hashtags = imageData.hashtags
+        this.description = imageData.description ?? ''
 
         this.cdr.detectChanges(); // ha kell
 
@@ -74,6 +76,8 @@ export class CommentsComponent implements OnInit {
         console.error("Hiba:", err);
       }
     );
+
+
   }
 
 
