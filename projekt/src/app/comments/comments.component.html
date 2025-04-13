@@ -7,7 +7,8 @@
             <canvas #canvas></canvas>
         </div>
         <div class="imageInfo">
-            <h1 class="tagsLabel">Tags:</h1>
+
+            <h1 style="color: rgb(109, 255, 255);" class="tagsLabel">Tags:</h1>
             @if(hashtags.length > 0)
             {
             <div class="hashtagsContainer">
@@ -20,8 +21,10 @@
             {
             <p>This drawing doesn't have any tags...</p>
             }
+            <h2 class="nameLabel" style="color: rgb(109, 255, 255);">Name: </h2>
+            <p class="name">{{name}}</p>
             <div class="desc">
-                <h2 class="descLabel">
+                <h2 style="color: rgb(109, 255, 255);" class="descLabel">
                     Description:
                 </h2>
                 @if(description != '')

@@ -11,6 +11,13 @@
   margin: 0;
 }
 
+.name
+{
+  margin-top: 0;
+  padding: 0;
+  margin-top: -0.5rem;
+  font-size: 2rem;
+}
 
 .upSection
 {
@@ -41,23 +48,26 @@ canvas
 }
 
 .imageInfo {
-  width: 50%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 
 }
 
-.upSection,
-.canvasContainer,
-.imageInfo {
-  margin: 0;
-  padding: 0;
+.description
+{
+  width: 100%;
 }
 
-.imageInfo h1 {
+.desc
+{
+  width: 100%;
+}
+
+.imageInfo h1, .imageInfo p {
   margin-top: 0;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   padding: 0;
   margin-top: -0.5rem;
 }
@@ -155,6 +165,13 @@ canvas
   background-color: #005dd1;
 }
 
+@media only screen and (max-width: 1300px) {
+  .description
+  {
+    font-size: 1.25rem;
+  }
+}
+
 @media only screen and (max-width: 900px) {
   
   .upSection
@@ -164,9 +181,42 @@ canvas
   height: 100%;
 }
 
+.name
+{
+  margin: 0 auto;
+  text-align: center;
+}
+
+.nameLabel
+{
+  margin: 0 auto;
+  margin-top: 2rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
 .tagsLabel
 {
   display: none;
+}
+
+.descLabel
+{
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.description
+{
+  width: 100%;
+  text-align: center;
+  display: flex;
+  word-wrap: break-word;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin: 0 auto;
 }
 
 .comments
@@ -208,7 +258,6 @@ canvas
 display: flex;
 justify-content: center;
 flex-direction: column;
-margin: 0 auto;
 }
 
 }

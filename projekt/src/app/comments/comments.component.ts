@@ -41,6 +41,7 @@ export class CommentsComponent implements OnInit {
   hashtags: any[] = []
   userDrawings: any[] = []
   description = ''
+  name = ''
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
@@ -66,6 +67,7 @@ export class CommentsComponent implements OnInit {
         this.userId = imageData.user?.id;
         this.hashtags = imageData.hashtags
         this.description = imageData.description ?? ''
+        this.name = imageData.name
 
         this.cdr.detectChanges(); // ha kell
 
