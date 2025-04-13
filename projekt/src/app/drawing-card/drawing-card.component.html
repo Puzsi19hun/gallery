@@ -3,6 +3,13 @@
   <div class="card">
     <h1 class="name">{{ name }}</h1>
     <canvas style="cursor: pointer" (click)="onClick()" #canvas></canvas>
+    @if(hashtags.length > 0) {
+    <div class="hashtagsContainer">
+      <div class="hashtags" *ngFor="let item of hashtags">
+        {{ item }}
+      </div>
+    </div>
+    }
     @if(canBeEdited == 1) {
     <span (click)="onEdit()" class="material-symbols-outlined edit">
       draw
