@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { DataserviceService } from '../dataservice.service';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, tap } from 'rxjs';
+import { interval, map, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 export interface User {
@@ -30,6 +30,7 @@ export interface User {
 export class CommentsComponent implements OnInit {
   user: User[] = []
   @ViewChild('canvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('comment', { static: false }) comment!: ElementRef<HTMLInputElement>;
   private readonly MIN_CANVAS_SIZE = 200; // Minimális méret
   private readonly MAX_CANVAS_SIZE = 550; // Eredeti méret
   canvasSize = this.MAX_CANVAS_SIZE; // Dinamikus méret
@@ -42,45 +43,62 @@ export class CommentsComponent implements OnInit {
   userDrawings: any[] = []
   description = ''
   name = ''
+  comments: any[] = []
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { 
+  
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
     if (!this.id) return;
-
+    
     const headers = new HttpHeaders().set('X-Requested-With', 'XMLHttpRequest');
     const formData = new FormData();
     formData.append('kepid', this.id);
+  
+    const url1 = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getHexCodesbykepid";
+    const url2 = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/comment_get";
+    let formdata2 = new FormData();
+    formdata2.append('kep_id', this.id)
+  
+    
 
-    const url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/getHexCodesbykepid";
-
-    this.http.post<any[]>(url, formData, { headers, withCredentials: true }).subscribe(
-      (data) => {
+    this.http.post<any[]>(url1, formData, { headers, withCredentials: true }).pipe(
+      tap((data) => {
         console.log("Kép adatok:", data);
-
         const imageData = data[0];
-
+  
         this.width = imageData.width;
         this.cardHex = imageData.hex_codes;
         this.userName = imageData.user?.name ?? 'Ismeretlen';
         this.userId = imageData.user?.id;
-        this.hashtags = imageData.hashtags
-        this.description = imageData.description ?? ''
-        this.name = imageData.name
-
-        this.cdr.detectChanges(); // ha kell
-
+        this.hashtags = imageData.hashtags;
+        this.description = imageData.description ?? '';
+        this.name = imageData.name;
+  
+        this.cdr.detectChanges(); // ha szükséges
         this.updateCanvasSize();
         this.drawCanvas();
+      }),
+      switchMap(() => {
+        return this.http.post(url2, formdata2 ,{ headers, withCredentials: true });
+      })
+    ).subscribe({
+      next: (res: any) => {
+        if(Array.isArray(res.message))
+        {
+          this.comments = res.message.reverse();
+        }
       },
-      (err) => {
+      error: (err) => {
         console.error("Hiba:", err);
       }
-    );
+    });
 
-
+  
   }
+  
 
 
   ngAfterViewInit(): void {
@@ -98,6 +116,51 @@ export class CommentsComponent implements OnInit {
     const screenWidth = window.innerWidth;
     // A vászon mérete az ablak szélességének 50%-a legyen, de legalább 200px, maximum 500px
     this.canvasSize = Math.max(this.MIN_CANVAS_SIZE, Math.min(this.MAX_CANVAS_SIZE, screenWidth * 0.5));
+  }
+
+  sendComment(value: any)
+  {
+    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/comment";
+    const headers = new HttpHeaders().set('X-Requested-With', 'XMLHttpRequest');
+    (document.getElementById('sendBtn') as HTMLButtonElement)!.disabled = true
+    const formData = new FormData();
+    formData.append('komment', value);
+    formData.append('kep_id', this.id);
+    formData.append('user_id', String(localStorage.getItem('id')))
+
+    this.http.post(url, formData, {headers: headers, withCredentials: true}).subscribe(
+      (res: any) => {
+        console.log(res)
+        this.refreshComments()
+        this.comment.nativeElement.value = "";
+        (document.getElementById('sendBtn') as HTMLButtonElement)!.disabled = false
+        this.cdr.detectChanges()
+      }, 
+      (error: any) => {
+        (document.getElementById('sendBtn') as HTMLButtonElement)!.disabled = false
+      }
+    )
+  }
+
+  refreshComments()
+  {
+    const headers = new HttpHeaders().set('X-Requested-With', 'XMLHttpRequest');
+    const formData = new FormData();
+    formData.append('kepid', this.id);
+  
+    const url2 = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/comment_get";
+    let formdata2 = new FormData();
+    formdata2.append('kep_id', this.id)
+
+    this.http.post(url2, formdata2 ,{ headers, withCredentials: true }).subscribe(
+      (res: any) => {
+        if(Array.isArray(res.message))
+          {
+            this.comments = res.message.reverse();
+          }      }
+    );
+  
+    
   }
 
   private drawCanvas() {

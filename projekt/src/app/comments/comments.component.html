@@ -19,7 +19,7 @@
             }
             @else
             {
-            <p>This drawing doesn't have any tags...</p>
+            <p class="nolabel">This drawing doesn't have any tags...</p>
             }
             <h2 class="nameLabel" style="color: rgb(109, 255, 255);">Name: </h2>
             <p class="name">{{name}}</p>
@@ -34,7 +34,7 @@
                 }
                 @else
                 {
-                <p>This drawing doesnt have a description...</p>
+                <p class="description">This drawing doesnt have a description...</p>
                 }
             </div>
         </div>
@@ -43,9 +43,17 @@
         <div class="commentWrite">
             <img src="assets/pfp.png" class="pfp" alt="Profilkép">
             <div class="inputWrapper">
-                <input type="text" placeholder="Add a comment..." />
-                <button class="sendBtn">Send</button>
+                <input type="text" #comment placeholder="Add a comment..." />
+                <button (click)="sendComment(comment.value)" id="sendBtn">Send</button>
             </div>
         </div>
     </div>
+    <div class="commentsContainer">
+        <div class="comment" *ngFor="let item of comments">
+          <div class="comment-bubble">
+            <p class="comment-author">{{ item.user_name }}</p>
+            <p class="comment-text">{{ item.komment }}</p>
+          </div>
+        </div>
+      </div>
 </div>

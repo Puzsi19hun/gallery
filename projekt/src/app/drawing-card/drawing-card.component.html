@@ -55,9 +55,11 @@
       </div>
     </div>
     }
-    <span (click)="checkComments()" class="material-symbols-outlined comments">
-      forum
-    </span>
+    @if (!profil) {
+      <span (click)="checkComments()" class="material-symbols-outlined comments">
+        forum
+      </span>
+    }
     @if(!profil) { @if(forked) {
     <span class="material-symbols-outlined fork"> graph_1 </span>
     <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem" class="bottomY">

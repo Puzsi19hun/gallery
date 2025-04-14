@@ -55,15 +55,6 @@ canvas
 
 }
 
-.description
-{
-  width: 100%;
-}
-
-.desc
-{
-  width: 100%;
-}
 
 .imageInfo h1, .imageInfo p {
   margin-top: 0;
@@ -97,11 +88,11 @@ canvas
 }
 
 .comments {
-  padding: 16px;
-  max-width: 600px;
+  padding: 16px; 
   margin: 0 auto;
-  margin-top: 2rem;
-
+  margin-top: 6rem;
+  margin-bottom: 1rem;
+  display: flex;
   font-family: "Minercraftory";
 }
 
@@ -110,9 +101,50 @@ canvas
   align-items: flex-start;
   gap: 12px;
   font-family: "Minercraftory";
-  padding: 12px;
   border-radius: 12px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 700px;
+  box-sizing: border-box;
 }
+
+
+
+.commentsContainer {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.comment {
+  margin-bottom: 1.5rem;
+}
+
+.comment-bubble {
+  background-color: #151d2b;
+  border: 2px solid #0ff;
+  border-radius: 10px;
+  padding: 1rem;
+  color: #fff;
+  box-shadow: 0 0 10px #0ff6;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.comment-author {
+  color: #00ff99;
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 0 5px #0ff;
+}
+
+.comment-text {
+  font-size: 0.85rem;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+
+
 
 .pfp {
   width: 40px;
@@ -125,9 +157,11 @@ canvas
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .inputWrapper input {
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -135,13 +169,13 @@ canvas
   font-family: "Arial";
   outline: none;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
-
 .inputWrapper input:focus {
   border-color: #0073ff;
 }
 
-.sendBtn {
+#sendBtn {
   align-self: flex-end;
   margin-top: 6px;
   padding: 6px 14px;
@@ -154,6 +188,10 @@ canvas
   transition: background-color 0.2s;
   font-family: "Minercraftory";
 
+}
+
+#sendBtn:disabled{
+  background-color: gray;
 }
 
 .description
@@ -210,19 +248,19 @@ canvas
 
 .description
 {
-  width: 100%;
-  text-align: center;
-  display: flex;
+  margin: 0 auto;
   word-wrap: break-word;
+  text-align: center;
   justify-content: center;
   font-size: 1.2rem;
-  margin: 0 auto;
 }
 
 .comments
 {
   display: flex;
   justify-content: center;
+  margin: 0 auto;
+  margin-top: 3rem;
 }
 
 .imageInfo
@@ -249,15 +287,27 @@ canvas
   flex-wrap: wrap;
   scrollbar-width: none;
 }
+
+.nolabel
+{
+  text-align: center;
+}
+
 .artistInfo
 {
   margin-bottom: 1rem;
 }
+
 .desc
 {
 display: flex;
 justify-content: center;
 flex-direction: column;
 }
+
+
+
+
+
 
 }
