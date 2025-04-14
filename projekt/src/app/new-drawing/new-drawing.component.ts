@@ -25,17 +25,21 @@ export class NewDrawingComponent implements OnDestroy {
   private drawing = false;
   private erasing = false;
   private pipette = false;
+  private touchDrawing = false;
+
+  private lastTouchX: number | null = null;
+  private lastTouchY: number | null = null;
   bucketMode: boolean = false;
   gridWidth: number = 16;
   gridHeight: number = 16;
-  @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('hashtags') hashtags!: ElementRef<HTMLInputElement>;
   private canvasSize: number = 600;
   private hoverX: number | null = null;
   private hoverY: number | null = null;
   private dirtyGrid: boolean[][] = [];
   private forked = false
   searchTimeout: any = null;
+
+
 
   options: any[] = [];
   selected: string | null = null;
@@ -46,6 +50,8 @@ export class NewDrawingComponent implements OnDestroy {
   cachedHashtags: { name: string }[] = [];
   readonly MAX_HASHTAGS = 8;
 
+  @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('hashtags') hashtags!: ElementRef<HTMLInputElement>;
 
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
@@ -216,7 +222,10 @@ export class NewDrawingComponent implements OnDestroy {
     this.resizeCanvas();
     this.edit()
 
-
+    const canvasElement = this.canvas.nativeElement;
+    canvasElement.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+    canvasElement.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+    canvasElement.addEventListener('touchend', this.handleTouchEnd.bind(this));
   }
 
   trackByFn(index: number, item: any): string {
@@ -265,6 +274,14 @@ export class NewDrawingComponent implements OnDestroy {
     this.dataservice.setData(null)
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
+    }
+
+    // Eseménykezelők eltávolítása
+    const canvasElement = this.canvas?.nativeElement;
+    if (canvasElement) {
+      canvasElement.removeEventListener('touchstart', this.handleTouchStart);
+      canvasElement.removeEventListener('touchmove', this.handleTouchMove);
+      canvasElement.removeEventListener('touchend', this.handleTouchEnd);
     }
   }
 
@@ -818,9 +835,195 @@ export class NewDrawingComponent implements OnDestroy {
       (width as HTMLInputElement).value = "1"
     }
   }
-  // Add these methods to your NewDrawingComponent class
 
-  // Keyboard event listener for Ctrl+Z (undo) and Ctrl+Y (redo)
+
+
+  // Touch eseménykezelők
+  @HostListener('touchstart', ['$event'])
+  onTouchStart(event: TouchEvent) {
+    if (!this.savingDialog) {
+
+      if (this.pipette) {
+        this.handleTouchPipette(event);
+        return;
+      }
+
+      if (this.bucketMode) {
+        this.handleTouchBucket(event);
+      } else {
+        this.touchDrawing = true;
+        this.drawTouchPixel(event);
+      }
+    }
+  }
+
+  @HostListener('touchmove', ['$event'])
+  onTouchMove(event: TouchEvent) {
+    if (this.touchDrawing && !this.savingDialog) {
+      this.drawTouchPixel(event);
+    }
+  }
+
+  @HostListener('touchend')
+  onTouchEnd() {
+    this.touchDrawing = false;
+    this.lastTouchX = null;
+    this.lastTouchY = null;
+  }
+
+  private handleTouchStart(event: TouchEvent) {
+    // A canvas eseményeknél akadályozzuk meg az alapértelmezett viselkedést
+
+    if (this.savingDialog || this.showDialog) return;
+
+    if (this.pipette) {
+      this.handleTouchPipette(event);
+      return;
+    }
+
+    if (this.bucketMode) {
+      this.handleTouchBucket(event);
+    } else {
+      this.touchDrawing = true;
+      this.drawTouchPixel(event);
+    }
+  }
+
+  private handleTouchMove(event: TouchEvent) {
+    // Canvas eseménynél akadályozzuk meg az alapértelmezett viselkedést
+
+    if (this.touchDrawing && !this.savingDialog && !this.showDialog) {
+      this.drawTouchPixel(event);
+    }
+  }
+
+  private handleTouchEnd(event: TouchEvent) {
+    this.touchDrawing = false;
+    this.lastTouchX = null;
+    this.lastTouchY = null;
+  }
+
+
+  private handleTouchPipette(event: TouchEvent) {
+    if (!this.ctx || !this.pipette) return;
+
+    const touch = event.touches[0];
+    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    const scaleX = this.canvas.nativeElement.width / rect.width;
+    const scaleY = this.canvas.nativeElement.height / rect.height;
+
+    const touchX = Math.floor((touch.clientX - rect.left) * scaleX / (this.canvas.nativeElement.width / this.gridWidth));
+    const touchY = Math.floor((touch.clientY - rect.top) * scaleY / (this.canvas.nativeElement.height / this.gridHeight));
+
+    if (touchX >= 0 && touchX < this.gridWidth && touchY >= 0 && touchY < this.gridHeight) {
+      // Szín kiválasztása a pixelGrid-ből
+      let pickedColor = this.pixelGrid[touchY][touchX];
+
+      // Fehér szín esetén hex formátum beállítása
+      if (pickedColor === 'white') {
+        pickedColor = '#ffffff';
+      }
+
+      // Szín frissítése
+      this.color = pickedColor;
+      console.log('Picked color:', pickedColor);
+
+      // Pipetta mód kikapcsolása
+      this.pipette = false;
+      document.querySelector('#pipette')?.classList.remove('pipetteActive');
+
+      // Canvas újrarajzolása
+      this.drawGrid();
+    }
+  }
+
+  private handleTouchBucket(event: TouchEvent) {
+    if (!this.ctx) return;
+
+    const touch = event.touches[0];
+    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    const scaleX = this.canvas.nativeElement.width / rect.width;
+    const scaleY = this.canvas.nativeElement.height / rect.height;
+
+    const x = Math.floor((touch.clientX - rect.left) * scaleX / (this.canvas.nativeElement.width / this.gridWidth));
+    const y = Math.floor((touch.clientY - rect.top) * scaleY / (this.canvas.nativeElement.height / this.gridHeight));
+
+    if (x < 0 || x >= this.gridWidth || y < 0 || y >= this.gridHeight) return;
+
+    const targetColor = this.pixelGrid[y][x];
+    if (targetColor === this.color) return;
+
+    this.fillAreaIterative(x, y, targetColor);
+    this.drawGrid();
+    this.bucketMode = false;
+    document.querySelector('#bucket')?.classList.remove('bucketActive');
+  }
+
+  private drawTouchPixel(event: TouchEvent) {
+    if (!this.ctx || this.pipette) return;
+
+    const touch = event.touches[0];
+    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    const scaleX = this.canvas.nativeElement.width / rect.width;
+    const scaleY = this.canvas.nativeElement.height / rect.height;
+
+    const x = (touch.clientX - rect.left) * scaleX;
+    const y = (touch.clientY - rect.top) * scaleY;
+
+    const cellWidth = this.canvas.nativeElement.width / this.gridWidth;
+    const cellHeight = this.canvas.nativeElement.height / this.gridHeight;
+    const gridX = Math.floor(x / cellWidth);
+    const gridY = Math.floor(y / cellHeight);
+
+    if (gridX >= 0 && gridX < this.gridWidth && gridY >= 0 && gridY < this.gridHeight) {
+      // Interpolálás az előző és az aktuális pont között
+      if (this.lastTouchX !== null && this.lastTouchY !== null) {
+        this.interpolateLine(this.lastTouchX, this.lastTouchY, gridX, gridY);
+      } else {
+        // Ha nincs előző pont, csak az aktuális pixelt rajzoljuk
+        this.pixelGrid[gridY][gridX] = this.color;
+        this.dirtyGrid[gridY][gridX] = true;
+      }
+
+      // Frissítjük az előző pontot
+      this.lastTouchX = gridX;
+      this.lastTouchY = gridY;
+
+      this.drawGrid();
+    }
+  }
+
+  // Két pont közötti interpolációs függvény
+  private interpolateLine(x0: number, y0: number, x1: number, y1: number) {
+    // Bresenham vonal algoritmus (megakadályozza a kihagyott pixeleket gyors swipe esetén)
+    const dx = Math.abs(x1 - x0);
+    const dy = Math.abs(y1 - y0);
+    const sx = (x0 < x1) ? 1 : -1;
+    const sy = (y0 < y1) ? 1 : -1;
+    let err = dx - dy;
+
+    while (true) {
+      // Aktuális pixel színezése
+      if (x0 >= 0 && x0 < this.gridWidth && y0 >= 0 && y0 < this.gridHeight) {
+        this.pixelGrid[y0][x0] = this.color;
+        this.dirtyGrid[y0][x0] = true;
+      }
+
+      // Kilépés, ha elértük a célpontot
+      if (x0 === x1 && y0 === y1) break;
+
+      const e2 = 2 * err;
+      if (e2 > -dy) {
+        err -= dy;
+        x0 += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        y0 += sy;
+      }
+    }
+  }
+
 
 
 }
