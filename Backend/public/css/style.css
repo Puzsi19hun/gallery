@@ -1,0 +1,11 @@
+* {
+    text-align: center;
+}
+
+#blog_title {
+    color: blue;
+}
+
+#blog_date {
+    color: green;
+}

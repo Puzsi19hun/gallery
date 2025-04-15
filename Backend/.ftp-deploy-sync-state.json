@@ -1,0 +1,325 @@
+{
+    "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
+    "version": "1.0.0",
+    "generatedTime": 1739956019779,
+    "data": [
+        {
+            "type": "file",
+            "name": ".ftp-deploy-sync-state.json",
+            "size": 1,
+            "hash": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+            "type": "file",
+            "name": "README.md",
+            "size": 21,
+            "hash": "f47249addc73b3ad12d8cede9cbedafca95b1a6e972825c113f6f6b69b75480b"
+        },
+        {
+            "type": "folder",
+            "name": "app"
+        },
+        {
+            "type": "folder",
+            "name": "routes"
+        },
+        {
+            "type": "folder",
+            "name": "app/Http"
+        },
+        {
+            "type": "folder",
+            "name": "app/Models"
+        },
+        {
+            "type": "folder",
+            "name": "app/Providers"
+        },
+        {
+            "type": "file",
+            "name": "routes/api.php",
+            "size": 248,
+            "hash": "9eb790bf6bae3b187a907c993f16a0116cb80902e3558615f94972701deec93c"
+        },
+        {
+            "type": "file",
+            "name": "routes/console.php",
+            "size": 220,
+            "hash": "7bff1ca9501485339d5fddb7777e2a5f4144787b9cb1af9cf61c269f38d1752d"
+        },
+        {
+            "type": "file",
+            "name": "routes/web.php",
+            "size": 1073,
+            "hash": "e70620b857c2684aefa286ff8467540a95a5152184aa4cf78f21f67b648267ef"
+        },
+        {
+            "type": "folder",
+            "name": "app/Http/Controllers"
+        },
+        {
+            "type": "folder",
+            "name": "app/Http/Middleware"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/Computer.php",
+            "size": 252,
+            "hash": "976011323aba1bfcd81933780c59bf5c638227e37222db17af476958d1c73fdf"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/Highway.php",
+            "size": 238,
+            "hash": "24411848d0f11566f17fcd45df8b516b856f4e6be83a939b78cea96a28296496"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/Lakas.php",
+            "size": 240,
+            "hash": "20e693b030914e88f9cec9d5c6307b5787f02dff095427073911a52cf116649b"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/Sections.php",
+            "size": 243,
+            "hash": "fcd63a15ade700b32fe67c8c1e01131e430491c9bb3731f8f52999aa419992e7"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/User.php",
+            "size": 508,
+            "hash": "d210df65b1216f6c33a25cf1f87060ebf35d184764185528b7facfb89cb6b316"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/airportapi.php",
+            "size": 212,
+            "hash": "1091d650566befc225307e9d9d5059934097db2bd07d2d403fa7c0c15c184d88"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/aramapi.php",
+            "size": 270,
+            "hash": "54c8309ede37e8ec0668f9d8a64d5fc5da723e57e4b5fcf613131a6f5dce5cbd"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/aramuzenetapi.php",
+            "size": 218,
+            "hash": "6fbc183c0d85851bf00c5a043ac33631423d30f54c373cfb23371a674550c5ad"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/auto.php",
+            "size": 276,
+            "hash": "1964eb167f51577081448d626f3b10833fc8b62a35d7d5365171f106246c2b2a"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/edesseg.php",
+            "size": 204,
+            "hash": "bd4ccc0627b441cd2802e0a4d12336cc9f6116999eaa594c4326d999be9085b9"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/edessegtabla.php",
+            "size": 214,
+            "hash": "1f54b1640873dcfcf813f728c25d2d18e583cbb0a7f10b545f99b4ab47ca782c"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/gallery_users.php",
+            "size": 576,
+            "hash": "b9ea7e788852f06cc875bcc1c3cea3fecc83e83f49f59d0e9ec6754a3267ceb7"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/kepek.php",
+            "size": 288,
+            "hash": "1e27eae4ef16deb73d9f486058f3b80604d65578ea2beef69908a339a2720053"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/lakasok.php",
+            "size": 204,
+            "hash": "f308fca89b8f012b8bbffb54c57e016c9faf7d8a772232fa0ed1a8c3fae7b6ad"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/napok.php",
+            "size": 200,
+            "hash": "e5e7eebfbea812761a017975a0c2c6c18a8b2ebbb4111960a4b451ea17621bd0"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/szavazat.php",
+            "size": 201,
+            "hash": "78631e7f5fc0332d051d10197e2f157988745d6afbceaf9bda91aebb8cd7caf7"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/webaruhaz",
+            "size": 206,
+            "hash": "c16b49dc9d00f0d27af9d362b4d841f75b75df4f4d89ed38acf99fd2ebe6eaa1"
+        },
+        {
+            "type": "file",
+            "name": "app/Models/weedshopapi.php",
+            "size": 214,
+            "hash": "01ee895ff0b0b8909723997df51589bf1699b20b51f16d5a837c1cdbd0e38419"
+        },
+        {
+            "type": "file",
+            "name": "app/Providers/AppServiceProvider.php",
+            "size": 361,
+            "hash": "caf306ef6a25a547bbb7edd5508a39b51c365083eb6dd58378cf2242018e94c7"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/AuthController.php",
+            "size": 790,
+            "hash": "a1a0ec4f6e324bf8299a5255bc7cabfff48c13533aaabfbc1de2eece8d082b08"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/CheckboxController.php",
+            "size": 579,
+            "hash": "bbe05682cd0f409e461de1140cde5ee6c8424935436f1f86b7f6fdf5bb318092"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/ComputerController.php",
+            "size": 1538,
+            "hash": "09cae76f9adb92bc40b69c5e7c33a0d671c325511824aace30de4a4c22f42483"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/Controller.php",
+            "size": 77,
+            "hash": "25d1c1ef8e6cc8a376553faacfba2b07d9dfaee9bdbb84f14f77517580e9deb1"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/HighwayController",
+            "size": 1240,
+            "hash": "52c0723664b65d4fb0b11ef18080161e37d885a1ce7b979b28e370c48a813d8d"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/LakasController",
+            "size": 386,
+            "hash": "eeaef2a2cdfbe5234a53dcffbc05cf4c6c9c03a25873ba265267193821d0491e"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/LakasController.php",
+            "size": 1516,
+            "hash": "a12899cf0849e96603063d8c937b0cad08722fc0ccf2dc28be6e2dac0a6ad563"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/SectionController.php",
+            "size": 222,
+            "hash": "3fd63d5cd6a9813c3b4817215e5be427bebe0247754fcba198267b6b14caae0f"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/SzamitogepController.php",
+            "size": 2320,
+            "hash": "2ad0390e2688e770f8333ba8afb8fb9a18bda1c58b2dae4df7fe8b468b1a6c58"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/airportapiController.php",
+            "size": 488,
+            "hash": "52354a965097f23bfd12221aa65a958865cc594339be2ef9098747befa547ad9"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/aramapiController.php",
+            "size": 3147,
+            "hash": "594cc2145da13eaf4e1182269a22d36dd400acd4ed3e5146341b620c9d46d5d6"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/edessegController.php",
+            "size": 485,
+            "hash": "ebb666d98b96464fd9f11c3a00a04738401079b80433b7f92d6169ddb4428ef9"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/foglalasController.php",
+            "size": 873,
+            "hash": "0c3c23ea45f0a09f848b535bc027431a1d7ff5e01542861b12cf71335e2ff596"
+        },
+        {
+            "type": "folder",
+            "name": "app/Http/Controllers/gallery"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/gallery_usersController.php",
+            "size": 5387,
+            "hash": "1bfb1fcc2ad583bc888ea3e3e6bc2c43cde53234f35eed32843c04d4bc0d9250"
+        },
+        {
+            "type": "folder",
+            "name": "app/Http/Controllers/lakas"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/napokController.php",
+            "size": 1174,
+            "hash": "1d5ce793b47044784013ce68ffbf4fa3eaced538ffa5b1b78665c212ee9db83c"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/szavazatController.php",
+            "size": 2592,
+            "hash": "b0d57eb6712d209ae56b37bf500fd6a7203d867fb5740cf5273c281ea60d7f22"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/webaruhazController.php",
+            "size": 346,
+            "hash": "c6058ba90c4a86449653881a66e134ec407cc2b6aef7f96273691431f9f50d89"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/weedshopapiController.php",
+            "size": 2252,
+            "hash": "027973f3f97ebdc6658d1ca8fb4fbf2c8443313d620a6664982c4b206446cb2c"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Middleware/VerifyCsrfToken.php",
+            "size": 635,
+            "hash": "a3362bda7777138db49d863f0bb534ff96b6a919ae58e8038aa8fdff7fe18083"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Middleware/ownCors.php",
+            "size": 848,
+            "hash": "c07e4bbd62945a45da3a4ea1a6a72cb42ba981b7771785369814d1dad890cf90"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/gallery/galleryuserController.php",
+            "size": 723,
+            "hash": "54626ae7f747eb475216ea0cecf21e1153e95699748b26514389bd794cfa9dd2"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/gallery/galleryusersController.php",
+            "size": 2474,
+            "hash": "6d505d39e4b34110c2e08fdbe1f33b6e36fa82d35d98b4c0c84ca0b3c481eedd"
+        },
+        {
+            "type": "file",
+            "name": "app/Http/Controllers/lakas/LakasController.php",
+            "size": 933,
+            "hash": "ccc83089f7e666dc02fade2c1457d1a8d78cc593d0cad26bdbaadc96062ac023"
+        }
+    ]
+}

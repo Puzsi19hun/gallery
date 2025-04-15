@@ -1,0 +1,150 @@
+-- Adminer 4.8.1 MySQL 10.6.12-MariaDB-0ubuntu0.22.04.1-log dump
+
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+
+DROP TABLE IF EXISTS `ertekelesek`;
+CREATE TABLE `ertekelesek` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `kep_id` int(11) NOT NULL,
+  `likes` int(11) NOT NULL DEFAULT 0,
+  `UPDATED_AT` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `kep_id` (`kep_id`),
+  CONSTRAINT `ertekelesek_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `ertekelesek_ibfk_3` FOREIGN KEY (`kep_id`) REFERENCES `kepek` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+INSERT INTO `ertekelesek` (`id`, `user_id`, `kep_id`, `likes`, `UPDATED_AT`) VALUES
+(26,	31,	337,	1,	'2025-04-15 18:54:41'),
+(27,	31,	353,	-1,	'2025-04-15 18:54:47'),
+(29,	3,	353,	-1,	'2025-04-15 18:55:40'),
+(30,	3,	337,	1,	'2025-04-15 18:55:47');
+
+DROP TABLE IF EXISTS `hashtags`;
+CREATE TABLE `hashtags` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+INSERT INTO `hashtags` (`id`, `name`) VALUES
+(96,	'microsoft'),
+(97,	'2x2'),
+(98,	'logo'),
+(99,	'mezo'),
+(100,	'fu'),
+(101,	'nap'),
+(102,	'flutter'),
+(103,	'kin'),
+(104,	'emoji');
+
+SET NAMES utf8mb4;
+
+DROP TABLE IF EXISTS `kepek`;
+CREATE TABLE `kepek` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(11) unsigned NOT NULL,
+  `width` bigint(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `description` text DEFAULT NULL,
+  `canBeEdited` tinyint(1) NOT NULL,
+  `rating` int(11) DEFAULT 0,
+  `forked` tinyint(1) NOT NULL DEFAULT 0,
+  `forkedFrom` varchar(255) DEFAULT NULL,
+  `hashtag` text NOT NULL,
+  `hashtags` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `kepek_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+INSERT INTO `kepek` (`id`, `user_id`, `width`, `name`, `description`, `canBeEdited`, `rating`, `forked`, `forkedFrom`, `hashtag`, `hashtags`, `created_at`) VALUES
+(337,	29,	16,	'Én 5 perc flutter után',	NULL,	1,	0,	0,	NULL,	'(2*AAAA)(12*EgIC)(4*AAAA)EgIC(3*HAYG)(4*EgIC)(3*HAYG)(2*EgIC)(2*AAAA)(2*EgIC)HAYG(2*OwQE)HAYG(3*EgIC)HAYG(2*OwQE)HAYGEgIC(2*AAAA)EgICHAYG(3*OwQE)HAYG(2*EgIC)HAYG(3*OwQE)HAYGEgICAAAA(2*EgIC)HAYGOwQEug8POwQE(2*HAYG)EgICHAYGOwQEug8POwQE(2*HAYG)(3*EgIC)HAYG(2*OwQE)bgQEOwQEHAYGEgICHAYGOwQEbgQE(2*OwQE)HAYG(3*EgIC)(2*HAYG)OwQEbgQE(2*HAYG)(2*EgIC)HAYG(2*bgQE)OwQEHAYG(2*EgIC)(3*HAYG)bgQE(2*HAYG)EgICeAwM(2*EgIC)bgQEug8POwQE(2*HAYG)EgICHAYGZhAQHAYGug8PHAYGEgIC(2*eAwM)EgICHAYGug8PHAYGZhAQ(2*HAYG)EgICHAYGgn1SeAwMug8P(2*EgIC)eAwM(3*EgIC)ug8P(2*HAYG)eAwM(2*EgIC)HAYGZhAQgn1SHAYGEgIC(3*eAwM)(3*EgIC)HAYG(2*eAwM)(2*EgIC)HAYGZhAQ(2*eAwM)(6*HAYG)EgIC(2*ZhAQ)HAYG(3*EgIC)gn1SZhAQeAwMgn1S(2*eAwM)gn1SeAwM(2*HAYG)ZhAQ(2*HAYG)(3*EgIC)HAYGZhAQgn1S(2*ZhAQ)gn1S(2*ZhAQ)gn1S(2*ZhAQ)HAYG(4*EgIC)(12*HAYG)(2*EgIC)AAAA(14*EgIC)AAAA',	NULL,	'2025-04-11 04:38:15'),
+(352,	29,	2,	'microsoft',	'microsoft logo 2x2',	1,	0,	0,	NULL,	'8DIygO1RPN7w4/9H',	'[96,97,98]',	'2025-04-15 05:07:20'),
+(353,	3,	16,	'Mezo',	'Egy mezo',	1,	0,	0,	NULL,	'(13*TcHr)(3*//IA)(13*TcHr)(3*//IA)(13*TcHr)(3*//IA)(97*TcHr)F00A(5*TcHr)F00A(5*TcHr)F00A(3*TcHr)F00A(2*TcHr)F00A(2*TcHr)F00A(2*TcHr)F00A(2*TcHr)F00ATcHrF00ATcHrF00A(2*TcHr)F00A(2*TcHr)F00A(2*TcHr)F00A(2*TcHr)F00ATcHrF00A(64*InAR)',	'[99,100,101]',	'2025-04-15 05:08:42');
+
+DROP TABLE IF EXISTS `kommentek`;
+CREATE TABLE `kommentek` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `kep_id` int(11) NOT NULL,
+  `komment` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `kep_id` (`kep_id`),
+  CONSTRAINT `kommentek_ibfk_2` FOREIGN KEY (`kep_id`) REFERENCES `kepek` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `kommentek` (`id`, `user_id`, `kep_id`, `komment`, `created_at`, `updated_at`) VALUES
+(59,	7,	337,	'Haha (emojikat nem tudok kommentelni)',	'2025-04-14 14:16:03',	NULL),
+(63,	3,	353,	'peak',	'2025-04-15 13:10:57',	NULL),
+(68,	38,	337,	'töröld le petike',	'2025-04-15 15:59:24',	NULL),
+(70,	3,	337,	'real',	'2025-04-15 15:59:58',	NULL),
+(71,	38,	353,	'az iron a peaked',	'2025-04-15 15:59:59',	NULL);
+
+DROP TABLE IF EXISTS `personal_access_tokens`;
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint(20) unsigned NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `expires_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token` (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `created_at`, `updated_at`, `expires_at`) VALUES
+(410,	'App\\Models\\gallery_users',	8,	'token',	'74c27eba7d1af4c02e8a7d7996f8d2e7add9357098e1747e5606860eb248bf2b',	'[\"*\"]',	NULL,	'2025-04-07 10:02:48',	'2025-04-07 10:02:48',	NULL),
+(439,	'App\\Models\\gallery_users',	33,	'token',	'7479630316fe6323b735827dd420dd043b38ce118a530f00a2511f635b6ffa69',	'[\"*\"]',	NULL,	'2025-04-14 08:40:44',	'2025-04-14 08:40:44',	NULL),
+(441,	'App\\Models\\gallery_users',	7,	'token',	'43b3618195dbbdd4a17448cc3468b7b816354ec6d80f619d5dae2b7b2eb1d782',	'[\"*\"]',	NULL,	'2025-04-14 14:10:31',	'2025-04-14 14:10:31',	NULL),
+(452,	'App\\Models\\gallery_users',	38,	'token',	'ae959dba7e8072197db4c3b927e289a70b2dae736b7f5865369b727eaf3922f0',	'[\"*\"]',	NULL,	'2025-04-15 15:53:13',	'2025-04-15 15:53:13',	NULL),
+(453,	'App\\Models\\gallery_users',	39,	'token',	'abcbd49520af4222c7d74306e2a660a897de733eb45853356317c5575ece90af',	'[\"*\"]',	NULL,	'2025-04-15 16:00:21',	'2025-04-15 16:00:21',	NULL),
+(455,	'App\\Models\\gallery_users',	29,	'token',	'11c10d7e1e428ffec1ecd962417803a55ef54df9d9612ae3cf59f7146d129b62',	'[\"*\"]',	NULL,	'2025-04-15 16:08:44',	'2025-04-15 16:08:44',	NULL),
+(456,	'App\\Models\\gallery_users',	10,	'token',	'f395468d4c1c70cc1159b8cf98fb4c0d4fc2466b2f6545cc194424bb9a18c68c',	'[\"*\"]',	NULL,	'2025-04-15 16:11:19',	'2025-04-15 16:11:19',	NULL),
+(458,	'App\\Models\\gallery_users',	3,	'token',	'0a94ea950208eabde7b7f57d8c4a0a59dc1b5500cc6c87a9cb739a3ef4609062',	'[\"*\"]',	NULL,	'2025-04-15 18:54:57',	'2025-04-15 18:54:57',	NULL);
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `pfp` blob DEFAULT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `pass_token` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `location` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`location`)),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `pfp`, `remember_token`, `created_at`, `updated_at`, `pass_token`, `location`) VALUES
+(1,	'gabigány',	'gabigany@gmail.com',	'$2y$12$zO2rdT2jSxcpOkDVWhbKeeKKqh3.jd97W54XHEkESnwgkH.o1GxLG',	NULL,	NULL,	'2025-02-06 10:29:00',	'2025-02-19 16:38:25',	'$2y$12$SO9pJRavzF3V0qkhtLzR8.IIQrVlQSiNm/yCelI6bO51Q.4i2srTy',	NULL),
+(3,	'Puzsi',	'puzsi19@gmail.com',	'$2y$12$m.GgwI7nQxTrYCws1Yu6Du3lmC3aEyktyQeHpTm0qfdButwp.XOpW',	NULL,	NULL,	'2025-02-06 18:46:28',	'2025-04-11 04:16:39',	'xvN4xFzACCvvUQNQ',	NULL),
+(5,	'dasdasf',	'asdsaojiufgbhasi@gmail.com',	'$2y$12$A0jvp3YP7pkYUvBLjg8KKebHFQx1/iik7kh.yRWEEadtG5IDhb2Ky',	NULL,	NULL,	'2025-02-06 18:52:02',	'2025-02-06 18:52:02',	NULL,	NULL),
+(6,	'asdasd',	'sapka@gmail.com',	'$2y$12$J1l9xIwitorCSE.evz6r1exCmXOoT/wx2T0x9VShWJ0owbRavY/6C',	NULL,	NULL,	'2025-02-06 18:53:14',	'2025-02-06 18:53:14',	NULL,	NULL),
+(7,	'thozoo',	'helyesmegoldas@gmail.com',	'$2y$12$ghv/w9DeIpyLW876bEc0sOiTP.H3mBR5V4XD/vcxfJEAwO1CwcoBe',	NULL,	NULL,	'2025-02-06 20:08:56',	'2025-02-06 20:08:56',	NULL,	NULL),
+(10,	'TibbaHXIII',	'tibbahxiii@gmail.com',	'$2y$12$ByOEwB1wv5UR8T/MOk6yrOaSCQAhexA.eqssSz/777Ww.g0vYktyq',	NULL,	NULL,	'2025-02-26 18:49:17',	'2025-04-15 16:11:09',	'qeFl2G8m9m0VfxXF',	NULL),
+(16,	'asdasdasdasdasdasdsadasdsadasd',	'asdasd@gmail.com',	'$2y$12$QmeCoX1ewpDwZdyuRBahHudO0FCT7oh21FlMrRJmZDxNI0.3yFT8u',	NULL,	NULL,	'2025-02-27 13:30:59',	'2025-02-27 13:30:59',	NULL,	NULL),
+(27,	'Bingobalazs',	'demo@galbalazs.hu',	'$2y$12$HAYGsQ6VYp9PXT8cx.Qg4Ogh6i0ye6W3SxnyG4ywDr.DbKOmdWgD6',	NULL,	NULL,	'2025-03-26 18:40:57',	'2025-03-26 19:06:25',	'V14pKTFkSGazhsSH',	NULL),
+(28,	'Asked',	'asked@gmail.com',	'$2y$12$rErUeRx1fv7VEssxS5W8XuiXWTCr4CW5OuajBmRmC4WpTz7UGnqXe',	NULL,	NULL,	'2025-03-26 18:48:02',	'2025-03-26 18:48:02',	NULL,	NULL),
+(29,	'nagypeti',	'dsac337@gmail.com',	'$2y$12$cE5mj/.5lo8BDqG6RItH2eJ3FpyJcHMrvufGDW7UYVRq8Uv2Zduo2',	NULL,	NULL,	'2025-04-09 09:01:15',	'2025-04-15 04:28:58',	'OdUbCMNl1j3djhF2',	NULL),
+(31,	'asdasd',	'puzsi19@gmail.hu',	'$2y$12$FZL6XIrwqCFs6UrEVdEQi.wX7BrJ513TH26Aun/FNf7J9yLODatMS',	NULL,	NULL,	'2025-04-13 07:15:34',	'2025-04-13 07:15:34',	NULL,	NULL),
+(33,	'Redzselek',	'egyedirobika@gmail.com',	'$2y$12$eIKjarYKknx/bFMZfm6.zOEaqkwVaczPOO0ty5LV44.wNAbioOjfK',	NULL,	NULL,	'2025-04-14 08:40:10',	'2025-04-14 08:40:10',	NULL,	NULL),
+(38,	'kocsog',	'budaifer@gmail.com',	'$2y$12$LG9UpeCx7iUob67gKXErTunwVPc5iia4rPkcFpLm92FfmeYMneDz6',	NULL,	NULL,	'2025-04-15 15:51:44',	'2025-04-15 15:53:04',	'R9KWU2ucu5uKNKdB',	NULL),
+(39,	'zoknyi',	'zoknyi0624@gmail.com',	'$2y$12$njszhkUtZpm7iXOrTIH6seKmmZIGAVmGYbSEhdynF60NytTO.vTo2',	NULL,	NULL,	'2025-04-15 15:58:53',	'2025-04-15 15:58:53',	NULL,	NULL);
+
+-- 2025-04-15 21:12:57

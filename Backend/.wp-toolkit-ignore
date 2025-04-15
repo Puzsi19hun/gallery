@@ -1,0 +1,1 @@
+Annak biztosítására végezte el a WP Toolkit kezelőfelület e fájl hozzáadását, hogy a WP Toolkit kezelőfelülettől leválasztva maradjon a webhely. Ha ismét a WP Toolkit kezelőfelülethez akarja adni ezt a webhelyet, akkor törölje '.wp-toolkit-ignore' fájlt, és végezzen keresést a WP Toolkit kezelőfelületen.
