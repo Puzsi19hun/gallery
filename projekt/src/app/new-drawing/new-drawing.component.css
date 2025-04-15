@@ -38,7 +38,8 @@ button:hover {
 
 .buttons {
   display: flex;
-  height: 92vh;
+  height: 5rem;
+  margin-bottom: 1rem;
   width: 100%;
   justify-content: center;
   gap: 1rem;
@@ -324,7 +325,6 @@ canvas {
   }
 
   .buttons {
-    height: 88vh;
     padding: 0.1rem 0.5rem;
   }
 
@@ -358,7 +358,7 @@ canvas {
   }
 
   .buttons {
-    height: 83vh;
+    height: 10rem;
     padding: 0.1rem 0.5rem;
   }
 

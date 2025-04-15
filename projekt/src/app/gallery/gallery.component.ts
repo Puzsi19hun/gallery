@@ -46,10 +46,13 @@ export class GalleryComponent implements OnInit {
       (data: any) => {
         this.data = data[0]
         this.updatePaginatedData();
+        console.log(this.data)
       }
     );
     this.adjustPaginator();
     this.updateCanvasSize(); // Inicializáláskor is méretezzük át
+
+
   }
 
   @HostListener('document:click', ['$event.target'])

@@ -23,18 +23,25 @@
       Made by:
       {{ user_name }}
     </h3>
-    }
-    @else {
+    } @else {
     <h3 style="font-size: 0.95rem; cursor: pointer; letter-spacing: 0.1rem" (click)="checkProfile()" class="bottomO">
       Made by:
       {{ user_name }}
     </h3>
     }
+
+    <div class="vote-container">
+      <button (click)="upVote(likeBtn, dislikeBtn)" class="vote-button upvote">
+        <i #likeBtn class="fas fa-arrow-up" [class.active-up]="user_vote === 1"></i>
+      </button>
+      <div id="vote-count">{{likes}}</div>
+      <button (click)="downVote(likeBtn, dislikeBtn)" class="vote-button downvote">
+        <i #dislikeBtn class="fas fa-arrow-down" [class.active-down]="user_vote === -1"></i>
+      </button>
+    </div>
   </div>
 </div>
-}
-
-@else {
+} @else {
 <div class="drawingsContainer">
   <div class="card">
     @if(profil) {
@@ -54,26 +61,20 @@
         {{ item }}
       </div>
     </div>
-    }
-    @if (!profil) {
-      <span (click)="checkComments()" class="material-symbols-outlined comments">
-        forum
-      </span>
-    }
-    @if(!profil) { @if(forked) {
+    } @if (!profil) {
+    <span (click)="checkComments()" class="material-symbols-outlined comments">
+      forum
+    </span>
+    } @if(!profil) { @if(forked) {
     <span class="material-symbols-outlined fork"> graph_1 </span>
     <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem" class="bottomY">
       Your drawing
     </h3>
-    }
-
-    @else {
+    } @else {
     <h3 (click)="moveToProfil()" style="font-size: 0.95rem; letter-spacing: 0.1rem" class="bottomY">
       Your drawing
     </h3>
-    } }
-    @else {
-    @if(forked) {
+    } } @else { @if(forked) {
     <span class="material-symbols-outlined fork"> graph_1 </span>
     <h3 style="
         font-size: 0.95rem;
@@ -93,6 +94,15 @@
       Your drawing
     </h3>
     } }
+    <div class="vote-container">
+      <button (click)="upVote(likeBtn, dislikeBtn)" class="vote-button upvote">
+        <i #likeBtn class="fas fa-arrow-up" [class.active-up]="user_vote === 1"></i>
+      </button>
+      <div id="vote-count">{{likes}}</div>
+      <button (click)="downVote(likeBtn, dislikeBtn)" class="vote-button downvote">
+        <i #dislikeBtn class="fas fa-arrow-down" [class.active-down]="user_vote === -1"></i>
+      </button>
+    </div>
   </div>
 </div>
 }

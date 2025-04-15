@@ -115,7 +115,7 @@ export class NewDrawingComponent implements OnDestroy {
           .subscribe((response) => {
             console.log('Response:', response);
           }, (error) => {
-            console.error('Error:', error); // Hiba kezelés, ha valami probléma történik
+            this.dataservice.errorPopup(error.error.message); // Hiba kezelés, ha valami probléma történik
           });
       }
     }
@@ -822,7 +822,10 @@ export class NewDrawingComponent implements OnDestroy {
         data => {
           console.log(data)
         },
-        error => console.log(error)
+        error => {
+          this.dataservice.errorPopup("You need name your art");
+        }// Hiba kezelés, ha valami probléma történik
+
 
       )
     }

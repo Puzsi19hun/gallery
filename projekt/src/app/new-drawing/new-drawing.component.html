@@ -76,13 +76,10 @@
 </div>
 }
 
-<div class="buttons">
-    <button (click)="openDialog()">New</button>
-    <button (click)="clear()">Clear</button>
-    <button (click)="openSaveDialog()">Save</button>
-</div>
+
 <div class="container">
     <div class="drawArea">
+
         <div class="tools">
             <div>
                 <button class="color toolButton"><span class="colorLabel">Color: </span><p-colorPicker id="picker"
@@ -111,5 +108,11 @@
 
             </canvas>
         </div>
+        <div class="buttons">
+            <button (click)="openDialog()">New</button>
+            <button (click)="clear()">Clear</button>
+            <button (click)="openSaveDialog()">Save</button>
+        </div>
+
     </div>
 </div>

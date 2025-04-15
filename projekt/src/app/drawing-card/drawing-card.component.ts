@@ -37,7 +37,8 @@ export class DrawingCardComponent implements AfterViewInit {
   @Input({ required: true }) hashtags: any[] = [];
   @Output() expandCard = new EventEmitter<any>();
   @Output() edit = new EventEmitter<any>();
-
+  @Input({ required: true }) likes = 0
+  @Input({ required: true }) user_vote = 0
   hashtagNames: any[] = [];
 
   private readonly CANVAS_SIZE = 180; // Fix méretű előnézet (200x200 px)
@@ -53,10 +54,8 @@ export class DrawingCardComponent implements AfterViewInit {
     console.log(this.user_id)
     const headers = new HttpHeaders({
       'X-Requested-With': 'XMLHttpRequest',
-      'Content-Type': 'application/json',
     });
-
-    let url = 'https://nagypeti.moriczcloud.hu/PixelArtSpotlight/hashtags/';
+    console.log(this.user_vote)
   }
 
   readLocalStorageValue(key: any) {
@@ -65,6 +64,81 @@ export class DrawingCardComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.drawCanvas();
+  }
+
+
+  upVote(likeElement: HTMLElement, dislikeElement: HTMLElement) {
+    const headers = new HttpHeaders({
+      'X-Requested-With': 'XMLHttpRequest',
+    });
+    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/rate"
+    let formData: FormData = new FormData();
+    formData.append('kep_id', this.image_id);
+    formData.append('user_id', String(localStorage.getItem('id')));
+    formData.append('action', "like");
+
+    this.http.post(url, formData, { headers: headers, withCredentials: true }).subscribe(
+      (res: any) => {
+        if (res.message == "Sikeresen visszavontad az értékelést.") {
+          this.dataservice.SuccessPopup(res.message)
+          this.refreshLikes()
+          dislikeElement.classList.remove('active-down');
+          likeElement.classList.remove('active-up');
+        }
+        else {
+          this.dataservice.SuccessPopup(res.message)
+          this.refreshLikes()
+          likeElement.classList.add('active-up');
+          dislikeElement.classList.remove('active-down');
+        }
+      },
+      (error) => {
+        this.dataservice.errorPopup(error.message)
+      }
+    )
+  }
+
+  downVote(likeElement: HTMLElement, dislikeElement: HTMLElement) {
+    const headers = new HttpHeaders({
+      'X-Requested-With': 'XMLHttpRequest',
+    });
+    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/rate"
+    let formData: FormData = new FormData();
+    formData.append('kep_id', this.image_id);
+    formData.append('user_id', String(localStorage.getItem('id')));
+    formData.append('action', "dislike");
+    this.http.post(url, formData, { headers: headers, withCredentials: true }).subscribe(
+      (res: any) => {
+        if (res.message == "Sikeresen visszavontad az értékelést.") {
+          this.dataservice.SuccessPopup(res.message)
+          this.refreshLikes()
+          dislikeElement.classList.remove('active-down');
+          likeElement.classList.remove('active-up');
+        }
+        else {
+          this.dataservice.SuccessPopup(res.message)
+          this.refreshLikes()
+          dislikeElement.classList.add('active-down');
+          likeElement.classList.remove('active-up');
+        }
+      },
+      (error) => {
+        this.dataservice.errorPopup(error.message)
+      }
+    )
+  }
+
+  refreshLikes() {
+    const headers = new HttpHeaders({
+      'X-Requested-With': 'XMLHttpRequest',
+    });
+    let url = "https://nagypeti.moriczcloud.hu/PixelArtSpotlight/likeok/" + this.image_id
+
+    this.http.get(url, { headers: headers, withCredentials: true }).subscribe(
+      (res: any) => {
+        this.likes = res.count
+      }
+    )
   }
 
   onClick() {
