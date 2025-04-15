@@ -68,6 +68,10 @@ export class DrawingCardComponent implements AfterViewInit {
 
 
   upVote(likeElement: HTMLElement, dislikeElement: HTMLElement) {
+    if (localStorage.getItem('logged') == null) {
+      this.dataservice.errorPopup('Please login first')
+      return
+    }
     const headers = new HttpHeaders({
       'X-Requested-With': 'XMLHttpRequest',
     });
@@ -99,6 +103,10 @@ export class DrawingCardComponent implements AfterViewInit {
   }
 
   downVote(likeElement: HTMLElement, dislikeElement: HTMLElement) {
+    if (localStorage.getItem('logged') == null) {
+      this.dataservice.errorPopup('Please login first')
+      return
+    }
     const headers = new HttpHeaders({
       'X-Requested-With': 'XMLHttpRequest',
     });
