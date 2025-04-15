@@ -25,7 +25,7 @@ export class UserDrawingsComponent implements OnInit {
     this.http.post(url, formData, { headers: headers, withCredentials: true }).subscribe(
       (data: any) => {
         console.log(data)
-        this.data = data
+        this.data = data.reverse()
       }
     )
   }
