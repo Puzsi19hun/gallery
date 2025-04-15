@@ -11,7 +11,7 @@
   margin-left: 2rem;
   margin-right: 2rem;
   overflow: hidden;
-
+  overscroll-behavior: none;
 }
 
 button {

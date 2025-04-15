@@ -46,9 +46,8 @@ export class NewDrawingComponent implements OnDestroy {
   private selectedOptions: any[] = []
   showDropdown: boolean = false;
   private lastQuery = '';
-  private cache = new Map<string, any[]>();
-  cachedHashtags: { name: string }[] = [];
   readonly MAX_HASHTAGS = 8;
+  private newTag = ""
 
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('hashtags') hashtags!: ElementRef<HTMLInputElement>;
@@ -108,9 +107,8 @@ export class NewDrawingComponent implements OnDestroy {
               // Ha sikeres válasz érkezik, adjuk hozzá az id-t a selectedOptions-hoz
               this.selectedOptions.push(res.data.id);
               console.log('Sikeresen hozzáadva:', res.data.id);
-
               // Most jöhet a DOM manipulálása
-              this.addTagToDom(option, res.id, newtag);
+              this.addTagToDom(option, res.data.id, newtag);
 
             })
           )
@@ -134,11 +132,16 @@ export class NewDrawingComponent implements OnDestroy {
     console.log(this.selectedOptions);
   }
 
+  printSelected() {
+    console.log(this.selectedOptions);
+  }
+
   // Segédmetódus a DOM frissítésére
   addTagToDom(option: any, id: any, newtag: any) {
     const currentDiv = document.getElementById("hashtagss");
-
     const newDiv = document.createElement("div");
+
+    // Styling for the tag container
     newDiv.style.backgroundColor = '#0073e6';
     newDiv.style.color = "white";
     newDiv.style.padding = '0.5rem';
@@ -151,17 +154,21 @@ export class NewDrawingComponent implements OnDestroy {
     newDiv.style.alignItems = 'center';
     newDiv.style.justifyContent = 'center';
     newDiv.style.margin = '0';
-    newDiv.style.gap = '6px'; // Szöveges rész és az X gomb közötti távolság
+    newDiv.style.gap = '6px';
 
+    // Save the actual value we're working with
+    const tagValue = newtag == 1 ? option : option.name;
+
+    let tagId = id
     // Hashtag szövege
     const textSpan = document.createElement("span");
-    const newContent = document.createTextNode(newtag == 1 ? option : option.name);
+    const newContent = document.createTextNode(tagValue);
     textSpan.appendChild(newContent);
     newDiv.appendChild(textSpan);
 
     // X gomb hozzáadása
     const deleteBtn = document.createElement("span");
-    deleteBtn.textContent = "X"; // × karakter az X-hez
+    deleteBtn.textContent = "X";
     deleteBtn.style.cursor = "pointer";
     deleteBtn.style.color = "red";
     deleteBtn.style.fontWeight = "bold";
@@ -172,6 +179,8 @@ export class NewDrawingComponent implements OnDestroy {
     deleteBtn.style.alignItems = "center";
     deleteBtn.style.justifyContent = "center";
 
+    // Store reference to original option for proper deletion
+
     // X gomb eseménykezelő
     deleteBtn.addEventListener("click", (event) => {
       // Buborékozás megállítása
@@ -180,10 +189,25 @@ export class NewDrawingComponent implements OnDestroy {
       // Hashtag törlése a DOM-ból
       newDiv.remove();
 
-      // Hashtag törlése a selectedOptions tömbből is
-      const index = this.selectedOptions.indexOf(newtag == 1 ? option : option.name);
-      if (index !== -1) {
-        this.selectedOptions.splice(index, 1);
+      // Hashtag törlése a selectedOptions tömbből
+      // Find the correct index based on the value we're looking for
+      let indexToRemove = -1;
+
+      for (let i = 0; i < this.selectedOptions.length; i++) {
+        const currentOption = this.selectedOptions[i];
+        // Check if the current item matches what we want to remove
+        if ((typeof currentOption === 'object' && currentOption.name === tagId) ||
+          currentOption === tagId) {
+          indexToRemove = i;
+          break;
+        }
+      }
+
+      if (indexToRemove !== -1) {
+        this.selectedOptions.splice(indexToRemove, 1);
+        console.log('Tag removed:', tagId, 'New selectedOptions:', this.selectedOptions);
+      } else {
+        console.warn('Tag not found in selectedOptions:', tagId);
       }
     });
 
