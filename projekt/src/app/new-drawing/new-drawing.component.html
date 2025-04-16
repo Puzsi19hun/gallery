@@ -82,7 +82,7 @@
 
         <div class="tools">
             <div>
-                <button (click)="openColorPicker(colorPickerRef)" class="color toolButton"><span class="colorLabel">Color: </span><p-colorPicker #colorPickerRef id="picker"
+                <button (click)="openColorPicker(colorPickerRef)" class="color toolButton"><span class="colorLabel">Color: </span><p-colorPicker (click)="openColorPicker(colorPickerRef)" #colorPickerRef id="picker"
                         appendTo="body" class="colorPicker" [inline]="false"
                         [(ngModel)]="color"></p-colorPicker></button>
 

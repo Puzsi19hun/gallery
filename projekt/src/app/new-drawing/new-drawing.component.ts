@@ -113,14 +113,12 @@ export class NewDrawingComponent implements OnDestroy {
               this.cdr.detectChanges()
               // Ha sikeres válasz érkezik, adjuk hozzá az id-t a selectedOptions-hoz
               this.selectedOptions.push(res.data.id);
-              console.log('Sikeresen hozzáadva:', res.data.id);
               // Most jöhet a DOM manipulálása
               this.addTagToDom(option, res.data.id, newtag);
 
             })
           )
           .subscribe((response) => {
-            console.log('Response:', response);
           }, (error) => {
             this.dataservice.errorPopup(error.error.message); // Hiba kezelés, ha valami probléma történik
           });
@@ -136,7 +134,6 @@ export class NewDrawingComponent implements OnDestroy {
       this.addTagToDom(option, option.id, newtag);
     }
 
-    console.log(this.selectedOptions);
   }
 
   printSelected() {
@@ -212,7 +209,6 @@ export class NewDrawingComponent implements OnDestroy {
 
       if (indexToRemove !== -1) {
         this.selectedOptions.splice(indexToRemove, 1);
-        console.log('Tag removed:', tagId, 'New selectedOptions:', this.selectedOptions);
       } else {
         console.warn('Tag not found in selectedOptions:', tagId);
       }
@@ -826,8 +822,8 @@ export class NewDrawingComponent implements OnDestroy {
 
     if (confirm("Are you sure you want to save your drawing?")) {
       this.http.post(apiUrl, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
-        data => {
-          console.log(data)
+        (data: any) => {
+          this.dataservice.SuccessPopup(data.body.message)
         },
         error => {
           this.dataservice.errorPopup("You need name your art");
