@@ -45,50 +45,17 @@ class gallery_usersController extends Controller
         $this->image_url = $this->generateGoogleMapsUrl($this->location_coords);
     }
 
-    /*private function getLocationFromIp()
-    {
-        try {
-            $response = $this->client->get("http://api.ipstack.com/{$this->ip}?access_key=" . env('IPSTACK_API_KEY'));
-            $data = json_decode($response->getBody(), true);
-    
-            // Ellenőrizzük a válasz adatokat
-            $latitude = $data['latitude'] ?? '47.4979';
-            $longitude = $data['longitude'] ?? '19.0402';
-    
-            return [
-                'ip' => $data['ip'] ?? 'N/A',
-                'city' => $data['city'] ?? 'N/A',
-                'region' => $data['region_name'] ?? 'N/A',
-                'country' => $data['country_name'] ?? 'N/A',
-                'location' => "{$latitude},{$longitude}"
-            ];
-        } catch (\Exception $e) {
-            Log::error("IP geolocation failed: " . $e->getMessage());
-            return [
-                'ip' => 'N/A',
-                'city' => 'N/A',
-                'region' => 'N/A',
-                'country' => 'N/A',
-                'location' => '47.4979,19.0402'
-            ];
-        }
-    }
-    */
-
-
-
     private function getLocationFromIp()
     {
         try {
             $response = $this->client->get("https://api.ip2location.io/?key=" . env('IP2LOCATION_API_KEY') . "&ip=" . $this->ip . "&format=json");
             $data = json_decode($response->getBody(), true);
 
-
             if (isset($data['latitude']) && isset($data['longitude'])) {
                 $latitude = $data['latitude'];
                 $longitude = $data['longitude'];
             } else {
-                Log::warning("Hibás válasz érkezett az IP geolocation API-tól: " . json_encode($data));
+                Log::warning("Invalid response from IP geolocation API: " . json_encode($data));
 
                 $latitude = '47.4979';
                 $longitude = '19.0402';
@@ -114,8 +81,6 @@ class gallery_usersController extends Controller
         }
     }
 
-
-    //sex
     private function formatLocation($location)
     {
         return $location['country'] . " - " . $location['region'] . " - " . $location['city'];
@@ -132,24 +97,21 @@ class gallery_usersController extends Controller
         $kepId = $request->input('kep_id');
         $szoveg = $request->input('komment');
 
-        // Validate input parameters
         if (!$userId || !$kepId || !$szoveg || trim($szoveg) === '') {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Hiányzó vagy érvénytelen paraméter! A komment nem lehet üres.'
+                'message' => 'Missing or invalid parameters! The comment cannot be empty.'
             ], 400);
         }
 
-        // Check if the image exists
         $kep = Kepek::find($kepId);
         if (!$kep) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'A megadott kép nem található.'
+                'message' => 'The specified image was not found.'
             ], 404);
         }
 
-        // Save the comment
         try {
             $komment = kommentek::create([
                 'user_id' => $userId,
@@ -159,7 +121,7 @@ class gallery_usersController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'A komment sikeresen elmentve.',
+                'message' => 'The comment has been successfully saved.',
                 'data' => [
                     'id' => $komment->id,
                     'user_id' => $komment->user_id,
@@ -168,11 +130,10 @@ class gallery_usersController extends Controller
                 ]
             ], 201);
         } catch (\Exception $e) {
-            // Log the error and return a failure response
-            Log::error('Komment mentése sikertelen: ' . $e->getMessage());
+            Log::error('Failed to save comment: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Hiba történt a komment mentése során.'
+                'message' => 'An error occurred while saving the comment.'
             ], 500);
         }
     }
@@ -183,12 +144,12 @@ class gallery_usersController extends Controller
 
         $kommentek = $kommentek->map(function ($komment) {
             $user = gallery_users::find($komment->user_id);
-            $komment->user_name = $user ? $user->name : 'Ismeretlen';
+            $komment->user_name = $user ? $user->name : 'Unknown';
             return $komment;
         });
 
         return response()->json([
-            'message' => $kommentek->isNotEmpty() ? $kommentek : 'Valami hiba történt'
+            'message' => $kommentek->isNotEmpty() ? $kommentek : 'Something went wrong'
         ]);
     }
 
@@ -198,7 +159,7 @@ class gallery_usersController extends Controller
         $delete = kommentek::find($id)->delete();
 
         return response()->json([
-            'message' => $delete ? "Sikeres törlés!" : "Valami hiba történt!"
+            'message' => $delete ? "Successfully deleted!" : "Something went wrong!"
         ]);
     }
 
@@ -210,41 +171,37 @@ class gallery_usersController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
-
         $token = Str::random(16);
         $user->update(['pass_token' => $token]);
-
 
         $frontendUrl = 'https://nagypeti.moriczcloud.hu/projekt/#/new-pass';
         $resetLink = "$frontendUrl?token=$token";
 
-
         $message = "
-         <html>
-                    <body>
-                        <div style='background: linear-gradient(to bottom, rgba(28, 143, 151, 0.31), rgba(165, 8, 165, 0.31)), url(\"https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/152164099/original/d793cc44e3997aa1d090c5d4d8041d7feb28e235/create-pixel-art-backgrounds.png\"); background-size: cover; border-radius: 10px 70% 37%  10px;  color:#c9f7cd; padding: 20px;'>
-                            <h1 style='color:#c9f7cd;'>Új jelszó kérelmet indítottak a fiókján, $user->name!</h1>
-                            <h2 style='color:#c9f7cd;'>
-                                Az új jelszó létrehozása:
-                                <a href='$resetLink' style='color:#FFD700 ;text-decoration: underline;'>Új Jelszó!</a>
-                            </h2>
-                            <h3 style='color:#c9f7cd;'>Ekkor történt a kérés: " . now() . "</h3>
-                            <img style='border-radius: 10px;' src='$this->image_url' alt='Térkép' />
-                        </div>
-                    </body>
-                </html>
+            <html>
+                <body>
+                    <div style='background: linear-gradient(to bottom, rgba(28, 143, 151, 0.31), rgba(165, 8, 165, 0.31)), url(\"https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/152164099/original/d793cc44e3997aa1d090c5d4d8041d7feb28e235/create-pixel-art-backgrounds.png\"); background-size: cover; border-radius: 10px 70% 37%  10px;  color:#c9f7cd; padding: 20px;'>
+                        <h1 style='color:#c9f7cd;'>A password reset request was made for your account, $user->name!</h1>
+                        <h2 style='color:#c9f7cd;'>
+                            To reset your password:
+                            <a href='$resetLink' style='color:#FFD700 ;text-decoration: underline;'>Reset Password</a>
+                        </h2>
+                        <h3 style='color:#c9f7cd;'>Request time: " . now() . "</h3>
+                        <img style='border-radius: 10px;' src='$this->image_url' alt='Map' />
+                    </div>
+                </body>
+            </html>
         ";
 
-
         $headers = "Content-type: text/html; charset=UTF-8";
-        mail($request->input('email'), "Elfelejtett jelszó!", $message, $headers);
+        mail($request->input('email'), "Forgot Password!", $message, $headers);
 
         return response()->json(['message' => 'Password reset link sent!']);
     }
+
     public function save(Request $request)
     {
         $userId = Auth::id();
-
 
         if (!is_array(json_decode($request->input('hex_codes')))) {
             return response()->json([
@@ -252,7 +209,6 @@ class gallery_usersController extends Controller
                 'message' => 'A hex_codes mezőnek tömbnek kell lennie!'
             ], 400);
         }
-
 
         $binaryData = '';
         foreach (json_decode($request->input('hex_codes')) as $hexCode) {
@@ -265,7 +221,6 @@ class gallery_usersController extends Controller
             }
             $binaryData .= hex2bin($hexCode);
         }
-
 
         $compressedData = '';
         $segmentLength = 3;
@@ -288,7 +243,6 @@ class gallery_usersController extends Controller
             }
         }
 
-
         if ($previousSegment !== '') {
             $compressedData .= ($count > 1)
                 ? '(' . $count . '*' . base64_encode($previousSegment) . ')'
@@ -301,7 +255,6 @@ class gallery_usersController extends Controller
         if ($request->input('forked')) {
             $forked = 1;
         }
-
 
         Kepek::create([
             'user_id' => $userId,
@@ -317,14 +270,12 @@ class gallery_usersController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Hex kódok sikeresen elmentve!'
+            'message' => 'Hex codes has been successfully saved!',
         ], 200);
     }
 
     public function delete(Request $request)
     {
-
-
         $kepid = $request->input('kepid');
 
         $delete = Kepek::where('id', $kepid)->delete();
@@ -332,41 +283,33 @@ class gallery_usersController extends Controller
         if ($delete) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Sikeres törlés!'
+                'message' => 'Successfully deleted!'
             ], 200);
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'sikertelen törlés!'
+                'message' => 'Failed to delete!'
             ], 400);
         }
     }
 
-
-
-
-
-
     public function update(Request $request)
     {
-
         $kepid = $request->input('kepid');
         $hexCodes = $request->input('hex_codes');
 
-
         if (!is_array($hexCodes)) {
-            return response()->json(['status' => 'error', 'message' => 'Érvénytelen hex kód formátum!'], 400);
+            return response()->json(['status' => 'error', 'message' => 'Invalid hex code format!'], 400);
         }
 
         $binaryData = '';
         foreach ($hexCodes as $hexCode) {
             $hexCode = substr($hexCode, 1);
             if (strlen($hexCode) % 2 !== 0) {
-                return response()->json(['status' => 'error', 'message' => 'Érvénytelen hexadecimális karakterek!'], 400);
+                return response()->json(['status' => 'error', 'message' => 'Invalid hexadecimal characters!'], 400);
             }
             $binaryData .= hex2bin($hexCode);
         }
-
 
         $compressedData = '';
         $segmentLength = 3;
@@ -399,27 +342,23 @@ class gallery_usersController extends Controller
             }
         }
 
-
         $updated = kepek::where('id', $kepid)->update([
             'hashtag' => $compressedData,
         ]);
 
         if (!$updated) {
-            return response()->json(['status' => 'error', 'message' => 'Nem sikerült frissíteni az adatokat!'], 500);
+            return response()->json(['status' => 'error', 'message' => 'Failed to update data!'], 500);
         }
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Hex kódok sikeresen elmentve!'
+            'message' => 'Hex codes successfully saved!',
         ], 200);
     }
 
-
-
-
     public function getHexCodesbykepid(Request $request)
     {
-        $buser = Auth::user(); // Bejelentkezett felhasználó
+        $buser = Auth::user(); 
         $buserId = $buser ? $buser->id : null;
 
         $kepid = $request->input('kepid');
@@ -466,7 +405,7 @@ class gallery_usersController extends Controller
 
         $user = $record->user;
 
-        // Convert JSON string to array
+       
         $hashtagIds = json_decode($record->hashtags, true);
 
         $hashtagNames = [];
@@ -491,7 +430,7 @@ class gallery_usersController extends Controller
                 ->first();
 
             if ($ertekeles) {
-                $userVote = $ertekeles->likes; // lehet 1 vagy -1
+                $userVote = $ertekeles->likes;
             }
         }
 
@@ -510,7 +449,7 @@ class gallery_usersController extends Controller
             'likes' => $likes,
             'dislikes' => $dislikes,
             'rating' => $rating,
-            'vote_by_user' => $userVote, // 👈 1, -1 vagy null
+            'vote_by_user' => $userVote, 
 
         ];
 
@@ -518,7 +457,7 @@ class gallery_usersController extends Controller
     }
     public function getHexCodes()
     {
-        $buser = Auth::user(); // Bejelentkezett felhasználó
+        $buser = Auth::user(); 
         $userId = $buser ? $buser->id : null;
         $records = kepek::all();
 
@@ -551,7 +490,7 @@ class gallery_usersController extends Controller
 
                 $user = $record->user;
 
-                // Convert JSON string to array
+               
                 $hashtagIds = json_decode($record->hashtags, true);
 
                 $hashtagNames = [];
@@ -576,7 +515,7 @@ class gallery_usersController extends Controller
                         ->first();
 
                     if ($ertekeles) {
-                        $userVote = $ertekeles->likes; // lehet 1 vagy -1
+                        $userVote = $ertekeles->likes; 
                     }
                 }
 
@@ -595,7 +534,7 @@ class gallery_usersController extends Controller
                     'likes' => $likes,
                     'dislikes' => $dislikes,
                     'rating' => $rating,
-                    'vote_by_user' => $userVote, // 👈 1, -1 vagy null
+                    'vote_by_user' => $userVote, 
                 ];
             }
         }
@@ -635,7 +574,7 @@ class gallery_usersController extends Controller
             if (!$record->hashtag) {
                 return null;
             }
-            $buser = Auth::user(); // Bejelentkezett felhasználó
+            $buser = Auth::user(); 
             $buserId = $buser ? $buser->id : null;
 
             $binaryData = '';
@@ -685,7 +624,7 @@ class gallery_usersController extends Controller
                 if ($ertekeles) {
                     $userVote = $ertekeles->likes;
                 }
-            } // lehet 1 vagy -1}
+            } 
             return [
                 'user_id' => $record->user_id,
                 'user_name' => $record->user->name ?? null,
@@ -699,7 +638,7 @@ class gallery_usersController extends Controller
                 'likes' => $likes,
                 'dislikes' => $dislikes,
                 'rating' => $rating,
-                'vote_by_user' => $userVote, // 👈 1, -1 vagy null
+                'vote_by_user' => $userVote, 
 
 
             ];
@@ -750,24 +689,24 @@ class gallery_usersController extends Controller
             <html>
                 <body>
                     <div style='background: linear-gradient(to bottom, rgba(28, 143, 151, 0.31), rgba(165, 8, 165, 0.31)), url(\"https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/152164099/original/d793cc44e3997aa1d090c5d4d8041d7feb28e235/create-pixel-art-backgrounds.png\"); background-size: cover; border-radius: 10px 70% 37%  10px; color:#c9f7cd; padding: 20px;'>
-                        <h1 style='color:#c9f7cd;'>Üdvözlünk, {$user->name}!</h1>
+                        <h1 style='color:#c9f7cd;'>Welcome, {$user->name}!</h1>
                         <h2 style='color:#c9f7cd;'>
-                            Köszönjük, hogy regisztráltál! Fedezd fel a galériát:
-                            <a href='$welcomeLink' style='color:#FFD700; text-decoration: underline;'>Galéria megtekintése</a>
+                            Thank you for registering! Explore the gallery:
+                            <a href='$welcomeLink' style='color:#FFD700; text-decoration: underline;'>View Gallery</a>
                         </h2>
-                        <h3 style='color:#c9f7cd;'>Regisztráció időpontja: " . now() . "</h3>
-                        <img style='border-radius: 10px;' src='$this->image_url' alt='Térkép' />
+                        <h3 style='color:#c9f7cd;'>Registration date: " . now() . "</h3>
+                        <img style='border-radius: 10px;' src='$this->image_url' alt='Map' />
                     </div>
                 </body>
             </html>
         ";
 
         $headers = "Content-type: text/html; charset=UTF-8";
-        mail($request->input('email'), "Üdvözlünk a Galériában!", $message, $headers);
+        mail($request->input('email'), "Welcome to the Gallery!", $message, $headers);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Sikeres regisztráció! Üdvözlő e-mail elküldve.'
+            'message' => 'Registration is successful',
         ], 201);
     }
 
@@ -830,33 +769,33 @@ class gallery_usersController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'error' => 'Nem jó a token!'
+                'error' => 'token is not valid'
             ], 400);
         }
     }
 
     public function query_kepek($query)
     {
-        $buser = Auth::user(); // Bejelentkezett felhasználó
+        $buser = Auth::user(); 
         $buserId = $buser ? $buser->id : null;
-        // 1. Kikeressük az ID-kat, amik a keresett hashtagekhez tartoznak
+        
         $matchingHashtagIds = Hashtags::where('name', 'like', "%$query%")->pluck('id')->toArray();
 
-        // 2. Keresés a JSON mezőben, ha a MySQL támogatja
+       
         $results = Kepek::where('name', 'like', "%$query%")
             ->orWhereHas('user', function ($q) use ($query) {
                 $q->where('name', 'like', "%$query%");
             })
             ->orWhere(function ($q) use ($matchingHashtagIds) {
                 foreach ($matchingHashtagIds as $id) {
-                    $q->orWhereJsonContains('hashtags', $id);  // Ez a JSON keresést használja
+                    $q->orWhereJsonContains('hashtags', $id);  
                 }
             })
             ->get();
 
 
         if ($results->isEmpty()) {
-            return response()->json(['error' => 'Nincs találat.'], 404);
+            return response()->json(['error' => 'Not found.'], 404);
         }
 
         $hexCodesByImage = [];
@@ -920,7 +859,7 @@ class gallery_usersController extends Controller
                     if ($ertekeles) {
                         $userVote = $ertekeles->likes;
                     }
-                } // lehet 1 vagy -1}
+                } 
                 $hexCodesByImage[] = [
                     'user_id' => $record->user_id,
                     'user_name' => $user ? $user->name : 'N/A',
@@ -936,7 +875,7 @@ class gallery_usersController extends Controller
                     'likes' => $likes,
                     'dislikes' => $dislikes,
                     'rating' => $rating,
-                    'vote_by_user' => $userVote, // 👈 1, -1 vagy null
+                    'vote_by_user' => $userVote, 
                 ];
             }
         }
@@ -966,7 +905,7 @@ class gallery_usersController extends Controller
 
     public function hashtags_post(Request $request, HashtagValidatorService $validator)
     {
-        // Alap validáció, hogy a 'name' paraméter valóban létezik és érvényes
+       
         $validatorInput = Validator::make($request->all(), [
             'name' => 'required|string|min:2|max:30'
         ]);
@@ -979,10 +918,10 @@ class gallery_usersController extends Controller
             ], 422);
         }
 
-        // A hashtag csupaszítása (# eltávolítása)
+      
         $hashtagName = trim($request->input('name'), '# ');
 
-        // Szóellenőrzés a HashtagValidatorService használatával
+   
         if (!$validator->isValid($hashtagName)) {
             return response()->json([
                 'status' => 'error',
@@ -990,7 +929,7 @@ class gallery_usersController extends Controller
             ], 422);
         }
 
-        // Ha minden oké, akkor létrehozzuk a hashtaget
+       
         $hashtag = Hashtags::create([
             'name' => $hashtagName,
         ]);
@@ -999,7 +938,7 @@ class gallery_usersController extends Controller
             'status' => 'success',
             'message' => 'Hashtag created.',
             'data' => [
-                'id' => $hashtag->id, // Az ID is visszaküldésre kerül
+                'id' => $hashtag->id, 
                 'name' => $hashtag->name
             ]
         ]);
@@ -1024,29 +963,29 @@ class gallery_usersController extends Controller
         if (!$kep) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Ez a kép nem létezik!'
+                'message' => 'This picture is not valid'
             ], 404);
         }
 
         $likes = ($action === 'like') ? 1 : -1;
 
-        // Megnézzük, van-e már ilyen szavazat
+     
         $existing = ertekelesek::where('user_id', $userId)
             ->where('kep_id', $kepId)
             ->first();
 
-        // Ha már létezik és ugyanaz az érték (like/dislike), akkor töröljük
+      
         if ($existing && $existing->likes == $likes) {
             $existing->delete();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Sikeresen visszavontad az értékelést.',
+                'message' => 'You successfully removed your rating.',
                 'likes' => null
             ]);
         }
 
-        // Egyébként frissítjük vagy létrehozzuk
+
         $ertekeles = ertekelesek::updateOrCreate(
             ['user_id' => $userId, 'kep_id' => $kepId],
             ['likes' => $likes]
@@ -1054,7 +993,7 @@ class gallery_usersController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Értékelés elmentve.',
+            'message' => 'Successfully saved.',
             'likes' => $ertekeles->likes
         ]);
     }
