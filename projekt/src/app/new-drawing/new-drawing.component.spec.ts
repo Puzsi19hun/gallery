@@ -10,7 +10,7 @@ describe('NewDrawingComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NewDrawingComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(NewDrawingComponent);
     component = fixture.componentInstance;

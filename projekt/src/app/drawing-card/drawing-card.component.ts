@@ -117,7 +117,7 @@ export class DrawingCardComponent implements AfterViewInit {
     formData.append('action', "dislike");
     this.http.post(url, formData, { headers: headers, withCredentials: true }).subscribe(
       (res: any) => {
-        if (res.message == "Sikeresen visszavontad az értékelést.") {
+        if (res.message == "You succesfully removed your rating.") {
           this.dataservice.SuccessPopup(res.message)
           this.refreshLikes()
           dislikeElement.classList.remove('active-down');
@@ -173,10 +173,10 @@ export class DrawingCardComponent implements AfterViewInit {
         .subscribe(
           (data: any) => {
             window.location.reload();
-            this.dataservice.SuccessPopup('Sikeres törlés!');
+            this.dataservice.SuccessPopup('You succesfully deleted the drawing.');
           },
           (error: any) => {
-            this.dataservice.errorPopup('Sikertelen törlés, hiba: ' + error);
+            this.dataservice.errorPopup('Something went wrong,  ' + error);
           }
         );
     }

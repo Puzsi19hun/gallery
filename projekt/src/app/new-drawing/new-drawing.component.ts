@@ -51,9 +51,16 @@ export class NewDrawingComponent implements OnDestroy {
 
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('hashtags') hashtags!: ElementRef<HTMLInputElement>;
+  @ViewChild('colorPickerRef') colorPickerRef: any;
 
   constructor(private http: HttpClient, private dataservice: DataserviceService, private cdr: ChangeDetectorRef) { }
 
+  openColorPicker(colorPicker: any) {
+    const inputEl = colorPicker?.el?.nativeElement?.querySelector('input');
+    if (inputEl) {
+      inputEl.click(); // megnyitja a színválasztót
+    }
+  }
   selectOption(option: any, newtag: any) {
 
     this.selected = option;
