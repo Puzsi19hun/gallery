@@ -71,8 +71,8 @@ export class CommentsComponent implements OnInit {
 
         this.width = imageData.width;
         this.cardHex = imageData.hex_codes;
-        this.userName = imageData.user?.name ?? 'Ismeretlen';
-        this.userId = imageData.user?.id;
+        this.userName = imageData.user_name ?? 'Ismeretlen';
+        this.userId = imageData.user_id;
         this.hashtags = imageData.hashtags;
         this.description = imageData.description ?? '';
         this.name = imageData.name;
