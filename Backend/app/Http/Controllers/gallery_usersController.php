@@ -270,7 +270,7 @@ class gallery_usersController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Hex codes has been successfully saved!',
+            'message' => 'Your drawing has been successfully saved.',
         ], 200);
     }
 
@@ -358,7 +358,7 @@ class gallery_usersController extends Controller
 
     public function getHexCodesbykepid(Request $request)
     {
-        $buser = Auth::user(); 
+        $buser = Auth::user();
         $buserId = $buser ? $buser->id : null;
 
         $kepid = $request->input('kepid');
@@ -405,7 +405,7 @@ class gallery_usersController extends Controller
 
         $user = $record->user;
 
-       
+
         $hashtagIds = json_decode($record->hashtags, true);
 
         $hashtagNames = [];
@@ -449,7 +449,7 @@ class gallery_usersController extends Controller
             'likes' => $likes,
             'dislikes' => $dislikes,
             'rating' => $rating,
-            'vote_by_user' => $userVote, 
+            'vote_by_user' => $userVote,
 
         ];
 
@@ -457,7 +457,7 @@ class gallery_usersController extends Controller
     }
     public function getHexCodes()
     {
-        $buser = Auth::user(); 
+        $buser = Auth::user();
         $userId = $buser ? $buser->id : null;
         $records = kepek::all();
 
@@ -490,7 +490,7 @@ class gallery_usersController extends Controller
 
                 $user = $record->user;
 
-               
+
                 $hashtagIds = json_decode($record->hashtags, true);
 
                 $hashtagNames = [];
@@ -515,7 +515,7 @@ class gallery_usersController extends Controller
                         ->first();
 
                     if ($ertekeles) {
-                        $userVote = $ertekeles->likes; 
+                        $userVote = $ertekeles->likes;
                     }
                 }
 
@@ -534,7 +534,7 @@ class gallery_usersController extends Controller
                     'likes' => $likes,
                     'dislikes' => $dislikes,
                     'rating' => $rating,
-                    'vote_by_user' => $userVote, 
+                    'vote_by_user' => $userVote,
                 ];
             }
         }
@@ -574,7 +574,7 @@ class gallery_usersController extends Controller
             if (!$record->hashtag) {
                 return null;
             }
-            $buser = Auth::user(); 
+            $buser = Auth::user();
             $buserId = $buser ? $buser->id : null;
 
             $binaryData = '';
@@ -624,7 +624,7 @@ class gallery_usersController extends Controller
                 if ($ertekeles) {
                     $userVote = $ertekeles->likes;
                 }
-            } 
+            }
             return [
                 'user_id' => $record->user_id,
                 'user_name' => $record->user->name ?? null,
@@ -638,7 +638,7 @@ class gallery_usersController extends Controller
                 'likes' => $likes,
                 'dislikes' => $dislikes,
                 'rating' => $rating,
-                'vote_by_user' => $userVote, 
+                'vote_by_user' => $userVote,
 
 
             ];
@@ -776,19 +776,19 @@ class gallery_usersController extends Controller
 
     public function query_kepek($query)
     {
-        $buser = Auth::user(); 
+        $buser = Auth::user();
         $buserId = $buser ? $buser->id : null;
-        
+
         $matchingHashtagIds = Hashtags::where('name', 'like', "%$query%")->pluck('id')->toArray();
 
-       
+
         $results = Kepek::where('name', 'like', "%$query%")
             ->orWhereHas('user', function ($q) use ($query) {
                 $q->where('name', 'like', "%$query%");
             })
             ->orWhere(function ($q) use ($matchingHashtagIds) {
                 foreach ($matchingHashtagIds as $id) {
-                    $q->orWhereJsonContains('hashtags', $id);  
+                    $q->orWhereJsonContains('hashtags', $id);
                 }
             })
             ->get();
@@ -859,7 +859,7 @@ class gallery_usersController extends Controller
                     if ($ertekeles) {
                         $userVote = $ertekeles->likes;
                     }
-                } 
+                }
                 $hexCodesByImage[] = [
                     'user_id' => $record->user_id,
                     'user_name' => $user ? $user->name : 'N/A',
@@ -875,7 +875,7 @@ class gallery_usersController extends Controller
                     'likes' => $likes,
                     'dislikes' => $dislikes,
                     'rating' => $rating,
-                    'vote_by_user' => $userVote, 
+                    'vote_by_user' => $userVote,
                 ];
             }
         }
@@ -905,7 +905,7 @@ class gallery_usersController extends Controller
 
     public function hashtags_post(Request $request, HashtagValidatorService $validator)
     {
-       
+
         $validatorInput = Validator::make($request->all(), [
             'name' => 'required|string|min:2|max:30'
         ]);
@@ -918,10 +918,10 @@ class gallery_usersController extends Controller
             ], 422);
         }
 
-      
+
         $hashtagName = trim($request->input('name'), '# ');
 
-   
+
         if (!$validator->isValid($hashtagName)) {
             return response()->json([
                 'status' => 'error',
@@ -929,7 +929,7 @@ class gallery_usersController extends Controller
             ], 422);
         }
 
-       
+
         $hashtag = Hashtags::create([
             'name' => $hashtagName,
         ]);
@@ -938,7 +938,7 @@ class gallery_usersController extends Controller
             'status' => 'success',
             'message' => 'Hashtag created.',
             'data' => [
-                'id' => $hashtag->id, 
+                'id' => $hashtag->id,
                 'name' => $hashtag->name
             ]
         ]);
@@ -969,12 +969,12 @@ class gallery_usersController extends Controller
 
         $likes = ($action === 'like') ? 1 : -1;
 
-     
+
         $existing = ertekelesek::where('user_id', $userId)
             ->where('kep_id', $kepId)
             ->first();
 
-      
+
         if ($existing && $existing->likes == $likes) {
             $existing->delete();
 

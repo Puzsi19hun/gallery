@@ -38,9 +38,10 @@ export class RegisterComponent {
         data => {
           console.log(data)
           this.dataservice.registerPopup()
+          this.dataservice.move_to("login")
         },
         error => {
-          this.dataservice.errorPopup(error)
+          this.dataservice.errorPopup("Your e-mail is already taken.")
         }
       )
 
