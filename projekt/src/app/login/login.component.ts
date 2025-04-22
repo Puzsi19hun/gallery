@@ -55,7 +55,7 @@ export class LoginComponent implements AfterViewInit {
         this.dataservice.set_token(data.message)
 
         this.cdr.detectChanges()
-        this.dataservice.move_to('/gallery')
+        this.dataservice.move_to('/logged-main')
       },
       error => {
         this.dataservice.errorPopup("Invalid credentials!")

@@ -51,9 +51,8 @@ export class GalleryComponent implements OnInit {
     );
     this.adjustPaginator();
     this.updateCanvasSize(); // Inicializáláskor is méretezzük át
-
-
   }
+
 
   @HostListener('document:click', ['$event.target'])
   onClick(target: HTMLElement) {
